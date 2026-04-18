@@ -268,7 +268,16 @@ def main():
     # ========== SIDEBAR ==========
     with st.sidebar:
         st.markdown("### 📊 篩選條件")
-        st.caption(f"資料更新時間: {get_data_freshness()}")
+        
+        # 資料狀態卡片
+        freshness = get_data_freshness()
+        st.markdown(f"""
+        <div style="background-color:rgba(0,212,170,0.1); border-radius:10px; padding:12px; border:1px solid rgba(0,212,170,0.3); margin-bottom:10px;">
+            <div style="font-size:0.75rem; color:#8892a4;">資料同步狀態</div>
+            <div style="font-weight:600; color:#00D4AA;">✅ 已離線預建完成</div>
+            <div style="font-size:0.75rem; color:#6b7b8d; margin-top:4px;">最後更新: {freshness}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
         st.divider()
 
@@ -299,6 +308,10 @@ def main():
         st.divider()
         st.markdown("""
         <div style="font-size:0.8rem; color:#6b7b8d; padding:8px;">
+            💡 <strong>如何更新資料？</strong><br>
+            由於 Goodinfo 限制，雲端無法自動抓取。請於本機執行 <code>build_dataset.py</code> 後推送到 GitHub 即可更新。
+        </div>
+        <div style="font-size:0.8rem; color:#6b7b8d; padding:8px; margin-top:8px;">
             💡 <strong>殖利率定義：</strong><br>
             本系統之殖利率 = 現金股利 + 股票股利<br>
             與市場常見「現金殖利率」不同
@@ -436,6 +449,14 @@ def main():
             float(row["avg_5y_yield_pct"]),
         )
         st.plotly_chart(fig_yield, use_container_width=True)
+
+    # ========== FOOTER ==========
+    st.markdown("---")
+    st.markdown("""
+    <div style="text-align:center; color:#6b7b8d; font-size:0.8rem; padding:20px;">
+        數據來源：TWSE/TPEX OpenAPI, Goodinfo.tw | 系統僅供參考，不構成任何投資建議。
+    </div>
+    """, unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
