@@ -283,12 +283,12 @@ def main():
 
         min_current = st.slider(
             "目前殖利率最低門檻 (%)",
-            min_value=0.0, max_value=20.0, value=6.0, step=0.1,
+            min_value=0.0, max_value=20.0, value=4.0, step=0.1,
             help="設定目前殖利率的最低門檻"
         )
         min_avg5 = st.slider(
             "平均 5 年殖利率最低門檻 (%)",
-            min_value=0.0, max_value=20.0, value=6.0, step=0.1,
+            min_value=0.0, max_value=20.0, value=4.0, step=0.1,
             help="設定近 5 年平均殖利率的最低門檻"
         )
 
