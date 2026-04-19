@@ -367,17 +367,23 @@ def main():
         st.info("🔍 目前沒有符合條件的股票，請嘗試調低殖利率門檻。")
     else:
         # 表格欄位設定
-        display_cols = [
-            "code", "name", "market", "price",
+        base_cols = [
+            "code", "name", "sector", "business_nature", "price",
             "latest_paid_year", "latest_paid_total_div",
             "current_yield_pct", "sum_5y_div", "avg_5y_yield_pct",
         ]
+        # 相容舊 CSV（若尚未重建資料，sector/business_nature 欄可能不存在）
+        display_cols = [c for c in base_cols if c in filtered.columns]
         display_df = filtered[display_cols].copy()
-        display_df.columns = [
-            "代號", "名稱", "市場", "現價",
-            "最新配年", "最新總股利",
-            "目前殖利率%", "近5年總股利", "平均5年殖利率%",
-        ]
+        col_name_map = {
+            "code": "代號", "name": "名稱",
+            "sector": "產業別", "business_nature": "主要業務",
+            "price": "現價",
+            "latest_paid_year": "最新配年", "latest_paid_total_div": "最新總股利",
+            "current_yield_pct": "目前殖利率%", "sum_5y_div": "近5年總股利",
+            "avg_5y_yield_pct": "平均5年殖利率%",
+        }
+        display_df.columns = [col_name_map[c] for c in display_cols]
 
         st.dataframe(
             display_df,
@@ -389,6 +395,7 @@ def main():
                 "目前殖利率%": st.column_config.NumberColumn(format="%.2f"),
                 "近5年總股利": st.column_config.NumberColumn(format="%.2f"),
                 "平均5年殖利率%": st.column_config.NumberColumn(format="%.2f"),
+                "主要業務": st.column_config.TextColumn(width="large"),
             },
             height=min(400, 40 + len(display_df) * 35),
         )
@@ -412,6 +419,16 @@ def main():
 
         row = filtered[filtered["code"].astype(str) == selected_code].iloc[0]
         sub = div_hist[div_hist["code"].astype(str) == selected_code].sort_values("year").copy()
+
+        # 個股基本資訊
+        if "sector" in row.index and row["sector"]:
+            st.markdown(
+                f'<div style="color:#8892a4; font-size:0.9rem; margin-bottom:4px;">'
+                f'🏭 <strong style="color:#c0c8d4;">{row["sector"]}</strong>'
+                + (f' &nbsp;|&nbsp; {row["business_nature"]}' if row.get("business_nature") else "")
+                + "</div>",
+                unsafe_allow_html=True,
+            )
 
         # 個股 KPI
         d1, d2, d3, d4 = st.columns(4)

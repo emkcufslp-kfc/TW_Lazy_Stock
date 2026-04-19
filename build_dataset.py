@@ -103,6 +103,8 @@ def build(top_n: int = 300) -> tuple[pd.DataFrame, pd.DataFrame]:
             "name": name,
             "market": market,
             "price": price,
+            "sector": row.get("sector", ""),
+            "business_nature": row.get("business_nature", ""),
             **metrics,
         })
 

@@ -50,6 +50,10 @@ TWSE_STOCK_DAY_ALL = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_AL
 TWSE_BWIBBU_ALL = "https://openapi.twse.com.tw/v1/exchangeReport/BWIBBU_ALL"
 TPEX_QUOTES = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_quotes"
 
+# 公司基本資料（產業別、主要業務）
+TWSE_COMPANY_INFO_URL = "https://openapi.twse.com.tw/v1/opendata/t187ap03_L"
+TPEX_COMPANY_INFO_URL = "https://www.tpex.org.tw/openapi/v1/tpex_company_basic_info"
+
 # Goodinfo 股利政策頁面
 GOODINFO_DIV_URL = "https://goodinfo.tw/tw/StockDividendPolicy.asp?STOCK_ID={code}"
 
@@ -163,18 +167,83 @@ def fetch_twse_market_cap_ranking() -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def fetch_company_info() -> pd.DataFrame:
+    """從 TWSE/TPEX OpenAPI 取得公司產業別與主要業務描述。
+
+    Returns
+    -------
+    pd.DataFrame
+        欄位: code, sector（產業別）, business_nature（主要業務）
+    """
+    rows = []
+
+    # --- TWSE 上市公司基本資料 ---
+    try:
+        r = requests.get(TWSE_COMPANY_INFO_URL, headers=HEADERS, timeout=15, verify=False)
+        r.raise_for_status()
+        data = r.json()
+        for item in data:
+            code = normalize_code(str(item.get("公司代號", "")))
+            if code is None:
+                continue
+            rows.append({
+                "code": code,
+                "sector": str(item.get("產業別", "")).strip(),
+                "business_nature": str(item.get("主要經營業務", "")).strip(),
+            })
+        logger.info(f"TWSE 公司基本資料: {len(rows)} 筆")
+    except Exception as e:
+        logger.warning(f"TWSE company info 取得失敗: {e}")
+
+    twse_count = len(rows)
+
+    # --- TPEX 上櫃公司基本資料 ---
+    try:
+        r = requests.get(TPEX_COMPANY_INFO_URL, headers=HEADERS, timeout=15, verify=False)
+        r.raise_for_status()
+        data = r.json()
+        for item in data:
+            code_raw = (item.get("SecuritiesCompanyCode") or item.get("公司代號") or "")
+            code = normalize_code(str(code_raw))
+            if code is None:
+                continue
+            sector = str(
+                item.get("IndustryType") or item.get("industryType") or
+                item.get("IndustryCategoryName") or item.get("產業別") or ""
+            ).strip()
+            business = str(
+                item.get("MainBusiness") or item.get("mainBusiness") or
+                item.get("主要業務") or item.get("主要經營業務") or ""
+            ).strip()
+            rows.append({
+                "code": code,
+                "sector": sector,
+                "business_nature": business,
+            })
+        logger.info(f"TPEX 公司基本資料: {len(rows) - twse_count} 筆")
+    except Exception as e:
+        logger.warning(f"TPEX company info 取得失敗: {e}")
+
+    if not rows:
+        return pd.DataFrame(columns=["code", "sector", "business_nature"])
+
+    df = pd.DataFrame(rows)
+    df = df.drop_duplicates("code", keep="first")
+    return df
+
+
 def fetch_full_universe(top_n: int = 300) -> pd.DataFrame:
     """取得完整股票清單（TWSE + TPEX），並篩選市值前 N 名。
-    
+
     Parameters
     ----------
     top_n : int
         保留前 N 檔股票（依成交金額代理市值排序）。
-    
+
     Returns
     -------
     pd.DataFrame
-        欄位: code, name, market, price
+        欄位: code, name, market, price, sector, business_nature
     """
     twse = fetch_twse_stocks()
     tpex = fetch_tpex_stocks()
@@ -194,8 +263,17 @@ def fetch_full_universe(top_n: int = 300) -> pd.DataFrame:
         universe = universe.head(top_n)
         universe = universe.drop(columns=["trade_value"])
     else:
-        # 若無法取得成交金額，直接取前 N 檔
         universe = universe.head(top_n)
+
+    # 合併產業別與主要業務
+    company_info = fetch_company_info()
+    if not company_info.empty:
+        universe = universe.merge(company_info, on="code", how="left")
+        universe["sector"] = universe["sector"].fillna("").astype(str)
+        universe["business_nature"] = universe["business_nature"].fillna("").astype(str)
+    else:
+        universe["sector"] = ""
+        universe["business_nature"] = ""
 
     logger.info(f"篩選後股票清單: {len(universe)} 檔")
     return universe
