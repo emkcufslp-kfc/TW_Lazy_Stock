@@ -120,9 +120,14 @@ def load_data() -> tuple[pd.DataFrame, pd.DataFrame]:
 
     # 若 CSV 尚未包含 sector/business_nature，即時從 API 補充
     if "sector" not in screened.columns or "business_nature" not in screened.columns:
-        company_info = fetch_company_info()
-        if not company_info.empty:
-            screened = screened.merge(company_info, on="code", how="left")
+        try:
+            company_info = fetch_company_info()
+            if not company_info.empty:
+                screened["code"] = screened["code"].astype(str)
+                company_info["code"] = company_info["code"].astype(str)
+                screened = screened.merge(company_info, on="code", how="left")
+        except Exception:
+            pass
         if "sector" not in screened.columns:
             screened["sector"] = ""
         if "business_nature" not in screened.columns:
