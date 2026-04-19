@@ -16,6 +16,8 @@ from pathlib import Path
 from datetime import datetime
 import os
 
+from data_sources import fetch_company_info
+
 # --- 頁面設定 ---
 st.set_page_config(
     page_title="台股股利選股 Dashboard",
@@ -112,9 +114,22 @@ DIV_FILE = DATA_DIR / "dividend_history.csv"
 # --- 資料載入 ---
 @st.cache_data(ttl=3600)
 def load_data() -> tuple[pd.DataFrame, pd.DataFrame]:
-    """載入預建的 CSV 資料。"""
+    """載入預建的 CSV 資料，並即時補充產業別與主要業務欄位。"""
     screened = pd.read_csv(SCREENED_FILE)
     div_hist = pd.read_csv(DIV_FILE)
+
+    # 若 CSV 尚未包含 sector/business_nature，即時從 API 補充
+    if "sector" not in screened.columns or "business_nature" not in screened.columns:
+        company_info = fetch_company_info()
+        if not company_info.empty:
+            screened = screened.merge(company_info, on="code", how="left")
+        if "sector" not in screened.columns:
+            screened["sector"] = ""
+        if "business_nature" not in screened.columns:
+            screened["business_nature"] = ""
+    screened["sector"] = screened["sector"].fillna("").astype(str)
+    screened["business_nature"] = screened["business_nature"].fillna("").astype(str)
+
     return screened, div_hist
 
 
@@ -390,12 +405,16 @@ def main():
             use_container_width=True,
             hide_index=True,
             column_config={
-                "現價": st.column_config.NumberColumn(format="%.2f"),
-                "最新總股利": st.column_config.NumberColumn(format="%.2f"),
-                "目前殖利率%": st.column_config.NumberColumn(format="%.2f"),
-                "近5年總股利": st.column_config.NumberColumn(format="%.2f"),
-                "平均5年殖利率%": st.column_config.NumberColumn(format="%.2f"),
+                "代號": st.column_config.TextColumn(width="small"),
+                "名稱": st.column_config.TextColumn(width="small"),
+                "產業別": st.column_config.TextColumn(width="medium"),
                 "主要業務": st.column_config.TextColumn(width="large"),
+                "現價": st.column_config.NumberColumn(format="%.2f", width="small"),
+                "最新配年": st.column_config.NumberColumn(format="%d", width="small"),
+                "最新總股利": st.column_config.NumberColumn(format="%.2f", width="small"),
+                "目前殖利率%": st.column_config.NumberColumn(format="%.2f", width="small"),
+                "近5年總股利": st.column_config.NumberColumn(format="%.2f", width="small"),
+                "平均5年殖利率%": st.column_config.NumberColumn(format="%.2f", width="small"),
             },
             height=min(400, 40 + len(display_df) * 35),
         )
