@@ -52,7 +52,48 @@ TPEX_QUOTES = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_quotes"
 
 # 公司基本資料（產業別、主要業務）
 TWSE_COMPANY_INFO_URL = "https://openapi.twse.com.tw/v1/opendata/t187ap03_L"
-TPEX_COMPANY_INFO_URL = "https://www.tpex.org.tw/openapi/v1/tpex_company_basic_info"
+TPEX_PERATIO_URL = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_peratio_analysis"
+
+# 產業代碼 → 繁體中文名稱（TWSE/TPEX 共用，t187ap03_L 的 產業別 為數字代碼）
+_INDUSTRY_CODE_MAP: dict[str, str] = {
+    "01": "水泥工業",  "1": "水泥工業",
+    "02": "食品工業",  "2": "食品工業",
+    "03": "塑膠工業",  "3": "塑膠工業",
+    "04": "紡織纖維",  "4": "紡織纖維",
+    "05": "電機機械",  "5": "電機機械",
+    "06": "電器電纜",  "6": "電器電纜",
+    "07": "化學工業",  "7": "化學工業",
+    "08": "玻璃陶瓷",  "8": "玻璃陶瓷",
+    "09": "造紙工業",  "9": "造紙工業",
+    "10": "鋼鐵工業",
+    "11": "橡膠工業",
+    "12": "汽車工業",
+    "13": "電子工業",
+    "14": "建材營造",
+    "15": "航運業",
+    "16": "觀光餐旅",
+    "17": "金融保險",
+    "18": "貿易百貨",
+    "19": "油電燃氣業",
+    "20": "其他",
+    "21": "化學生技醫療",
+    "22": "電子通路業",
+    "23": "資訊服務業",
+    "24": "其他電子業",
+    "25": "文化創意業",
+    "26": "農業科技業",
+    "27": "電子商務",
+    "28": "觀光餐旅",
+    "29": "電子工業",
+    "30": "半導體業",
+    "31": "電腦及周邊設備業",
+    "32": "光電業",
+    "33": "通信網路業",
+    "34": "電子零組件業",
+    "35": "電子通路業",
+    "36": "資訊服務業",
+    "37": "其他電子業",
+}
 
 # Goodinfo 股利政策頁面
 GOODINFO_DIV_URL = "https://goodinfo.tw/tw/StockDividendPolicy.asp?STOCK_ID={code}"
@@ -167,62 +208,78 @@ def fetch_twse_market_cap_ranking() -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def _resolve_sector(raw: str) -> str:
+    """將數字代碼轉為繁體中文產業別；若已是中文則直接回傳。"""
+    raw = raw.strip()
+    if not raw:
+        return ""
+    # 純數字 → 查對照表
+    if raw.isdigit() or (len(raw) == 2 and raw[0] == "0" and raw[1].isdigit()):
+        return _INDUSTRY_CODE_MAP.get(raw, raw)
+    return raw
+
+
 def fetch_company_info() -> pd.DataFrame:
     """從 TWSE/TPEX OpenAPI 取得公司產業別與主要業務描述。
 
     Returns
     -------
     pd.DataFrame
-        欄位: code, sector（產業別）, business_nature（主要業務）
+        欄位: code, sector（繁體中文產業別）, business_nature（主要業務）
     """
     rows = []
 
-    # --- TWSE 上市公司基本資料 ---
+    # --- Step 1: TWSE 產業別 — 從 BWIBBU_ALL 取得中文 IndutryName ---
+    twse_sector: dict[str, str] = {}
+    try:
+        r = requests.get(TWSE_BWIBBU_ALL, headers=HEADERS, timeout=15, verify=False)
+        r.raise_for_status()
+        for item in r.json():
+            code = normalize_code(str(item.get("Code", "")))
+            if code is None:
+                continue
+            name = str(item.get("IndutryName", "")).strip()  # 注意 TWSE 欄位有拼字錯誤
+            if name:
+                twse_sector[code] = name
+        logger.info(f"TWSE BWIBBU_ALL 產業別: {len(twse_sector)} 筆")
+    except Exception as e:
+        logger.warning(f"TWSE BWIBBU_ALL 取得失敗: {e}")
+
+    # --- Step 2: TWSE 主要業務 — 從 t187ap03_L 取得 ---
     try:
         r = requests.get(TWSE_COMPANY_INFO_URL, headers=HEADERS, timeout=15, verify=False)
         r.raise_for_status()
-        data = r.json()
-        for item in data:
+        for item in r.json():
             code = normalize_code(str(item.get("公司代號", "")))
             if code is None:
                 continue
-            rows.append({
-                "code": code,
-                "sector": str(item.get("產業別", "")).strip(),
-                "business_nature": str(item.get("主要經營業務", "")).strip(),
-            })
-        logger.info(f"TWSE 公司基本資料: {len(rows)} 筆")
+            # 優先用 BWIBBU_ALL 的中文産業別；fallback 到代碼對照表
+            sector = twse_sector.get(code, _resolve_sector(str(item.get("產業別", ""))))
+            business = str(item.get("主要業務", "") or item.get("主要經營業務", "")).strip()
+            rows.append({"code": code, "sector": sector, "business_nature": business})
+        logger.info(f"TWSE t187ap03_L 公司資料: {len(rows)} 筆")
     except Exception as e:
-        logger.warning(f"TWSE company info 取得失敗: {e}")
+        logger.warning(f"TWSE t187ap03_L 取得失敗: {e}")
 
     twse_count = len(rows)
 
-    # --- TPEX 上櫃公司基本資料 ---
+    # --- Step 3: TPEX 産業別 — 從 peratio_analysis 取得（含中文 IndustryType）---
     try:
-        r = requests.get(TPEX_COMPANY_INFO_URL, headers=HEADERS, timeout=15, verify=False)
+        r = requests.get(TPEX_PERATIO_URL, headers=HEADERS, timeout=15, verify=False)
         r.raise_for_status()
-        data = r.json()
-        for item in data:
-            code_raw = (item.get("SecuritiesCompanyCode") or item.get("公司代號") or "")
-            code = normalize_code(str(code_raw))
+        for item in r.json():
+            code = normalize_code(str(item.get("SecuritiesCompanyCode", "")))
             if code is None:
                 continue
-            sector = str(
-                item.get("IndustryType") or item.get("industryType") or
-                item.get("IndustryCategoryName") or item.get("產業別") or ""
-            ).strip()
-            business = str(
-                item.get("MainBusiness") or item.get("mainBusiness") or
-                item.get("主要業務") or item.get("主要經營業務") or ""
-            ).strip()
+            sector_raw = str(item.get("IndustryType", "") or item.get("industryType", "")).strip()
             rows.append({
                 "code": code,
-                "sector": sector,
-                "business_nature": business,
+                "sector": _resolve_sector(sector_raw),
+                "business_nature": "",  # TPEX peratio API 不含業務描述
             })
-        logger.info(f"TPEX 公司基本資料: {len(rows) - twse_count} 筆")
+        logger.info(f"TPEX peratio 公司資料: {len(rows) - twse_count} 筆")
     except Exception as e:
-        logger.warning(f"TPEX company info 取得失敗: {e}")
+        logger.warning(f"TPEX peratio 取得失敗: {e}")
 
     if not rows:
         return pd.DataFrame(columns=["code", "sector", "business_nature"])
