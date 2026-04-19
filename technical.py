@@ -84,6 +84,13 @@ def compute_wvf(
     return out
 
 
+def compute_ma(close: pd.Series, ma_type: str = "SMA", period: int = 20) -> pd.Series:
+    """Compute SMA or EMA for a price series."""
+    if ma_type == "EMA":
+        return close.ewm(span=period, adjust=False).mean()
+    return close.rolling(period).mean()   # SMA default
+
+
 def check_signal(
     code: str,
     market: str,
@@ -94,15 +101,20 @@ def check_signal(
     lb: int = 50,
     ph: float = 0.85,
     pl: float = 1.01,
+    use_ma_filter: bool = False,
+    ma_type: str = "SMA",
+    ma_period: int = 20,
 ) -> dict:
     """
     Check if WVF green bar fired in the last `lookback_days` sessions.
+    Optionally checks whether latest close is above the chosen MA.
 
     Returns dict with keys:
       green (bool), days (int signal count), wvf, upper_band, range_high,
+      above_ma (bool|None), last_close, last_ma, ma_label,
       wvf_data (full DataFrame for charting), error (str if failed)
     """
-    min_rows = lb + bbl + 5
+    min_rows = max(lb + bbl + 5, ma_period + 5)
     df = fetch_ohlcv(code, market, days=max(160, min_rows + 20))
     if df is None or len(df) < min_rows:
         return {"code": code, "green": False, "days": 0, "error": "insufficient data"}
@@ -113,15 +125,35 @@ def check_signal(
         tail = valid.tail(lookback_days)
         green_count = int(tail["green"].sum())
         last = valid.iloc[-1]
-        return {
+
+        out = {
             "code": code,
             "green": green_count > 0,
             "days": green_count,
             "wvf": round(float(last["wvf"]), 2),
             "upper_band": round(float(last["upper_band"]), 2),
             "range_high": round(float(last["range_high"]), 2),
+            "above_ma": None,
+            "last_close": None,
+            "last_ma": None,
+            "ma_label": f"{ma_type}{ma_period}",
             "wvf_data": valid,
         }
+
+        if use_ma_filter:
+            ma_series = compute_ma(df["Close"], ma_type, ma_period)
+            last_close = float(df["Close"].iloc[-1])
+            last_ma_val = float(ma_series.dropna().iloc[-1])
+            out["above_ma"] = last_close > last_ma_val
+            out["last_close"] = round(last_close, 2)
+            out["last_ma"] = round(last_ma_val, 2)
+
+            # Attach MA to wvf_data for charting
+            valid = valid.copy()
+            valid["ma"] = ma_series.reindex(valid.index)
+            out["wvf_data"] = valid
+
+        return out
     except Exception as e:
         logger.warning(f"[{code}] WVF compute error: {e}")
         return {"code": code, "green": False, "days": 0, "error": str(e)}
@@ -191,35 +223,65 @@ def get_historical_prices_batch(
 def make_wvf_chart(result: dict, name: str, n_days: int = 60):
     """Build a Plotly figure of the WVF for the last n_days sessions."""
     import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
 
     data: pd.DataFrame = result["wvf_data"].tail(n_days)
+    has_ma = "ma" in data.columns and data["ma"].notna().any()
     colors = ["#00D4AA" if g else "#4a5568" for g in data["green"]]
 
-    fig = go.Figure()
+    # Two rows when MA is present: top = price + MA, bottom = WVF
+    if has_ma:
+        fig = make_subplots(rows=2, cols=1, shared_xaxes=True,
+                            row_heights=[0.45, 0.55], vertical_spacing=0.04)
+        # Price line
+        fig.add_trace(go.Scatter(
+            x=data.index, y=data["Close"],
+            line=dict(color="#c0c8d4", width=1.5), name="Close", showlegend=True,
+        ), row=1, col=1)
+        # MA line
+        ma_label = result.get("ma_label", "MA")
+        fig.add_trace(go.Scatter(
+            x=data.index, y=data["ma"],
+            line=dict(color="#FFD700", width=2), name=ma_label, showlegend=True,
+        ), row=1, col=1)
+        wvf_row = 2
+    else:
+        fig = go.Figure()
+        wvf_row = None
 
-    fig.add_trace(go.Bar(
-        x=data.index, y=data["wvf"],
-        marker_color=colors, name="WVF", opacity=0.9,
-    ))
-    fig.add_trace(go.Scatter(
-        x=data.index, y=data["upper_band"],
-        line=dict(color="#00B4D8", width=2), name="Upper Band",
-    ))
-    fig.add_trace(go.Scatter(
-        x=data.index, y=data["range_high"],
-        line=dict(color="orange", width=2, dash="dot"), name="Range High",
-    ))
+    def _add(trace, row=None):
+        if row:
+            fig.add_trace(trace, row=row, col=1)
+        else:
+            fig.add_trace(trace)
 
-    fig.update_layout(
+    _add(go.Bar(x=data.index, y=data["wvf"],
+                marker_color=colors, name="WVF", opacity=0.9), wvf_row)
+    _add(go.Scatter(x=data.index, y=data["upper_band"],
+                    line=dict(color="#00B4D8", width=2), name="Upper Band"), wvf_row)
+    _add(go.Scatter(x=data.index, y=data["range_high"],
+                    line=dict(color="orange", width=2, dash="dot"), name="Range High"), wvf_row)
+
+    layout = dict(
         title=dict(text=f"{result['code']} {name} — Williams VIX Fix", font=dict(size=14, color="#e0e0e0")),
-        xaxis=dict(gridcolor="rgba(255,255,255,0.05)"),
-        yaxis=dict(title="WVF", gridcolor="rgba(255,255,255,0.08)"),
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
         font=dict(color="#c0c8d4"),
         legend=dict(orientation="h", y=1.12, x=0),
         margin=dict(l=40, r=20, t=55, b=30),
-        height=280,
+        height=380 if has_ma else 280,
         showlegend=True,
     )
+    if has_ma:
+        layout.update({
+            "xaxis2": dict(gridcolor="rgba(255,255,255,0.05)"),
+            "yaxis":  dict(title="Price", gridcolor="rgba(255,255,255,0.08)"),
+            "yaxis2": dict(title="WVF",   gridcolor="rgba(255,255,255,0.08)"),
+        })
+    else:
+        layout.update({
+            "xaxis": dict(gridcolor="rgba(255,255,255,0.05)"),
+            "yaxis": dict(title="WVF", gridcolor="rgba(255,255,255,0.08)"),
+        })
+    fig.update_layout(**layout)
     return fig

@@ -703,6 +703,15 @@ def main():
             wvf_ph  = pc5.number_input("高百分位 ph", 0.50, 1.00, 0.85, 0.01, help="rangeHigh = highest(wvf,lb) × ph")
             wvf_lkb = pc6.number_input("訊號掃描天數", 1, 7, 3, help="檢查最近幾個交易日是否出現綠色柱")
 
+            st.markdown("---")
+            use_ma = st.checkbox("📈 加入均線過濾（收盤價需在均線之上）", value=False)
+            if use_ma:
+                ma1, ma2 = st.columns(2)
+                ma_type   = ma1.selectbox("均線類型", ["SMA", "EMA"], index=0)
+                ma_period = ma2.selectbox("均線週期", [5, 10, 20, 50, 100, 200], index=2)
+            else:
+                ma_type, ma_period = "SMA", 20
+
         scan_btn = st.button("📡 掃描（Williams VIX Fix）", use_container_width=True)
 
         if scan_btn:
@@ -720,22 +729,40 @@ def main():
                     lookback_days=int(wvf_lkb),
                     pd_=int(wvf_pd), bbl=int(wvf_bbl), mult=float(wvf_mult),
                     lb=int(wvf_lb), ph=float(wvf_ph),
+                    use_ma_filter=use_ma,
+                    ma_type=ma_type,
+                    ma_period=int(ma_period),
                 )
                 results.append({**s, **sig})
                 bar.progress((i + 1) / len(stocks), text=f"掃描中… {s['code']} {s.get('name','')}")
             bar.empty()
             st.session_state["wvf_results"] = results
             st.session_state["wvf_lkb"] = int(wvf_lkb)
+            st.session_state["wvf_use_ma"] = use_ma
 
         # ---------- 顯示結果 ----------
         wvf_results = st.session_state.get("wvf_results")
         if wvf_results:
             from technical import make_wvf_chart
 
-            green_hits = [r for r in wvf_results if r.get("green") and "error" not in r]
-            no_signal  = [r for r in wvf_results if not r.get("green") and "error" not in r]
-            errors     = [r for r in wvf_results if "error" in r]
+            use_ma_display = st.session_state.get("wvf_use_ma", False)
             lkb = st.session_state.get("wvf_lkb", 3)
+
+            # Apply filters: WVF green + (optionally) above MA
+            def _passes(r: dict) -> bool:
+                if "error" in r or not r.get("green"):
+                    return False
+                if use_ma_display and r.get("above_ma") is False:
+                    return False
+                return True
+
+            green_hits = [r for r in wvf_results if _passes(r)]
+            no_signal  = [r for r in wvf_results if not _passes(r) and "error" not in r]
+            errors     = [r for r in wvf_results if "error" in r]
+
+            if use_ma_display:
+                ma_label = (wvf_results[0].get("ma_label") or "MA") if wvf_results else "MA"
+                st.info(f"均線過濾已啟用（{ma_label}）：僅顯示 WVF 綠色訊號 **且** 收盤價在均線之上的股票。")
 
             if green_hits:
                 st.markdown(
@@ -753,6 +780,19 @@ def main():
                     wvf_val = r.get("wvf", 0)
                     ub_val  = r.get("upper_band", 0)
                     rh_val  = r.get("range_high", 0)
+
+                    ma_label  = r.get("ma_label", "")
+                    last_close= r.get("last_close")
+                    last_ma   = r.get("last_ma")
+                    above_ma  = r.get("above_ma")
+                    ma_row = ""
+                    if above_ma is not None and last_close is not None:
+                        ma_badge = (
+                            f'<span style="color:#00D4AA;">▲ 收盤 {last_close} &gt; {ma_label} {last_ma}</span>'
+                            if above_ma else
+                            f'<span style="color:#ff6b6b;">▼ 收盤 {last_close} &lt; {ma_label} {last_ma}</span>'
+                        )
+                        ma_row = f'<div style="margin-top:4px; font-size:0.85rem;">{ma_badge}</div>'
 
                     st.markdown(f"""
                     <div style="
@@ -775,6 +815,7 @@ def main():
                             Upper Band = {ub_val:.2f} &nbsp;｜&nbsp;
                             Range High = {rh_val:.2f}
                         </div>
+                        {ma_row}
                         <div style="margin-top:10px; font-size:0.85rem; color:#ffd700;">
                             ⚠️ 建議留意此股，Williams VIX Fix 顯示潛在市場恐慌底部，可評估是否買入。
                         </div>
@@ -793,13 +834,18 @@ def main():
             with st.expander(f"📋 全部掃描結果（{len(no_signal)} 股無訊號 / {len(errors)} 股無資料）"):
                 rows = []
                 for r in wvf_results:
+                    ma_lbl = r.get("ma_label", "")
+                    above  = r.get("above_ma")
+                    ma_str = ("✅ 是" if above else "❌ 否") if above is not None else "—"
                     rows.append({
                         "代號": r.get("code",""), "名稱": r.get("name",""),
                         "產業別": r.get("sector",""),
-                        "訊號": "🟢 是" if r.get("green") else ("⚠️ 無資料" if "error" in r else "—"),
+                        "WVF訊號": "🟢 是" if r.get("green") else ("⚠️ 無資料" if "error" in r else "—"),
                         "觸發天數": r.get("days", 0) if "error" not in r else "-",
+                        f"收盤>{ma_lbl}": ma_str,
+                        "收盤價": r.get("last_close", "-") if r.get("last_close") else "-",
+                        ma_lbl or "MA": r.get("last_ma", "-") if r.get("last_ma") else "-",
                         "WVF": r.get("wvf", "-") if "error" not in r else "-",
-                        "Upper Band": r.get("upper_band", "-") if "error" not in r else "-",
                     })
                 st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
 
