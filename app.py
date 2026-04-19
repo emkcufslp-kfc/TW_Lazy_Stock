@@ -554,6 +554,130 @@ def main():
         )
         st.plotly_chart(fig_yield, use_container_width=True)
 
+    # ========== WILLIAMS VIX FIX 技術面掃描 ==========
+    wl_df = st.session_state.get("watchlist_df")
+    if wl_df is not None and not wl_df.empty:
+        st.markdown('<div class="section-header">📡 技術面警示 — Williams VIX Fix</div>', unsafe_allow_html=True)
+
+        st.markdown("""
+        <div class="rule-box">
+            <strong>📌 Williams VIX Fix 說明：</strong><br>
+            模擬 VIX 恐慌指數，<strong style="color:#00D4AA;">綠色柱</strong> 代表近期出現恐慌底部訊號——
+            當 WVF ≥ 布林上軌 <em>或</em> WVF ≥ 百分位高點時觸發。<br>
+            本功能掃描觀察清單各股，找出 <strong>過去 3 個交易日</strong> 出現綠色訊號者，列為潛在買入提示。
+        </div>
+        """, unsafe_allow_html=True)
+
+        with st.expander("⚙️ 指標參數（選填，預設值與 Pine Script 原版相同）"):
+            pc1, pc2, pc3 = st.columns(3)
+            wvf_pd  = pc1.number_input("回望期 pd", 5, 50, 22, help="highest(close, pd) 的回望天數")
+            wvf_bbl = pc2.number_input("BB 長度 bbl", 5, 50, 20, help="布林帶計算長度")
+            wvf_mult= pc3.number_input("BB 倍數 mult", 0.5, 5.0, 2.0, 0.1, help="布林帶標準差倍數")
+            pc4, pc5, pc6 = st.columns(3)
+            wvf_lb  = pc4.number_input("百分位回望 lb", 10, 200, 50, help="highest/lowest 百分位的回望天數")
+            wvf_ph  = pc5.number_input("高百分位 ph", 0.50, 1.00, 0.85, 0.01, help="rangeHigh = highest(wvf,lb) × ph")
+            wvf_lkb = pc6.number_input("訊號掃描天數", 1, 7, 3, help="檢查最近幾個交易日是否出現綠色柱")
+
+        scan_btn = st.button("📡 掃描觀察清單（Williams VIX Fix）", use_container_width=True)
+
+        if scan_btn:
+            from technical import check_signal, make_wvf_chart
+
+            stocks = wl_df[
+                [c for c in ["code", "name", "sector", "market", "current_yield_pct", "avg_5y_yield_pct"] if c in wl_df.columns]
+            ].to_dict("records")
+
+            results = []
+            bar = st.progress(0, text="掃描中…")
+            for i, s in enumerate(stocks):
+                sig = check_signal(
+                    str(s["code"]), s.get("market", "TWSE"),
+                    lookback_days=int(wvf_lkb),
+                    pd_=int(wvf_pd), bbl=int(wvf_bbl), mult=float(wvf_mult),
+                    lb=int(wvf_lb), ph=float(wvf_ph),
+                )
+                results.append({**s, **sig})
+                bar.progress((i + 1) / len(stocks), text=f"掃描中… {s['code']} {s.get('name','')}")
+            bar.empty()
+            st.session_state["wvf_results"] = results
+            st.session_state["wvf_lkb"] = int(wvf_lkb)
+
+        # ---------- 顯示結果 ----------
+        wvf_results = st.session_state.get("wvf_results")
+        if wvf_results:
+            from technical import make_wvf_chart
+
+            green_hits = [r for r in wvf_results if r.get("green") and "error" not in r]
+            no_signal  = [r for r in wvf_results if not r.get("green") and "error" not in r]
+            errors     = [r for r in wvf_results if "error" in r]
+            lkb = st.session_state.get("wvf_lkb", 3)
+
+            if green_hits:
+                st.markdown(
+                    f'<div style="font-size:1.1rem; font-weight:700; color:#00D4AA; margin:16px 0 8px;">'
+                    f'🟢 發現 {len(green_hits)} 檔潛在買入提示（近 {lkb} 日出現 WVF 綠色訊號）</div>',
+                    unsafe_allow_html=True,
+                )
+                for r in green_hits:
+                    code = str(r["code"])
+                    name = r.get("name", "")
+                    sector = r.get("sector", "")
+                    cy = r.get("current_yield_pct", 0)
+                    ay = r.get("avg_5y_yield_pct", 0)
+                    days_hit = r.get("days", 0)
+                    wvf_val = r.get("wvf", 0)
+                    ub_val  = r.get("upper_band", 0)
+                    rh_val  = r.get("range_high", 0)
+
+                    st.markdown(f"""
+                    <div style="
+                        background:linear-gradient(135deg,#0d2a1f 0%,#1a3a2a 100%);
+                        border:1px solid #00D4AA; border-left:5px solid #00D4AA;
+                        border-radius:12px; padding:16px 20px; margin-bottom:12px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-size:1.15rem; font-weight:700; color:#e0e0e0;">
+                                🟢 {code} &nbsp; {name}
+                            </span>
+                            <span style="font-size:0.82rem; color:#8892a4;">{sector}</span>
+                        </div>
+                        <div style="margin-top:8px; font-size:0.88rem; color:#b0b8c8;">
+                            殖利率：<strong style="color:#00D4AA;">{cy:.2f}%</strong> &nbsp;｜&nbsp;
+                            5年平均：<strong style="color:#00B4D8;">{ay:.2f}%</strong> &nbsp;｜&nbsp;
+                            訊號：近 {lkb} 日中 <strong style="color:#00D4AA;">{days_hit} 日</strong> 出現綠色柱
+                        </div>
+                        <div style="margin-top:6px; font-size:0.82rem; color:#6b7b8d;">
+                            WVF = {wvf_val:.2f} &nbsp;｜&nbsp;
+                            Upper Band = {ub_val:.2f} &nbsp;｜&nbsp;
+                            Range High = {rh_val:.2f}
+                        </div>
+                        <div style="margin-top:10px; font-size:0.85rem; color:#ffd700;">
+                            ⚠️ 建議留意此股，Williams VIX Fix 顯示潛在市場恐慌底部，可評估是否買入。
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+
+                    if r.get("wvf_data") is not None:
+                        with st.expander(f"📊 {code} {name} — WVF 走勢圖"):
+                            fig = make_wvf_chart(r, name)
+                            st.plotly_chart(fig, use_container_width=True)
+
+            else:
+                st.info(f"近 {lkb} 個交易日內，觀察清單中無股票出現 WVF 綠色訊號。")
+
+            # Summary table
+            with st.expander(f"📋 全部掃描結果（{len(no_signal)} 股無訊號 / {len(errors)} 股無資料）"):
+                rows = []
+                for r in wvf_results:
+                    rows.append({
+                        "代號": r.get("code",""), "名稱": r.get("name",""),
+                        "產業別": r.get("sector",""),
+                        "訊號": "🟢 是" if r.get("green") else ("⚠️ 無資料" if "error" in r else "—"),
+                        "觸發天數": r.get("days", 0) if "error" not in r else "-",
+                        "WVF": r.get("wvf", "-") if "error" not in r else "-",
+                        "Upper Band": r.get("upper_band", "-") if "error" not in r else "-",
+                    })
+                st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
+
     # ========== FOOTER ==========
     st.markdown("---")
     st.markdown("""
