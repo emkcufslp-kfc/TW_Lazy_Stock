@@ -331,17 +331,29 @@ def main():
 
         st.divider()
 
-        # 觀察清單日期
+        # 觀察清單日期 + Screen 按鈕
         today = date.today()
         watchlist_date = st.date_input(
             "📅 觀察清單日期",
-            value=today,
+            value=st.session_state.get("watchlist_date", today),
             min_value=today.replace(year=today.year - 10),
             max_value=today,
-            help="選擇標記此觀察清單的日期",
+            help="選擇標記此觀察清單的日期，每次更改日期後按 Screen 重新篩選",
+            key="watchlist_date_input",
         )
+        apply_btn = st.button("📋 Screen", use_container_width=True, type="primary")
 
-        apply_btn = st.button("🔍 套用篩選並建立觀察清單", use_container_width=True)
+        # 顯示上次篩選結果摘要
+        meta = st.session_state.get("watchlist_meta")
+        if meta:
+            prev_date = meta["date"].strftime("%d.%b.%Y")
+            prev_n = len(st.session_state.get("watchlist_df", []))
+            st.markdown(
+                f'<div style="font-size:0.75rem; color:#6b7b8d; padding:4px 2px;">'
+                f'上次篩選：{prev_date} · {prev_n} 檔 · '
+                f'殖利率 ≥ {meta["min_current"]:.1f}%</div>',
+                unsafe_allow_html=True,
+            )
 
         st.divider()
         st.markdown("""
@@ -376,15 +388,16 @@ def main():
     sort_cols, sort_asc = sort_map[sort_by]
     filtered = filtered.sort_values(sort_cols, ascending=sort_asc).reset_index(drop=True)
 
-    # 儲存觀察清單到 session state（按下按鈕時）
+    # 儲存觀察清單到 session state（按下 Screen 時）
     if apply_btn:
         st.session_state["watchlist_df"] = filtered.copy()
         st.session_state["watchlist_meta"] = {
             "min_current": min_current,
             "min_avg5": min_avg5,
             "market": market,
-            "date": watchlist_date,
+            "date": st.session_state["watchlist_date_input"],
         }
+        st.session_state["wvf_results"] = None  # 日期或條件變動後清除舊掃描結果
 
     # ========== KPI 卡片 ==========
     c1, c2, c3 = st.columns(3)
@@ -494,7 +507,7 @@ def main():
                 type="primary",
             )
         else:
-            st.info("👈 調整左側條件後，點擊「🔍 套用篩選並建立觀察清單」即可儲存。")
+            st.info("👈 在左側設定殖利率門檻與日期，點擊「📋 Screen」即可建立觀察清單。")
 
     # ========== 個股詳情 ==========
     if not filtered.empty:
