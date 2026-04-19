@@ -13,7 +13,7 @@ import streamlit as st
 import plotly.graph_objects as go
 import plotly.express as px
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, date, timedelta
 import os
 
 from data_sources import fetch_company_info
@@ -330,6 +330,20 @@ def main():
         )
 
         st.divider()
+
+        # 觀察清單日期
+        today = date.today()
+        watchlist_date = st.date_input(
+            "📅 觀察清單日期",
+            value=today,
+            min_value=today.replace(year=today.year - 10),
+            max_value=today,
+            help="選擇標記此觀察清單的日期",
+        )
+
+        apply_btn = st.button("🔍 套用篩選並建立觀察清單", use_container_width=True)
+
+        st.divider()
         st.markdown("""
         <div style="font-size:0.8rem; color:#6b7b8d; padding:8px;">
             💡 <strong>如何更新資料？</strong><br>
@@ -361,6 +375,16 @@ def main():
     }
     sort_cols, sort_asc = sort_map[sort_by]
     filtered = filtered.sort_values(sort_cols, ascending=sort_asc).reset_index(drop=True)
+
+    # 儲存觀察清單到 session state（按下按鈕時）
+    if apply_btn:
+        st.session_state["watchlist_df"] = filtered.copy()
+        st.session_state["watchlist_meta"] = {
+            "min_current": min_current,
+            "min_avg5": min_avg5,
+            "market": market,
+            "date": watchlist_date,
+        }
 
     # ========== KPI 卡片 ==========
     c1, c2, c3 = st.columns(3)
@@ -428,14 +452,49 @@ def main():
             height=min(400, 40 + len(display_df) * 35),
         )
 
-        # 下載 CSV
-        csv_bytes = filtered.to_csv(index=False, encoding="utf-8-sig").encode("utf-8-sig")
-        st.download_button(
-            "⬇️ 下載篩選結果 CSV",
-            csv_bytes,
-            file_name=f"tw_dividend_filtered_{datetime.now().strftime('%Y%m%d')}.csv",
-            mime="text/csv",
-        )
+        # ── 觀察清單儲存區 ──────────────────────────────────────────
+        wl = st.session_state.get("watchlist_df")
+        meta = st.session_state.get("watchlist_meta")
+
+        if wl is not None and meta is not None:
+            d = meta["date"]
+            date_str = d.strftime("%d.%b.%Y")          # e.g. 20.Apr.2026
+            c_pct = meta["min_current"]
+            a_pct = meta["min_avg5"]
+            # xx: 若兩個門檻相同就用一個數字，否則 c{x}-a{y}
+            if c_pct == a_pct:
+                xx = f"{c_pct:.1f}".rstrip("0").rstrip(".")
+            else:
+                xx = f"c{c_pct:.1f}-a{a_pct:.1f}".rstrip("0")
+            filename = f"TW_Div_{xx}_{date_str}.csv"
+
+            watchlist_cols = [
+                c for c in ["code", "name", "sector", "market", "price",
+                             "current_yield_pct", "avg_5y_yield_pct",
+                             "latest_paid_year", "latest_paid_total_div",
+                             "business_nature"]
+                if c in wl.columns
+            ]
+            wl_export = wl[watchlist_cols].copy()
+            wl_export.columns = [
+                {"code": "代號", "name": "名稱", "sector": "產業別",
+                 "market": "市場", "price": "現價",
+                 "current_yield_pct": "目前殖利率%", "avg_5y_yield_pct": "平均5年殖利率%",
+                 "latest_paid_year": "最新配年", "latest_paid_total_div": "最新總股利",
+                 "business_nature": "主要業務"}.get(c, c)
+                for c in watchlist_cols
+            ]
+
+            st.success(f"✅ 觀察清單已建立：**{filename}**（{len(wl)} 檔股票）")
+            st.download_button(
+                f"💾 下載觀察清單 {filename}",
+                wl_export.to_csv(index=False, encoding="utf-8-sig").encode("utf-8-sig"),
+                file_name=filename,
+                mime="text/csv",
+                type="primary",
+            )
+        else:
+            st.info("👈 調整左側條件後，點擊「🔍 套用篩選並建立觀察清單」即可儲存。")
 
     # ========== 個股詳情 ==========
     if not filtered.empty:
