@@ -127,6 +127,67 @@ def check_signal(
         return {"code": code, "green": False, "days": 0, "error": str(e)}
 
 
+def get_historical_prices_batch(
+    stocks: list[dict],
+    target_date,
+) -> dict[str, float]:
+    """
+    Fetch closing prices for multiple stocks on or just before target_date.
+
+    Parameters
+    ----------
+    stocks : list of {"code": str, "market": "TWSE"|"TPEX"}
+    target_date : datetime.date
+
+    Returns
+    -------
+    dict mapping code -> closing price
+    """
+    if not _HAS_YF or not stocks:
+        return {}
+
+    from datetime import timedelta
+
+    start = target_date - timedelta(days=7)
+    end   = target_date + timedelta(days=1)
+
+    ticker_to_code: dict[str, str] = {
+        (f"{s['code']}.TW" if s.get("market") == "TWSE" else f"{s['code']}.TWO"): str(s["code"])
+        for s in stocks
+    }
+
+    try:
+        tickers = list(ticker_to_code.keys())
+        raw = yf.download(tickers, start=str(start), end=str(end),
+                          progress=False, auto_adjust=True)
+        if raw.empty:
+            return {}
+
+        close = raw["Close"] if "Close" in raw.columns else raw
+
+        prices: dict[str, float] = {}
+        if hasattr(close.columns, "levels"):          # MultiIndex (multiple tickers)
+            for ticker, code in ticker_to_code.items():
+                try:
+                    col = close[ticker].dropna()
+                    if not col.empty:
+                        prices[code] = float(col.iloc[-1])
+                except Exception:
+                    pass
+        else:                                          # flat (single ticker)
+            code = list(ticker_to_code.values())[0]
+            col = close.dropna()
+            if not col.empty:
+                prices[code] = float(col.iloc[-1])
+
+        logger.info(f"Historical prices fetched: {len(prices)}/{len(stocks)} stocks")
+        return prices
+
+    except Exception as e:
+        logger.warning(f"Batch historical price fetch failed: {e}")
+        return {}
+
+
 def make_wvf_chart(result: dict, name: str, n_days: int = 60):
     """Build a Plotly figure of the WVF for the last n_days sessions."""
     import plotly.graph_objects as go

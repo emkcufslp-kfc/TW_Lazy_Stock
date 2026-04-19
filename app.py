@@ -388,16 +388,88 @@ def main():
     sort_cols, sort_asc = sort_map[sort_by]
     filtered = filtered.sort_values(sort_cols, ascending=sort_asc).reset_index(drop=True)
 
+    # ---- 歷史殖利率重算輔助函式 ----
+    def _hist_metrics(sub_div: pd.DataFrame, price: float) -> dict | None:
+        """Recompute yield metrics from historical dividend data at a given price."""
+        yearly = sub_div.groupby("year")["total_div"].sum()
+        if yearly.empty or price <= 0:
+            return None
+        latest_year = int(yearly.index.max())
+        latest_div  = float(yearly[latest_year])
+        recent_5y   = yearly.sort_index().tail(5)
+        sum_5y      = float(recent_5y.sum())
+        return {
+            "current_yield_pct":    round(latest_div / price * 100, 4),
+            "avg_5y_yield_pct":     round(sum_5y / len(recent_5y) / price * 100, 4),
+            "latest_paid_year":     latest_year,
+            "latest_paid_total_div":round(latest_div, 4),
+            "sum_5y_div":           round(sum_5y, 4),
+        }
+
     # 儲存觀察清單到 session state（按下 Screen 時）
     if apply_btn:
-        st.session_state["watchlist_df"] = filtered.copy()
+        target_date = st.session_state["watchlist_date_input"]
+        today_date  = date.today()
+
+        if target_date < today_date:
+            # ── 歷史模式：用 yfinance 取得該日股價，重算殖利率再篩選 ──
+            with st.spinner(f"正在取得 {target_date.strftime('%Y-%m-%d')} 歷史股價（共 {len(screened)} 檔）…"):
+                from technical import get_historical_prices_batch
+                stock_list = [
+                    {"code": str(r["code"]), "market": r["market"]}
+                    for _, r in screened.iterrows()
+                ]
+                hist_prices = get_historical_prices_batch(stock_list, target_date)
+
+            target_year = target_date.year
+            rows = []
+            for _, row in screened.iterrows():
+                code  = str(row["code"])
+                price = hist_prices.get(code)
+                if not price or price <= 0:
+                    continue
+                sub_d = div_hist[div_hist["code"].astype(str) == code]
+                sub_d = sub_d[sub_d["year"] < target_year]
+                if sub_d.empty:
+                    continue
+                m = _hist_metrics(sub_d, price)
+                if m is None:
+                    continue
+                rows.append({"code": code, "name": row["name"], "market": row["market"],
+                             "price": price,
+                             "sector": str(row.get("sector", "")),
+                             "business_nature": str(row.get("business_nature", "")),
+                             **m})
+
+            if rows:
+                hist_df = pd.DataFrame(rows)
+                hist_df["code"] = hist_df["code"].astype(str)
+                hist_filtered = hist_df[
+                    (hist_df["current_yield_pct"] >= min_current) &
+                    (hist_df["avg_5y_yield_pct"]  >= min_avg5)
+                ]
+                if market == "上市 (TWSE)":
+                    hist_filtered = hist_filtered[hist_filtered["market"] == "TWSE"]
+                elif market == "上櫃 (TPEX)":
+                    hist_filtered = hist_filtered[hist_filtered["market"] == "TPEX"]
+                sort_cols2, sort_asc2 = sort_map[sort_by]
+                hist_filtered = hist_filtered.sort_values(sort_cols2, ascending=sort_asc2).reset_index(drop=True)
+                st.session_state["watchlist_df"] = hist_filtered
+                st.success(f"歷史篩選完成：{len(hist_prices)} 檔取得股價 → 篩選後 {len(hist_filtered)} 檔")
+            else:
+                st.warning("無法取得該日期的歷史股價，已改用當前資料。")
+                st.session_state["watchlist_df"] = filtered.copy()
+        else:
+            # ── 今日模式：直接使用預建資料 ──
+            st.session_state["watchlist_df"] = filtered.copy()
+
         st.session_state["watchlist_meta"] = {
             "min_current": min_current,
-            "min_avg5": min_avg5,
-            "market": market,
-            "date": st.session_state["watchlist_date_input"],
+            "min_avg5":    min_avg5,
+            "market":      market,
+            "date":        target_date,
         }
-        st.session_state["wvf_results"] = None  # 日期或條件變動後清除舊掃描結果
+        st.session_state["wvf_results"] = None  # 清除舊掃描結果
 
     # ========== KPI 卡片 ==========
     c1, c2, c3 = st.columns(3)
@@ -568,19 +640,59 @@ def main():
         st.plotly_chart(fig_yield, use_container_width=True)
 
     # ========== WILLIAMS VIX FIX 技術面掃描 ==========
-    wl_df = st.session_state.get("watchlist_df")
-    if wl_df is not None and not wl_df.empty:
-        st.markdown('<div class="section-header">📡 技術面警示 — Williams VIX Fix</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-header">📡 技術面警示 — Williams VIX Fix</div>', unsafe_allow_html=True)
 
-        st.markdown("""
-        <div class="rule-box">
-            <strong>📌 Williams VIX Fix 說明：</strong><br>
-            模擬 VIX 恐慌指數，<strong style="color:#00D4AA;">綠色柱</strong> 代表近期出現恐慌底部訊號——
-            當 WVF ≥ 布林上軌 <em>或</em> WVF ≥ 百分位高點時觸發。<br>
-            本功能掃描觀察清單各股，找出 <strong>過去 3 個交易日</strong> 出現綠色訊號者，列為潛在買入提示。
-        </div>
-        """, unsafe_allow_html=True)
+    st.markdown("""
+    <div class="rule-box">
+        <strong>📌 Williams VIX Fix 說明：</strong><br>
+        模擬 VIX 恐慌指數，<strong style="color:#00D4AA;">綠色柱</strong> 代表近期出現恐慌底部訊號——
+        當 WVF ≥ 布林上軌 <em>或</em> WVF ≥ 百分位高點時觸發。<br>
+        本功能掃描觀察清單各股，找出 <strong>過去 3 個交易日</strong> 出現綠色訊號者，列為潛在買入提示。
+    </div>
+    """, unsafe_allow_html=True)
 
+    # ── 選擇掃描來源 ──
+    wl_session = st.session_state.get("watchlist_df")
+    wl_meta    = st.session_state.get("watchlist_meta")
+
+    src_options = []
+    if wl_session is not None and not wl_session.empty:
+        label = "目前觀察清單（session）"
+        if wl_meta:
+            label += f" — {wl_meta['date'].strftime('%d.%b.%Y')} · {len(wl_session)} 檔"
+        src_options.append(label)
+    src_options.append("上傳觀察清單 CSV")
+
+    wvf_src = st.radio("📂 掃描來源", src_options, horizontal=True, key="wvf_src")
+
+    wl_df: pd.DataFrame | None = None
+    if wvf_src.startswith("目前觀察清單"):
+        wl_df = wl_session
+    else:
+        uploaded = st.file_uploader(
+            "上傳觀察清單 CSV（格式：TW_Div_xx_dd.mmm.yyyy.csv）",
+            type=["csv"], key="wvf_upload",
+        )
+        if uploaded is not None:
+            try:
+                raw_csv = pd.read_csv(uploaded)
+                # Map 繁體中文欄位 → 內部欄位名
+                col_map = {"代號": "code", "名稱": "name", "產業別": "sector",
+                           "市場": "market", "現價": "price",
+                           "目前殖利率%": "current_yield_pct",
+                           "平均5年殖利率%": "avg_5y_yield_pct"}
+                raw_csv = raw_csv.rename(columns=col_map)
+                raw_csv["code"] = raw_csv["code"].astype(str)
+                if "market" not in raw_csv.columns:
+                    raw_csv["market"] = "TWSE"   # fallback
+                wl_df = raw_csv
+                st.success(f"已載入：{uploaded.name}（{len(wl_df)} 檔股票）")
+            except Exception as e:
+                st.error(f"CSV 解析失敗：{e}")
+
+    if wl_df is None or wl_df.empty:
+        st.info("👈 請先建立觀察清單（點擊 Screen）或上傳 CSV，再執行掃描。")
+    else:
         with st.expander("⚙️ 指標參數（選填，預設值與 Pine Script 原版相同）"):
             pc1, pc2, pc3 = st.columns(3)
             wvf_pd  = pc1.number_input("回望期 pd", 5, 50, 22, help="highest(close, pd) 的回望天數")
@@ -591,7 +703,7 @@ def main():
             wvf_ph  = pc5.number_input("高百分位 ph", 0.50, 1.00, 0.85, 0.01, help="rangeHigh = highest(wvf,lb) × ph")
             wvf_lkb = pc6.number_input("訊號掃描天數", 1, 7, 3, help="檢查最近幾個交易日是否出現綠色柱")
 
-        scan_btn = st.button("📡 掃描觀察清單（Williams VIX Fix）", use_container_width=True)
+        scan_btn = st.button("📡 掃描（Williams VIX Fix）", use_container_width=True)
 
         if scan_btn:
             from technical import check_signal, make_wvf_chart
