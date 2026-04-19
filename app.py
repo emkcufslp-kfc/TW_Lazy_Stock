@@ -299,6 +299,10 @@ def main():
         </div>
         """, unsafe_allow_html=True)
 
+        if st.button("🔄 清除快取並重新載入"):
+            st.cache_data.clear()
+            st.rerun()
+
         st.divider()
 
         min_current = st.slider(
