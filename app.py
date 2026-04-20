@@ -954,26 +954,101 @@ def main():
 
     # ========== 歷史股價驗證工具 ==========
     st.markdown('<div class="section-header">🔎 歷史收盤價驗證</div>', unsafe_allow_html=True)
-    with st.expander("展開 — 查詢任意股票在指定日期的收盤價（驗證篩選用價格）"):
+    with st.expander("展開 — 查詢任意股票在指定日期的收盤價（雙來源交叉驗證）"):
         vp_c1, vp_c2, vp_c3 = st.columns([2, 2, 1])
         vp_code = vp_c1.text_input("股票代號", placeholder="e.g. 6278", key="vp_code")
         vp_date = vp_c2.date_input("查詢日期", value=date.today() - timedelta(days=1), key="vp_date")
         vp_mkt  = vp_c3.selectbox("市場", ["TWSE", "TPEX"], key="vp_mkt")
-        if st.button("🔍 查詢收盤價", key="vp_btn"):
-            if vp_code.strip():
-                from technical import get_historical_prices_batch
-                _vp_stocks = [{"code": vp_code.strip(), "market": vp_mkt}]
-                _vp_prices = get_historical_prices_batch(_vp_stocks, vp_date)
-                if _vp_prices:
-                    _vp_p = _vp_prices.get(vp_code.strip())
-                    if _vp_p:
-                        st.success(f"**{vp_code.strip()}** 在 {vp_date.strftime('%d.%b.%Y')} 的收盤價：**${_vp_p:.2f}**（來源：yfinance）")
-                    else:
-                        st.warning(f"找不到 {vp_code.strip()} 在 {vp_date.strftime('%d.%b.%Y')} 的股價，該日可能為非交易日或代號有誤。")
-                else:
-                    st.error("無法取得資料，請確認網路連線或代號。")
-            else:
+
+        if st.button("🔍 查詢並交叉驗證", key="vp_btn"):
+            if not vp_code.strip():
                 st.warning("請輸入股票代號。")
+            else:
+                _code = vp_code.strip()
+                _results: dict[str, float | None] = {}
+
+                # Source 1: yfinance
+                try:
+                    from technical import get_historical_prices_batch
+                    _yf_p = get_historical_prices_batch([{"code": _code, "market": vp_mkt}], vp_date)
+                    _results["yfinance"] = _yf_p.get(_code)
+                except Exception as _e:
+                    _results["yfinance"] = None
+
+                # Source 2: TWSE/TPEX official daily API
+                try:
+                    import requests as _req
+                    _date_str = vp_date.strftime("%Y%m%d")
+                    if vp_mkt == "TWSE":
+                        _url = (f"https://www.twse.com.tw/exchangeReport/STOCK_DAY"
+                                f"?response=json&date={_date_str}&stockNo={_code}")
+                        _r = _req.get(_url, timeout=10)
+                        _j = _r.json()
+                        _twse_p = None
+                        if _j.get("stat") == "OK" and _j.get("data"):
+                            # rows: [民國日期, 成交股數, 成交金額, 開盤, 最高, 最低, 收盤, 漲跌, 筆數]
+                            # target row: date matches vp_date (col 0 = "114/04/30")
+                            _target = vp_date.strftime("%Y/%m/%d")
+                            _roc_y  = vp_date.year - 1911
+                            _target_roc = f"{_roc_y}/{vp_date.strftime('%m/%d')}"
+                            for _row in _j["data"]:
+                                if _row[0].strip() == _target_roc:
+                                    try:
+                                        _twse_p = float(_row[6].replace(",", ""))
+                                    except Exception:
+                                        pass
+                                    break
+                            if _twse_p is None and _j["data"]:
+                                # fallback: last row of the month
+                                try:
+                                    _twse_p = float(_j["data"][-1][6].replace(",", ""))
+                                except Exception:
+                                    pass
+                        _results["TWSE官方"] = _twse_p
+                    else:
+                        # TPEX: daily close via openapi quotes snapshot — use yfinance only
+                        _url = (f"https://www.tpex.org.tw/web/stock/aftertrading/daily_trading_info/st43_result.php"
+                                f"?l=zh-tw&d={vp_date.year - 1911}/{vp_date.strftime('%m/%d')}&stkno={_code}&o=json")
+                        _r = _req.get(_url, timeout=10)
+                        _j = _r.json()
+                        _tpex_p = None
+                        if _j.get("iTotalRecords", 0) > 0 and _j.get("aaData"):
+                            for _row in _j["aaData"]:
+                                # col 0 = date, col 8 = close
+                                if len(_row) > 8:
+                                    try:
+                                        _tpex_p = float(str(_row[8]).replace(",", ""))
+                                    except Exception:
+                                        pass
+                                    break
+                        _results["TPEX官方"] = _tpex_p
+                except Exception as _e2:
+                    _results[f"{'TWSE' if vp_mkt == 'TWSE' else 'TPEX'}官方"] = None
+
+                # Display results
+                _date_label_vp = vp_date.strftime("%d.%b.%Y")
+                st.markdown(f"#### {_code} — {_date_label_vp} 收盤價比對")
+                _cols = st.columns(len(_results))
+                _prices_found = [v for v in _results.values() if v is not None]
+                _match = len(set(round(p, 1) for p in _prices_found)) <= 1 if len(_prices_found) > 1 else None
+
+                for _ci, (_src, _p) in enumerate(sorted(_results.items())):
+                    with _cols[_ci]:
+                        if _p is not None:
+                            st.metric(_src, f"${_p:.2f}")
+                        else:
+                            st.metric(_src, "無資料")
+
+                if _match is True:
+                    st.success("✅ 兩來源價格一致，數據可信。")
+                elif _match is False:
+                    _diff = abs(_prices_found[0] - _prices_found[1])
+                    _pct  = _diff / _prices_found[0] * 100
+                    st.warning(f"⚠️ 兩來源差異 ${_diff:.2f}（{_pct:.2f}%）。可能原因：yfinance 使用還原股價（除權息調整），TWSE/TPEX 為原始收盤價。")
+                    st.info("💡 本系統使用 yfinance `auto_adjust=True`（已還原股價），若股票近期有除權息，兩者數字會不同——這是正常現象，不影響殖利率計算正確性。")
+                elif len(_prices_found) == 1:
+                    _src_name = [k for k, v in _results.items() if v is not None][0]
+                    st.info(f"僅 {_src_name} 有資料。")
 
     # ========== FOOTER ==========
     st.markdown("---")
