@@ -429,7 +429,7 @@ def main():
                 if not price or price <= 0:
                     continue
                 sub_d = div_hist[div_hist["code"].astype(str) == code]
-                sub_d = sub_d[sub_d["year"] < target_year]
+                sub_d = sub_d[sub_d["year"] <= target_year]
                 if sub_d.empty:
                     continue
                 m = _hist_metrics(sub_d, price)
