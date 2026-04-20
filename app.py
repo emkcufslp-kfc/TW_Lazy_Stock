@@ -900,33 +900,30 @@ def main():
                     import html as _html
                     _name_s   = _html.escape(str(name))
                     _sector_s = _html.escape(str(sector))
-                    st.markdown(f"""
-                    <div style="
-                        background:linear-gradient(135deg,#0d2a1f 0%,#1a3a2a 100%);
-                        border:1px solid #00D4AA; border-left:5px solid #00D4AA;
-                        border-radius:12px; padding:16px 20px; margin-bottom:12px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-size:1.15rem; font-weight:700; color:#e0e0e0;">
-                                🟢 {code} &nbsp; {_name_s}
-                            </span>
-                            <span style="font-size:0.82rem; color:#8892a4;">{_sector_s}</span>
-                        </div>
-                        <div style="margin-top:8px; font-size:0.88rem; color:#b0b8c8;">
-                            殖利率：<strong style="color:#00D4AA;">{cy:.2f}%</strong> &nbsp;｜&nbsp;
-                            5年平均：<strong style="color:#00B4D8;">{ay:.2f}%</strong> &nbsp;｜&nbsp;
-                            訊號：近 {lkb} 日中 <strong style="color:#00D4AA;">{days_hit} 日</strong> 出現綠色柱
-                        </div>
-                        <div style="margin-top:6px; font-size:0.82rem; color:#6b7b8d;">
-                            WVF = {wvf_val:.2f} &nbsp;｜&nbsp;
-                            Upper Band = {ub_val:.2f} &nbsp;｜&nbsp;
-                            Range High = {rh_val:.2f}
-                        </div>
-                        {ma_row}
-                        <div style="margin-top:10px; font-size:0.85rem; color:#ffd700;">
-                            &#9888; 建議留意此股，Williams VIX Fix 顯示潛在市場恐慌底部，可評估是否買入。
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
+                    # Build card as single string — no blank lines that break markdown HTML blocks
+                    _card = (
+                        '<div style="background:linear-gradient(135deg,#0d2a1f 0%,#1a3a2a 100%);'
+                        'border:1px solid #00D4AA;border-left:5px solid #00D4AA;'
+                        'border-radius:12px;padding:16px 20px;margin-bottom:12px;">'
+                        '<div style="display:flex;justify-content:space-between;align-items:center;">'
+                        f'<span style="font-size:1.15rem;font-weight:700;color:#e0e0e0;">🟢 {code} &nbsp; {_name_s}</span>'
+                        f'<span style="font-size:0.82rem;color:#8892a4;">{_sector_s}</span>'
+                        '</div>'
+                        '<div style="margin-top:8px;font-size:0.88rem;color:#b0b8c8;">'
+                        f'殖利率：<strong style="color:#00D4AA;">{cy:.2f}%</strong> &nbsp;｜&nbsp;'
+                        f'5年平均：<strong style="color:#00B4D8;">{ay:.2f}%</strong> &nbsp;｜&nbsp;'
+                        f'訊號：近 {lkb} 日中 <strong style="color:#00D4AA;">{days_hit} 日</strong> 出現綠色柱'
+                        '</div>'
+                        '<div style="margin-top:6px;font-size:0.82rem;color:#6b7b8d;">'
+                        f'WVF = {wvf_val:.2f} &nbsp;｜&nbsp;Upper Band = {ub_val:.2f} &nbsp;｜&nbsp;Range High = {rh_val:.2f}'
+                        '</div>'
+                        + ma_row +
+                        '<div style="margin-top:10px;font-size:0.85rem;color:#ffd700;">'
+                        '&#9888; 建議留意此股，Williams VIX Fix 顯示潛在市場恐慌底部，可評估是否買入。'
+                        '</div>'
+                        '</div>'
+                    )
+                    st.markdown(_card, unsafe_allow_html=True)
 
                     if r.get("wvf_data") is not None:
                         with st.expander(f"📊 {code} {name} — WVF 走勢圖"):
@@ -954,6 +951,29 @@ def main():
                         "WVF": r.get("wvf", "-") if "error" not in r else "-",
                     })
                 st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
+
+    # ========== 歷史股價驗證工具 ==========
+    st.markdown('<div class="section-header">🔎 歷史收盤價驗證</div>', unsafe_allow_html=True)
+    with st.expander("展開 — 查詢任意股票在指定日期的收盤價（驗證篩選用價格）"):
+        vp_c1, vp_c2, vp_c3 = st.columns([2, 2, 1])
+        vp_code = vp_c1.text_input("股票代號", placeholder="e.g. 6278", key="vp_code")
+        vp_date = vp_c2.date_input("查詢日期", value=date.today() - timedelta(days=1), key="vp_date")
+        vp_mkt  = vp_c3.selectbox("市場", ["TWSE", "TPEX"], key="vp_mkt")
+        if st.button("🔍 查詢收盤價", key="vp_btn"):
+            if vp_code.strip():
+                from technical import get_historical_prices_batch
+                _vp_stocks = [{"code": vp_code.strip(), "market": vp_mkt}]
+                _vp_prices = get_historical_prices_batch(_vp_stocks, vp_date)
+                if _vp_prices:
+                    _vp_p = _vp_prices.get(vp_code.strip())
+                    if _vp_p:
+                        st.success(f"**{vp_code.strip()}** 在 {vp_date.strftime('%d.%b.%Y')} 的收盤價：**${_vp_p:.2f}**（來源：yfinance）")
+                    else:
+                        st.warning(f"找不到 {vp_code.strip()} 在 {vp_date.strftime('%d.%b.%Y')} 的股價，該日可能為非交易日或代號有誤。")
+                else:
+                    st.error("無法取得資料，請確認網路連線或代號。")
+            else:
+                st.warning("請輸入股票代號。")
 
     # ========== FOOTER ==========
     st.markdown("---")
