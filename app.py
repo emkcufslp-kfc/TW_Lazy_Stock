@@ -978,38 +978,42 @@ def main():
                 # Source 2: TWSE/TPEX official daily API
                 try:
                     import requests as _req
+                    import urllib3; urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
                     _date_str = vp_date.strftime("%Y%m%d")
                     if vp_mkt == "TWSE":
                         _url = (f"https://www.twse.com.tw/exchangeReport/STOCK_DAY"
                                 f"?response=json&date={_date_str}&stockNo={_code}")
-                        _r = _req.get(_url, timeout=10)
+                        _r = _req.get(_url, timeout=10, verify=False)
                         _j = _r.json()
                         _twse_p = None
+                        _twse_actual_date = None
                         if _j.get("stat") == "OK" and _j.get("data"):
                             # rows: [民國日期, 成交股數, 成交金額, 開盤, 最高, 最低, 收盤, 漲跌, 筆數]
-                            # target row: date matches vp_date (col 0 = "114/04/30")
-                            _target = vp_date.strftime("%Y/%m/%d")
-                            _roc_y  = vp_date.year - 1911
+                            # Find last trading day on or before vp_date
+                            from datetime import datetime as _dt
+                            _roc_y = vp_date.year - 1911
                             _target_roc = f"{_roc_y}/{vp_date.strftime('%m/%d')}"
+                            _best_row = None
                             for _row in _j["data"]:
-                                if _row[0].strip() == _target_roc:
-                                    try:
-                                        _twse_p = float(_row[6].replace(",", ""))
-                                    except Exception:
-                                        pass
+                                _d_str = _row[0].strip()  # e.g. "114/04/18"
+                                if _d_str <= _target_roc:
+                                    _best_row = _row
+                                else:
                                     break
-                            if _twse_p is None and _j["data"]:
-                                # fallback: last row of the month
+                            if _best_row:
                                 try:
-                                    _twse_p = float(_j["data"][-1][6].replace(",", ""))
+                                    _twse_p = float(_best_row[6].replace(",", ""))
+                                    _twse_actual_date = _best_row[0].strip()
                                 except Exception:
                                     pass
                         _results["TWSE官方"] = _twse_p
+                        if _twse_actual_date and _twse_actual_date != f"{vp_date.year - 1911}/{vp_date.strftime('%m/%d')}":
+                            st.caption(f"ℹ️ {vp_date.strftime('%d.%b.%Y')} 為非交易日，TWSE 使用前一交易日 {_twse_actual_date} 的收盤價。")
                     else:
                         # TPEX: daily close via openapi quotes snapshot — use yfinance only
                         _url = (f"https://www.tpex.org.tw/web/stock/aftertrading/daily_trading_info/st43_result.php"
                                 f"?l=zh-tw&d={vp_date.year - 1911}/{vp_date.strftime('%m/%d')}&stkno={_code}&o=json")
-                        _r = _req.get(_url, timeout=10)
+                        _r = _req.get(_url, timeout=10, verify=False)
                         _j = _r.json()
                         _tpex_p = None
                         if _j.get("iTotalRecords", 0) > 0 and _j.get("aaData"):

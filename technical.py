@@ -190,11 +190,14 @@ def get_historical_prices_batch(
 
     try:
         tickers = list(ticker_to_code.keys())
+        # auto_adjust=False → raw unadjusted close prices (actual market price on that day)
+        # auto_adjust=True would back-adjust for dividends, giving wrong historical prices
         raw = yf.download(tickers, start=str(start), end=str(end),
-                          progress=False, auto_adjust=True)
+                          progress=False, auto_adjust=False)
         if raw.empty:
             return {}
 
+        # With auto_adjust=False, yfinance returns both "Close" and "Adj Close"
         close = raw["Close"] if "Close" in raw.columns else raw
 
         prices: dict[str, float] = {}
