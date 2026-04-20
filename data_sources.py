@@ -53,6 +53,10 @@ TPEX_QUOTES = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_quotes"
 # 公司基本資料（產業別、主要業務）
 TWSE_COMPANY_INFO_URL = "https://openapi.twse.com.tw/v1/opendata/t187ap03_L"
 TPEX_PERATIO_URL = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_peratio_analysis"
+TPEX_COMPANY_INFO_URL = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O"
+
+# yfinance industry cache file
+_YF_CACHE_FILE = Path("data/yf_industry_cache.json")
 
 # 產業代碼 → 繁體中文名稱（TWSE/TPEX 共用，t187ap03_L 的 產業別 為數字代碼）
 _INDUSTRY_CODE_MAP: dict[str, str] = {
@@ -165,11 +169,13 @@ def fetch_tpex_stocks() -> pd.DataFrame:
         if math.isnan(price) or price <= 0:
             continue
         name = str(item.get("CompanyName", "")).strip()
+        trade_value = to_float(item.get("TransactionAmount", "0"))
         rows.append({
             "code": code,
             "name": name,
             "market": "TPEX",
             "price": price,
+            "trade_value": trade_value if not math.isnan(trade_value) else 0.0,
         })
 
     df = pd.DataFrame(rows)
@@ -219,33 +225,86 @@ def _resolve_sector(raw: str) -> str:
     return raw
 
 
-def fetch_company_info() -> pd.DataFrame:
-    """從 TWSE/TPEX OpenAPI 取得公司產業別與主要業務描述。
+def _load_yf_cache() -> dict:
+    """Load the yfinance industry cache from disk (code -> {sector, industry})."""
+    if _YF_CACHE_FILE.exists():
+        import json
+        try:
+            return json.loads(_YF_CACHE_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {}
+
+
+def _save_yf_cache(cache: dict) -> None:
+    """Persist the yfinance industry cache to disk."""
+    import json
+    _YF_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    _YF_CACHE_FILE.write_text(json.dumps(cache, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def fetch_yf_industry(codes: list[str], markets: dict[str, str]) -> dict[str, dict]:
+    """Fetch sector/industry from yfinance for codes not yet in cache.
+
+    Parameters
+    ----------
+    codes : list of stock code strings
+    markets : dict mapping code -> "TWSE" or "TPEX"
+
+    Returns
+    -------
+    dict  code -> {"sector": str, "industry": str}
+    """
+    try:
+        import yfinance as yf
+    except ImportError:
+        logger.warning("yfinance not installed — skipping yfinance industry fetch")
+        return {}
+
+    cache = _load_yf_cache()
+    missing = [c for c in codes if c not in cache]
+    logger.info(f"yfinance industry: {len(missing)} 筆待查（快取 {len(cache)} 筆）")
+
+    for code in missing:
+        mkt = markets.get(code, "TWSE")
+        suffix = ".TW" if mkt == "TWSE" else ".TWO"
+        try:
+            info = yf.Ticker(f"{code}{suffix}").info
+            cache[code] = {
+                "sector":   str(info.get("sector",   "") or ""),
+                "industry": str(info.get("industry", "") or ""),
+            }
+        except Exception as e:
+            logger.debug(f"[{code}] yfinance info failed: {e}")
+            cache[code] = {"sector": "", "industry": ""}
+        time.sleep(0.3)
+
+    _save_yf_cache(cache)
+    return cache
+
+
+def fetch_company_info(universe: Optional[pd.DataFrame] = None) -> pd.DataFrame:
+    """從 TWSE/TPEX OpenAPI 及 yfinance 取得公司產業別與主要業務描述。
+
+    資料來源優先順序：
+    1. TWSE t187ap03_L → 產業別代碼 → _INDUSTRY_CODE_MAP（繁中）
+    2. TPEX mopsfin_t187ap03_O → SecuritiesIndustryCode → _INDUSTRY_CODE_MAP
+    3. yfinance .info → sector / industry（英文，作為 business_nature）
+
+    Parameters
+    ----------
+    universe : pd.DataFrame, optional
+        若提供，用於 yfinance 查詢時的 market 對照。
+        需含 'code' 與 'market' 欄。
 
     Returns
     -------
     pd.DataFrame
-        欄位: code, sector（繁體中文產業別）, business_nature（主要業務）
+        欄位: code, sector（繁體中文產業別）, business_nature（英文 industry）
     """
-    rows = []
+    rows: list[dict] = []
 
-    # --- Step 1: TWSE 產業別 — 從 BWIBBU_ALL 取得中文 IndutryName ---
-    twse_sector: dict[str, str] = {}
-    try:
-        r = requests.get(TWSE_BWIBBU_ALL, headers=HEADERS, timeout=15, verify=False)
-        r.raise_for_status()
-        for item in r.json():
-            code = normalize_code(str(item.get("Code", "")))
-            if code is None:
-                continue
-            name = str(item.get("IndutryName", "")).strip()  # 注意 TWSE 欄位有拼字錯誤
-            if name:
-                twse_sector[code] = name
-        logger.info(f"TWSE BWIBBU_ALL 產業別: {len(twse_sector)} 筆")
-    except Exception as e:
-        logger.warning(f"TWSE BWIBBU_ALL 取得失敗: {e}")
-
-    # --- Step 2: TWSE 主要業務 — 從 t187ap03_L 取得 ---
+    # --- Step 1: TWSE — t187ap03_L 含產業別代碼 ---
     try:
         r = requests.get(TWSE_COMPANY_INFO_URL, headers=HEADERS, timeout=15, verify=False)
         r.raise_for_status()
@@ -253,77 +312,102 @@ def fetch_company_info() -> pd.DataFrame:
             code = normalize_code(str(item.get("公司代號", "")))
             if code is None:
                 continue
-            # 優先用 BWIBBU_ALL 的中文産業別；fallback 到代碼對照表
-            sector = twse_sector.get(code, _resolve_sector(str(item.get("產業別", ""))))
-            business = str(item.get("主要業務", "") or item.get("主要經營業務", "")).strip()
-            rows.append({"code": code, "sector": sector, "business_nature": business})
+            sector = _resolve_sector(str(item.get("產業別", "")))
+            rows.append({"code": code, "sector": sector, "business_nature": ""})
         logger.info(f"TWSE t187ap03_L 公司資料: {len(rows)} 筆")
     except Exception as e:
         logger.warning(f"TWSE t187ap03_L 取得失敗: {e}")
 
     twse_count = len(rows)
 
-    # --- Step 3: TPEX 産業別 — 從 peratio_analysis 取得（含中文 IndustryType）---
+    # --- Step 2: TPEX — mopsfin_t187ap03_O 含 SecuritiesIndustryCode ---
     try:
-        r = requests.get(TPEX_PERATIO_URL, headers=HEADERS, timeout=15, verify=False)
+        r = requests.get(TPEX_COMPANY_INFO_URL, headers=HEADERS, timeout=15, verify=False)
         r.raise_for_status()
         for item in r.json():
             code = normalize_code(str(item.get("SecuritiesCompanyCode", "")))
             if code is None:
                 continue
-            sector_raw = str(item.get("IndustryType", "") or item.get("industryType", "")).strip()
-            rows.append({
-                "code": code,
-                "sector": _resolve_sector(sector_raw),
-                "business_nature": "",  # TPEX peratio API 不含業務描述
-            })
-        logger.info(f"TPEX peratio 公司資料: {len(rows) - twse_count} 筆")
+            sector = _resolve_sector(str(item.get("SecuritiesIndustryCode", "")))
+            rows.append({"code": code, "sector": sector, "business_nature": ""})
+        logger.info(f"TPEX mopsfin_t187ap03_O 公司資料: {len(rows) - twse_count} 筆")
     except Exception as e:
-        logger.warning(f"TPEX peratio 取得失敗: {e}")
+        logger.warning(f"TPEX mopsfin_t187ap03_O 取得失敗: {e}")
 
     if not rows:
         return pd.DataFrame(columns=["code", "sector", "business_nature"])
 
-    df = pd.DataFrame(rows)
-    df = df.drop_duplicates("code", keep="first")
+    df = pd.DataFrame(rows).drop_duplicates("code", keep="first")
+
+    # --- Step 3: yfinance industry → business_nature ---
+    if universe is not None and not universe.empty:
+        markets = {str(r["code"]): r["market"] for _, r in universe.iterrows()}
+    else:
+        markets = {r["code"]: "TWSE" for _, r in df.iterrows()}
+
+    yf_data = fetch_yf_industry(df["code"].tolist(), markets)
+    if yf_data:
+        df["business_nature"] = df["code"].map(
+            lambda c: yf_data.get(c, {}).get("industry", "")
+        )
+        # Fill sector from yfinance where TWSE/TPEX code mapping is empty
+        def _fill_sector(row):
+            if row["sector"]:
+                return row["sector"]
+            return yf_data.get(row["code"], {}).get("sector", "")
+        df["sector"] = df.apply(_fill_sector, axis=1)
+
     return df
 
 
 def fetch_full_universe(top_n: int = 300) -> pd.DataFrame:
-    """取得完整股票清單（TWSE + TPEX），並篩選市值前 N 名。
+    """取得完整股票清單（TWSE + TPEX），各自依成交金額排名後合併取前 N 名。
 
     Parameters
     ----------
     top_n : int
-        保留前 N 檔股票（依成交金額代理市值排序）。
+        TWSE + TPEX 合計保留股票數。
+        TWSE 取 top_n * 0.75，TPEX 取 top_n * 0.25（各市場獨立排名）。
 
     Returns
     -------
     pd.DataFrame
         欄位: code, name, market, price, sector, business_nature
     """
-    twse = fetch_twse_stocks()
-    tpex = fetch_tpex_stocks()
+    twse_raw = fetch_twse_stocks()
+    tpex_raw = fetch_tpex_stocks()
 
-    universe = pd.concat([twse, tpex], ignore_index=True)
-
-    if universe.empty:
+    if twse_raw.empty and tpex_raw.empty:
         logger.error("無法取得任何股票資料")
         return pd.DataFrame()
 
-    # 使用 TWSE 成交金額作為市值排序代理
+    # --- TWSE：用 STOCK_DAY_ALL TradeValue 排序 ---
+    twse_n = max(1, int(top_n * 0.75))
     cap_proxy = fetch_twse_market_cap_ranking()
-    if not cap_proxy.empty:
-        universe = universe.merge(cap_proxy, on="code", how="left")
-        universe["trade_value"] = universe["trade_value"].fillna(0)
-        universe = universe.sort_values("trade_value", ascending=False).reset_index(drop=True)
-        universe = universe.head(top_n)
-        universe = universe.drop(columns=["trade_value"])
+    if not cap_proxy.empty and not twse_raw.empty:
+        twse_ranked = twse_raw.merge(cap_proxy, on="code", how="left")
+        twse_ranked["trade_value"] = twse_ranked["trade_value"].fillna(0)
+        twse_ranked = twse_ranked.sort_values("trade_value", ascending=False).head(twse_n)
+        twse_ranked = twse_ranked.drop(columns=["trade_value"])
     else:
-        universe = universe.head(top_n)
+        twse_ranked = twse_raw.head(twse_n)
+
+    # --- TPEX：用 TransactionAmount 排序（fetch_tpex_stocks 已包含 trade_value）---
+    tpex_n = top_n - len(twse_ranked)
+    if not tpex_raw.empty:
+        if "trade_value" in tpex_raw.columns:
+            tpex_ranked = tpex_raw.sort_values("trade_value", ascending=False).head(tpex_n)
+            tpex_ranked = tpex_ranked.drop(columns=["trade_value"])
+        else:
+            tpex_ranked = tpex_raw.head(tpex_n)
+    else:
+        tpex_ranked = pd.DataFrame()
+
+    universe = pd.concat([twse_ranked, tpex_ranked], ignore_index=True)
+    logger.info(f"篩選後股票清單: TWSE {len(twse_ranked)} + TPEX {len(tpex_ranked)} = {len(universe)} 檔")
 
     # 合併產業別與主要業務
-    company_info = fetch_company_info()
+    company_info = fetch_company_info(universe=universe)
     if not company_info.empty:
         universe = universe.merge(company_info, on="code", how="left")
         universe["sector"] = universe["sector"].fillna("").astype(str)

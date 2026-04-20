@@ -441,7 +441,13 @@ def main():
                              "business_nature": str(row.get("business_nature", "")),
                              **m})
 
-            if rows:
+            if not hist_prices:
+                st.error("❌ 無法從 yfinance 取得歷史股價，請確認網路連線或稍後重試。")
+                st.session_state["watchlist_df"] = filtered.copy()
+            elif not rows:
+                st.warning(f"⚠️ 取得 {len(hist_prices)} 檔股價，但所有股票在 {target_date} 均無股利資料可計算，已改用當前資料。")
+                st.session_state["watchlist_df"] = filtered.copy()
+            else:
                 hist_df = pd.DataFrame(rows)
                 hist_df["code"] = hist_df["code"].astype(str)
                 hist_filtered = hist_df[
@@ -455,10 +461,7 @@ def main():
                 sort_cols2, sort_asc2 = sort_map[sort_by]
                 hist_filtered = hist_filtered.sort_values(sort_cols2, ascending=sort_asc2).reset_index(drop=True)
                 st.session_state["watchlist_df"] = hist_filtered
-                st.success(f"歷史篩選完成：{len(hist_prices)} 檔取得股價 → 篩選後 {len(hist_filtered)} 檔")
-            else:
-                st.warning("無法取得該日期的歷史股價，已改用當前資料。")
-                st.session_state["watchlist_df"] = filtered.copy()
+                st.success(f"✅ 歷史篩選完成：{len(hist_prices)} 檔取得股價 → 符合條件 {len(hist_filtered)} 檔")
         else:
             # ── 今日模式：直接使用預建資料 ──
             st.session_state["watchlist_df"] = filtered.copy()
@@ -471,22 +474,57 @@ def main():
         }
         st.session_state["wvf_results"] = None  # 清除舊掃描結果
 
+    # ========== 決定主要顯示資料來源 ==========
+    # 若已用歷史日期 Screen 過，主畫面改用當時的歷史結果；否則沿用即時篩選
+    _wl = st.session_state.get("watchlist_df")
+    _meta = st.session_state.get("watchlist_meta")
+    _is_historical = (
+        _wl is not None
+        and _meta is not None
+        and _meta["date"] < date.today()
+    )
+    if _is_historical:
+        display_df = _wl.copy()
+        _date_label = _meta["date"].strftime("%d.%b.%Y")
+    else:
+        display_df = filtered
+        _date_label = None
+
+    # ========== 歷史模式提示橫幅 ==========
+    if _is_historical:
+        _b1, _b2 = st.columns([5, 1])
+        with _b1:
+            st.markdown(
+                f'<div style="background:rgba(0,180,216,0.12);border:1px solid #00B4D8;border-radius:10px;'
+                f'padding:10px 18px;font-size:0.9rem;color:#b0d8e8;">'
+                f'🕐 <strong style="color:#00B4D8;">歷史模式</strong> — 顯示 <strong>{_date_label}</strong> '
+                f'股價回溯篩選結果（殖利率 ≥ {_meta["min_current"]:.1f}%）。'
+                f' 調整門檻後需重新點擊「📋 Screen」才會更新。</div>',
+                unsafe_allow_html=True,
+            )
+        with _b2:
+            if st.button("✖ 回即時", help="清除歷史篩選結果，回到即時資料", use_container_width=True):
+                st.session_state.pop("watchlist_df", None)
+                st.session_state.pop("watchlist_meta", None)
+                st.session_state.pop("wvf_results", None)
+                st.rerun()
+
     # ========== KPI 卡片 ==========
     c1, c2, c3 = st.columns(3)
 
     with c1:
         st.markdown(render_kpi_card(
-            "📊", str(len(filtered)), "符合條件股票數"
+            "📊", str(len(display_df)), "符合條件股票數"
         ), unsafe_allow_html=True)
 
     with c2:
-        avg_curr = f"{filtered['current_yield_pct'].mean():.2f}%" if not filtered.empty else "-"
+        avg_curr = f"{display_df['current_yield_pct'].mean():.2f}%" if not display_df.empty else "-"
         st.markdown(render_kpi_card(
             "💹", avg_curr, "平均目前殖利率"
         ), unsafe_allow_html=True)
 
     with c3:
-        avg_5y = f"{filtered['avg_5y_yield_pct'].mean():.2f}%" if not filtered.empty else "-"
+        avg_5y = f"{display_df['avg_5y_yield_pct'].mean():.2f}%" if not display_df.empty else "-"
         st.markdown(render_kpi_card(
             "📈", avg_5y, "平均 5 年殖利率"
         ), unsafe_allow_html=True)
@@ -494,9 +532,10 @@ def main():
     st.markdown("", unsafe_allow_html=True)  # 間距
 
     # ========== 股票清單 ==========
-    st.markdown('<div class="section-header">📋 篩選結果股票清單</div>', unsafe_allow_html=True)
+    _list_title = f"📋 篩選結果股票清單" + (f" — {_date_label}" if _date_label else "")
+    st.markdown(f'<div class="section-header">{_list_title}</div>', unsafe_allow_html=True)
 
-    if filtered.empty:
+    if display_df.empty:
         st.info("🔍 目前沒有符合條件的股票，請嘗試調低殖利率門檻。")
     else:
         # 表格欄位設定
@@ -506,8 +545,8 @@ def main():
             "current_yield_pct", "sum_5y_div", "avg_5y_yield_pct",
         ]
         # 相容舊 CSV（若尚未重建資料，sector/business_nature 欄可能不存在）
-        display_cols = [c for c in base_cols if c in filtered.columns]
-        display_df = filtered[display_cols].copy()
+        table_cols = [c for c in base_cols if c in display_df.columns]
+        table_df = display_df[table_cols].copy()
         col_name_map = {
             "code": "代號", "name": "名稱",
             "sector": "產業別", "business_nature": "主要業務",
@@ -516,10 +555,10 @@ def main():
             "current_yield_pct": "目前殖利率%", "sum_5y_div": "近5年總股利",
             "avg_5y_yield_pct": "平均5年殖利率%",
         }
-        display_df.columns = [col_name_map[c] for c in display_cols]
+        table_df.columns = [col_name_map[c] for c in table_cols]
 
         st.dataframe(
-            display_df,
+            table_df,
             use_container_width=True,
             hide_index=True,
             column_config={
@@ -534,7 +573,7 @@ def main():
                 "近5年總股利": st.column_config.NumberColumn(format="%.2f", width="small"),
                 "平均5年殖利率%": st.column_config.NumberColumn(format="%.2f", width="small"),
             },
-            height=min(400, 40 + len(display_df) * 35),
+            height=min(400, 40 + len(table_df) * 35),
         )
 
         # ── 觀察清單儲存區 ──────────────────────────────────────────
@@ -582,22 +621,25 @@ def main():
             st.info("👈 在左側設定殖利率門檻與日期，點擊「📋 Screen」即可建立觀察清單。")
 
     # ========== 個股詳情 ==========
-    if not filtered.empty:
+    if not display_df.empty:
         st.markdown('<div class="section-header">🔍 個股詳情</div>', unsafe_allow_html=True)
 
-        code_options = (filtered["code"].astype(str) + " — " + filtered["name"].astype(str)).tolist()
+        code_options = (display_df["code"].astype(str) + " — " + display_df["name"].astype(str)).tolist()
         selected = st.selectbox("選擇個股查看詳情", code_options, key="stock_select")
         selected_code = selected.split(" — ")[0].strip()
 
-        row = filtered[filtered["code"].astype(str) == selected_code].iloc[0]
+        row = display_df[display_df["code"].astype(str) == selected_code].iloc[0]
         sub = div_hist[div_hist["code"].astype(str) == selected_code].sort_values("year").copy()
 
         # 個股基本資訊
         if "sector" in row.index and row["sector"]:
+            import html as _html
+            _sec = _html.escape(str(row["sector"]))
+            _biz = _html.escape(str(row.get("business_nature", "") or ""))
             st.markdown(
                 f'<div style="color:#8892a4; font-size:0.9rem; margin-bottom:4px;">'
-                f'🏭 <strong style="color:#c0c8d4;">{row["sector"]}</strong>'
-                + (f' &nbsp;|&nbsp; {row["business_nature"]}' if row.get("business_nature") else "")
+                f'🏭 <strong style="color:#c0c8d4;">{_sec}</strong>'
+                + (f' &nbsp;|&nbsp; {_biz}' if _biz else "")
                 + "</div>",
                 unsafe_allow_html=True,
             )
@@ -794,6 +836,9 @@ def main():
                         )
                         ma_row = f'<div style="margin-top:4px; font-size:0.85rem;">{ma_badge}</div>'
 
+                    import html as _html
+                    _name_s   = _html.escape(str(name))
+                    _sector_s = _html.escape(str(sector))
                     st.markdown(f"""
                     <div style="
                         background:linear-gradient(135deg,#0d2a1f 0%,#1a3a2a 100%);
@@ -801,9 +846,9 @@ def main():
                         border-radius:12px; padding:16px 20px; margin-bottom:12px;">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
                             <span style="font-size:1.15rem; font-weight:700; color:#e0e0e0;">
-                                🟢 {code} &nbsp; {name}
+                                🟢 {code} &nbsp; {_name_s}
                             </span>
-                            <span style="font-size:0.82rem; color:#8892a4;">{sector}</span>
+                            <span style="font-size:0.82rem; color:#8892a4;">{_sector_s}</span>
                         </div>
                         <div style="margin-top:8px; font-size:0.88rem; color:#b0b8c8;">
                             殖利率：<strong style="color:#00D4AA;">{cy:.2f}%</strong> &nbsp;｜&nbsp;
@@ -817,7 +862,7 @@ def main():
                         </div>
                         {ma_row}
                         <div style="margin-top:10px; font-size:0.85rem; color:#ffd700;">
-                            ⚠️ 建議留意此股，Williams VIX Fix 顯示潛在市場恐慌底部，可評估是否買入。
+                            &#9888; 建議留意此股，Williams VIX Fix 顯示潛在市場恐慌底部，可評估是否買入。
                         </div>
                     </div>
                     """, unsafe_allow_html=True)

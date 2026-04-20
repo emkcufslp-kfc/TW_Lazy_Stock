@@ -1,0 +1,7830 @@
+{
+  "2330": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "2317": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2881": {
+    "sector": "Financial Services",
+    "industry": "Insurance - Life"
+  },
+  "1101": {
+    "sector": "Basic Materials",
+    "industry": "Building Materials"
+  },
+  "1102": {
+    "sector": "Basic Materials",
+    "industry": "Building Materials"
+  },
+  "1103": {
+    "sector": "Basic Materials",
+    "industry": "Building Materials"
+  },
+  "1104": {
+    "sector": "Basic Materials",
+    "industry": "Building Materials"
+  },
+  "1108": {
+    "sector": "Basic Materials",
+    "industry": "Building Materials"
+  },
+  "1109": {
+    "sector": "Basic Materials",
+    "industry": "Building Materials"
+  },
+  "1110": {
+    "sector": "Basic Materials",
+    "industry": "Building Materials"
+  },
+  "1201": {
+    "sector": "Consumer Defensive",
+    "industry": "Packaged Foods"
+  },
+  "1203": {
+    "sector": "Consumer Defensive",
+    "industry": "Packaged Foods"
+  },
+  "1210": {
+    "sector": "Consumer Defensive",
+    "industry": "Packaged Foods"
+  },
+  "1213": {
+    "sector": "Consumer Defensive",
+    "industry": "Beverages - Non-Alcoholic"
+  },
+  "1215": {
+    "sector": "Consumer Defensive",
+    "industry": "Packaged Foods"
+  },
+  "1216": {
+    "sector": "Consumer Defensive",
+    "industry": "Packaged Foods"
+  },
+  "1217": {
+    "sector": "Consumer Defensive",
+    "industry": "Packaged Foods"
+  },
+  "1218": {
+    "sector": "Consumer Defensive",
+    "industry": "Packaged Foods"
+  },
+  "1219": {
+    "sector": "Consumer Defensive",
+    "industry": "Packaged Foods"
+  },
+  "1220": {
+    "sector": "Consumer Defensive",
+    "industry": "Packaged Foods"
+  },
+  "1225": {
+    "sector": "Consumer Defensive",
+    "industry": "Packaged Foods"
+  },
+  "1227": {
+    "sector": "Consumer Defensive",
+    "industry": "Packaged Foods"
+  },
+  "1229": {
+    "sector": "Industrials",
+    "industry": "Conglomerates"
+  },
+  "1231": {
+    "sector": "Consumer Defensive",
+    "industry": "Packaged Foods"
+  },
+  "1232": {
+    "sector": "Consumer Defensive",
+    "industry": "Packaged Foods"
+  },
+  "1233": {
+    "sector": "Consumer Defensive",
+    "industry": "Packaged Foods"
+  },
+  "1234": {
+    "sector": "Consumer Defensive",
+    "industry": "Beverages - Non-Alcoholic"
+  },
+  "1235": {
+    "sector": "Consumer Defensive",
+    "industry": "Farm Products"
+  },
+  "1236": {
+    "sector": "Consumer Defensive",
+    "industry": "Confectioners"
+  },
+  "1256": {
+    "sector": "Consumer Defensive",
+    "industry": "Beverages - Non-Alcoholic"
+  },
+  "1301": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "1303": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "1304": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "1305": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "1307": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1308": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "1309": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "1310": {
+    "sector": "Basic Materials",
+    "industry": "Chemicals"
+  },
+  "1312": {
+    "sector": "Basic Materials",
+    "industry": "Chemicals"
+  },
+  "1313": {
+    "sector": "Basic Materials",
+    "industry": "Chemicals"
+  },
+  "1314": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "1315": {
+    "sector": "Consumer Cyclical",
+    "industry": "Apparel Manufacturing"
+  },
+  "1316": {
+    "sector": "Real Estate",
+    "industry": "Real Estate Services"
+  },
+  "1319": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "1321": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "1323": {
+    "sector": "Consumer Cyclical",
+    "industry": "Packaging & Containers"
+  },
+  "1324": {
+    "sector": "Industrials",
+    "industry": "Business Equipment & Supplies"
+  },
+  "1325": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1326": {
+    "sector": "Basic Materials",
+    "industry": "Chemicals"
+  },
+  "1337": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "1338": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "1339": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "1340": {
+    "sector": "Consumer Cyclical",
+    "industry": "Footwear & Accessories"
+  },
+  "1341": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1342": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1402": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1409": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1410": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1413": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1414": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1416": {
+    "sector": "Technology",
+    "industry": "Information Technology Services"
+  },
+  "1417": {
+    "sector": "Consumer Cyclical",
+    "industry": "Apparel Retail"
+  },
+  "1418": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1419": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1423": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1432": {
+    "sector": "Consumer Cyclical",
+    "industry": "Leisure"
+  },
+  "1434": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1435": {
+    "sector": "Industrials",
+    "industry": "Conglomerates"
+  },
+  "1436": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Development"
+  },
+  "1437": {
+    "sector": "Real Estate",
+    "industry": "Real Estate Services"
+  },
+  "1438": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Diversified"
+  },
+  "1439": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1440": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1441": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1442": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Development"
+  },
+  "1443": {
+    "sector": "Industrials",
+    "industry": "Integrated Freight & Logistics"
+  },
+  "1444": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1445": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1446": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1447": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1449": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1451": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1452": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1453": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1454": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1455": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1456": {
+    "sector": "Real Estate",
+    "industry": "Real Estate Services"
+  },
+  "1457": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1459": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1460": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1463": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1464": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1465": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1466": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1467": {
+    "sector": "Consumer Cyclical",
+    "industry": "Apparel Manufacturing"
+  },
+  "1468": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1470": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1471": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "1472": {
+    "sector": "Industrials",
+    "industry": "Engineering & Construction"
+  },
+  "1473": {
+    "sector": "Consumer Cyclical",
+    "industry": "Apparel Manufacturing"
+  },
+  "1474": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1475": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "1476": {
+    "sector": "Consumer Cyclical",
+    "industry": "Apparel Manufacturing"
+  },
+  "1477": {
+    "sector": "Consumer Cyclical",
+    "industry": "Apparel Manufacturing"
+  },
+  "1503": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "1504": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "1506": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "1512": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "1513": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "1514": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "1515": {
+    "sector": "Consumer Cyclical",
+    "industry": "Leisure"
+  },
+  "1516": {
+    "sector": "Energy",
+    "industry": "Thermal Coal"
+  },
+  "1517": {
+    "sector": "Industrials",
+    "industry": "Metal Fabrication"
+  },
+  "1519": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "1521": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "1522": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "1524": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "1525": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "1526": {
+    "sector": "Consumer Cyclical",
+    "industry": "Leisure"
+  },
+  "1527": {
+    "sector": "Industrials",
+    "industry": "Tools & Accessories"
+  },
+  "1528": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "1529": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "1530": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "1531": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "1532": {
+    "sector": "Industrials",
+    "industry": "Metal Fabrication"
+  },
+  "1533": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "1535": {
+    "sector": "Industrials",
+    "industry": "Pollution & Treatment Controls"
+  },
+  "1536": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "1537": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "1538": {
+    "sector": "Industrials",
+    "industry": "Tools & Accessories"
+  },
+  "1539": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "1540": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "1541": {
+    "sector": "Industrials",
+    "industry": "Tools & Accessories"
+  },
+  "1558": {
+    "sector": "Consumer Cyclical",
+    "industry": "Furnishings, Fixtures & Appliances"
+  },
+  "1560": {
+    "sector": "Industrials",
+    "industry": "Tools & Accessories"
+  },
+  "1563": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "1568": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "1582": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "1583": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "1587": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "1589": {
+    "sector": "Industrials",
+    "industry": "Metal Fabrication"
+  },
+  "1590": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "1597": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "1598": {
+    "sector": "Consumer Cyclical",
+    "industry": "Leisure"
+  },
+  "1603": {
+    "sector": "Technology",
+    "industry": "Electronics & Computer Distribution"
+  },
+  "1604": {
+    "sector": "Consumer Cyclical",
+    "industry": "Furnishings, Fixtures & Appliances"
+  },
+  "1605": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "1608": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "1609": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "1611": {
+    "sector": "Consumer Cyclical",
+    "industry": "Furnishings, Fixtures & Appliances"
+  },
+  "1612": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "1614": {
+    "sector": "Consumer Cyclical",
+    "industry": "Furnishings, Fixtures & Appliances"
+  },
+  "1615": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "1616": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "1617": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "1618": {
+    "sector": "Technology",
+    "industry": "Electronics & Computer Distribution"
+  },
+  "1623": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "1626": {
+    "sector": "Consumer Cyclical",
+    "industry": "Furnishings, Fixtures & Appliances"
+  },
+  "1702": {
+    "sector": "Consumer Defensive",
+    "industry": "Packaged Foods"
+  },
+  "1707": {
+    "sector": "Healthcare",
+    "industry": "Drug Manufacturers - Specialty & Generic"
+  },
+  "1708": {
+    "sector": "Basic Materials",
+    "industry": "Chemicals"
+  },
+  "1709": {
+    "sector": "Basic Materials",
+    "industry": "Chemicals"
+  },
+  "1710": {
+    "sector": "Basic Materials",
+    "industry": "Chemicals"
+  },
+  "1711": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "1712": {
+    "sector": "Basic Materials",
+    "industry": "Agricultural Inputs"
+  },
+  "1713": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "1714": {
+    "sector": "Basic Materials",
+    "industry": "Chemicals"
+  },
+  "1717": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "1718": {
+    "sector": "Financial Services",
+    "industry": "Banks - Regional"
+  },
+  "1720": {
+    "sector": "Healthcare",
+    "industry": "Drug Manufacturers - Specialty & Generic"
+  },
+  "1721": {
+    "sector": "Basic Materials",
+    "industry": "Chemicals"
+  },
+  "1722": {
+    "sector": "Basic Materials",
+    "industry": "Agricultural Inputs"
+  },
+  "1723": {
+    "sector": "Basic Materials",
+    "industry": "Chemicals"
+  },
+  "1725": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "1726": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "1727": {
+    "sector": "Basic Materials",
+    "industry": "Chemicals"
+  },
+  "1730": {
+    "sector": "Consumer Defensive",
+    "industry": "Household & Personal Products"
+  },
+  "1731": {
+    "sector": "Healthcare",
+    "industry": "Drug Manufacturers - Specialty & Generic"
+  },
+  "1732": {
+    "sector": "Consumer Defensive",
+    "industry": "Household & Personal Products"
+  },
+  "1733": {
+    "sector": "Healthcare",
+    "industry": "Biotechnology"
+  },
+  "1734": {
+    "sector": "Healthcare",
+    "industry": "Biotechnology"
+  },
+  "1735": {
+    "sector": "Basic Materials",
+    "industry": "Chemicals"
+  },
+  "1736": {
+    "sector": "Consumer Cyclical",
+    "industry": "Leisure"
+  },
+  "1737": {
+    "sector": "Consumer Defensive",
+    "industry": "Household & Personal Products"
+  },
+  "1752": {
+    "sector": "Healthcare",
+    "industry": "Medical Instruments & Supplies"
+  },
+  "1760": {
+    "sector": "Healthcare",
+    "industry": "Biotechnology"
+  },
+  "1762": {
+    "sector": "Healthcare",
+    "industry": "Biotechnology"
+  },
+  "1773": {
+    "sector": "Basic Materials",
+    "industry": "Chemicals"
+  },
+  "1776": {
+    "sector": "Basic Materials",
+    "industry": "Chemicals"
+  },
+  "1783": {
+    "sector": "Healthcare",
+    "industry": "Medical Instruments & Supplies"
+  },
+  "1786": {
+    "sector": "Healthcare",
+    "industry": "Medical Instruments & Supplies"
+  },
+  "1789": {
+    "sector": "Healthcare",
+    "industry": "Drug Manufacturers - Specialty & Generic"
+  },
+  "1795": {
+    "sector": "Healthcare",
+    "industry": "Drug Manufacturers - Specialty & Generic"
+  },
+  "1802": {
+    "sector": "Basic Materials",
+    "industry": "Building Materials"
+  },
+  "1805": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Development"
+  },
+  "1806": {
+    "sector": "Industrials",
+    "industry": "Building Products & Equipment"
+  },
+  "1808": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Development"
+  },
+  "1809": {
+    "sector": "Industrials",
+    "industry": "Building Products & Equipment"
+  },
+  "1810": {
+    "sector": "Consumer Cyclical",
+    "industry": "Furnishings, Fixtures & Appliances"
+  },
+  "1817": {
+    "sector": "Consumer Defensive",
+    "industry": "Household & Personal Products"
+  },
+  "1903": {
+    "sector": "Consumer Defensive",
+    "industry": "Household & Personal Products"
+  },
+  "1904": {
+    "sector": "Basic Materials",
+    "industry": "Paper & Paper Products"
+  },
+  "1905": {
+    "sector": "Basic Materials",
+    "industry": "Paper & Paper Products"
+  },
+  "1906": {
+    "sector": "Basic Materials",
+    "industry": "Paper & Paper Products"
+  },
+  "1907": {
+    "sector": "Basic Materials",
+    "industry": "Paper & Paper Products"
+  },
+  "1909": {
+    "sector": "Basic Materials",
+    "industry": "Paper & Paper Products"
+  },
+  "2002": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "2006": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "2007": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "2008": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "2009": {
+    "sector": "Basic Materials",
+    "industry": "Copper"
+  },
+  "2010": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "2012": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "2013": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "2014": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "2015": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "2017": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "2020": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "2022": {
+    "sector": "Industrials",
+    "industry": "Tools & Accessories"
+  },
+  "2023": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "2024": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "2025": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "2027": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "2028": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "2029": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "2030": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "2031": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "2032": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "2033": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "2034": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "2038": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "2049": {
+    "sector": "Industrials",
+    "industry": "Tools & Accessories"
+  },
+  "2059": {
+    "sector": "Consumer Cyclical",
+    "industry": "Furnishings, Fixtures & Appliances"
+  },
+  "2062": {
+    "sector": "Industrials",
+    "industry": "Building Products & Equipment"
+  },
+  "2069": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "2072": {
+    "sector": "Industrials",
+    "industry": "Engineering & Construction"
+  },
+  "2101": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "2102": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "2103": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "2104": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "2105": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "2106": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "2107": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "2108": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "2109": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "2114": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "2115": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "2201": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Manufacturers"
+  },
+  "2204": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Manufacturers"
+  },
+  "2206": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Manufacturers"
+  },
+  "2207": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto & Truck Dealerships"
+  },
+  "2208": {
+    "sector": "Industrials",
+    "industry": "Aerospace & Defense"
+  },
+  "2211": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "2227": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Manufacturers"
+  },
+  "2228": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "2231": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "2233": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "2236": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "2239": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "2241": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "2243": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "2247": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto & Truck Dealerships"
+  },
+  "2248": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "2250": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "2254": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "2258": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Manufacturers"
+  },
+  "2301": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2302": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "2303": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "2305": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2308": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2312": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2313": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2314": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "2316": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2321": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "2323": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2324": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2327": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2328": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2329": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "2331": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2332": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "2337": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "2338": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "2340": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "2342": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "2344": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "2345": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "2347": {
+    "sector": "Technology",
+    "industry": "Electronics & Computer Distribution"
+  },
+  "2348": {
+    "sector": "Real Estate",
+    "industry": "Real Estate Services"
+  },
+  "2349": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2351": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "2352": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2353": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2354": {
+    "sector": "Technology",
+    "industry": "Electronics & Computer Distribution"
+  },
+  "2355": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2356": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2357": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2359": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2360": {
+    "sector": "Technology",
+    "industry": "Scientific & Technical Instruments"
+  },
+  "2362": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2363": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "2364": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2365": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2367": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2368": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2369": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "2371": {
+    "sector": "Industrials",
+    "industry": "Conglomerates"
+  },
+  "2373": {
+    "sector": "Industrials",
+    "industry": "Industrial Distribution"
+  },
+  "2374": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2375": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2376": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2377": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2379": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "2380": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2382": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2383": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2385": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2387": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2388": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "2390": {
+    "sector": "Industrials",
+    "industry": "Security & Protection Services"
+  },
+  "2392": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2393": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2395": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2397": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2399": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2401": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "2402": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2404": {
+    "sector": "Industrials",
+    "industry": "Engineering & Construction"
+  },
+  "2405": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2406": {
+    "sector": "Technology",
+    "industry": "Solar"
+  },
+  "2408": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "2409": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2412": {
+    "sector": "Communication Services",
+    "industry": "Telecom Services"
+  },
+  "2413": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2414": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2415": {
+    "sector": "Industrials",
+    "industry": "Metal Fabrication"
+  },
+  "2417": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2419": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "2420": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "2421": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "2423": {
+    "sector": "Technology",
+    "industry": "Scientific & Technical Instruments"
+  },
+  "2424": {
+    "sector": "Technology",
+    "industry": "Consumer Electronics"
+  },
+  "2425": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2426": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "2427": {
+    "sector": "Industrials",
+    "industry": "Business Equipment & Supplies"
+  },
+  "2428": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2429": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2430": {
+    "sector": "Consumer Cyclical",
+    "industry": "Specialty Retail"
+  },
+  "2431": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2432": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2433": {
+    "sector": "Industrials",
+    "industry": "Business Equipment & Supplies"
+  },
+  "2434": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "2436": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "2438": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "2439": {
+    "sector": "Technology",
+    "industry": "Consumer Electronics"
+  },
+  "2440": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "2441": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "2442": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Development"
+  },
+  "2444": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "2449": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "2450": {
+    "sector": "Technology",
+    "industry": "Electronics & Computer Distribution"
+  },
+  "2451": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2453": {
+    "sector": "Technology",
+    "industry": "Information Technology Services"
+  },
+  "2454": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "2455": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "2457": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "2458": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "2459": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2460": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2461": {
+    "sector": "Consumer Cyclical",
+    "industry": "Packaging & Containers"
+  },
+  "2462": {
+    "sector": "Technology",
+    "industry": "Consumer Electronics"
+  },
+  "2464": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "2465": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2466": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2467": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "2468": {
+    "sector": "Technology",
+    "industry": "Information Technology Services"
+  },
+  "2471": {
+    "sector": "Technology",
+    "industry": "Information Technology Services"
+  },
+  "2472": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2474": {
+    "sector": "Industrials",
+    "industry": "Metal Fabrication"
+  },
+  "2476": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "2477": {
+    "sector": "Technology",
+    "industry": "Consumer Electronics"
+  },
+  "2478": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2480": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2481": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "2482": {
+    "sector": "Industrials",
+    "industry": "Business Equipment & Supplies"
+  },
+  "2483": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "2484": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2485": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "2486": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2488": {
+    "sector": "Technology",
+    "industry": "Consumer Electronics"
+  },
+  "2489": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "2491": {
+    "sector": "Consumer Cyclical",
+    "industry": "Furnishings, Fixtures & Appliances"
+  },
+  "2492": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "2493": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "2495": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "2496": {
+    "sector": "Consumer Defensive",
+    "industry": "Education & Training Services"
+  },
+  "2497": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "2498": {
+    "sector": "Technology",
+    "industry": "Consumer Electronics"
+  },
+  "2501": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Development"
+  },
+  "2504": {
+    "sector": "Basic Materials",
+    "industry": "Building Materials"
+  },
+  "2505": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Development"
+  },
+  "2506": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Development"
+  },
+  "2509": {
+    "sector": "Real Estate",
+    "industry": "Real Estate Services"
+  },
+  "2511": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Development"
+  },
+  "2514": {
+    "sector": "Industrials",
+    "industry": "Engineering & Construction"
+  },
+  "2515": {
+    "sector": "Industrials",
+    "industry": "Engineering & Construction"
+  },
+  "2516": {
+    "sector": "Industrials",
+    "industry": "Engineering & Construction"
+  },
+  "2520": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Diversified"
+  },
+  "2524": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Development"
+  },
+  "2527": {
+    "sector": "Real Estate",
+    "industry": "Real Estate Services"
+  },
+  "2528": {
+    "sector": "Real Estate",
+    "industry": "Real Estate Services"
+  },
+  "2530": {
+    "sector": "Industrials",
+    "industry": "Engineering & Construction"
+  },
+  "2534": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Development"
+  },
+  "2535": {
+    "sector": "Industrials",
+    "industry": "Engineering & Construction"
+  },
+  "2536": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Development"
+  },
+  "2537": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Development"
+  },
+  "2538": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Development"
+  },
+  "2539": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Development"
+  },
+  "2540": {
+    "sector": "Real Estate",
+    "industry": "Real Estate Services"
+  },
+  "2542": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Development"
+  },
+  "2543": {
+    "sector": "Industrials",
+    "industry": "Engineering & Construction"
+  },
+  "2545": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Diversified"
+  },
+  "2546": {
+    "sector": "Industrials",
+    "industry": "Engineering & Construction"
+  },
+  "2547": {
+    "sector": "Industrials",
+    "industry": "Conglomerates"
+  },
+  "2548": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Development"
+  },
+  "2597": {
+    "sector": "Industrials",
+    "industry": "Engineering & Construction"
+  },
+  "2601": {
+    "sector": "Consumer Cyclical",
+    "industry": "Department Stores"
+  },
+  "2603": {
+    "sector": "Industrials",
+    "industry": "Marine Shipping"
+  },
+  "2605": {
+    "sector": "Industrials",
+    "industry": "Marine Shipping"
+  },
+  "2606": {
+    "sector": "Industrials",
+    "industry": "Marine Shipping"
+  },
+  "2607": {
+    "sector": "Industrials",
+    "industry": "Integrated Freight & Logistics"
+  },
+  "2608": {
+    "sector": "Industrials",
+    "industry": "Trucking"
+  },
+  "2609": {
+    "sector": "Industrials",
+    "industry": "Marine Shipping"
+  },
+  "2610": {
+    "sector": "Industrials",
+    "industry": "Airlines"
+  },
+  "2611": {
+    "sector": "Industrials",
+    "industry": "Marine Shipping"
+  },
+  "2612": {
+    "sector": "Industrials",
+    "industry": "Integrated Freight & Logistics"
+  },
+  "2613": {
+    "sector": "Industrials",
+    "industry": "Marine Shipping"
+  },
+  "2614": {
+    "sector": "Industrials",
+    "industry": "Conglomerates"
+  },
+  "2615": {
+    "sector": "Industrials",
+    "industry": "Marine Shipping"
+  },
+  "2616": {
+    "sector": "Consumer Cyclical",
+    "industry": "Specialty Retail"
+  },
+  "2617": {
+    "sector": "Industrials",
+    "industry": "Marine Shipping"
+  },
+  "2618": {
+    "sector": "Industrials",
+    "industry": "Airlines"
+  },
+  "2630": {
+    "sector": "Industrials",
+    "industry": "Aerospace & Defense"
+  },
+  "2633": {
+    "sector": "Industrials",
+    "industry": "Railroads"
+  },
+  "2634": {
+    "sector": "Industrials",
+    "industry": "Aerospace & Defense"
+  },
+  "2636": {
+    "sector": "Industrials",
+    "industry": "Integrated Freight & Logistics"
+  },
+  "2637": {
+    "sector": "Industrials",
+    "industry": "Marine Shipping"
+  },
+  "2642": {
+    "sector": "Industrials",
+    "industry": "Integrated Freight & Logistics"
+  },
+  "2645": {
+    "sector": "Industrials",
+    "industry": "Aerospace & Defense"
+  },
+  "2646": {
+    "sector": "Industrials",
+    "industry": "Airlines"
+  },
+  "2701": {
+    "sector": "Real Estate",
+    "industry": "Real Estate Services"
+  },
+  "2702": {
+    "sector": "Consumer Cyclical",
+    "industry": "Lodging"
+  },
+  "2704": {
+    "sector": "Consumer Cyclical",
+    "industry": "Lodging"
+  },
+  "2705": {
+    "sector": "Consumer Cyclical",
+    "industry": "Lodging"
+  },
+  "2706": {
+    "sector": "Real Estate",
+    "industry": "Real Estate Services"
+  },
+  "2707": {
+    "sector": "Consumer Cyclical",
+    "industry": "Lodging"
+  },
+  "2712": {
+    "sector": "Consumer Cyclical",
+    "industry": "Resorts & Casinos"
+  },
+  "2722": {
+    "sector": "Consumer Cyclical",
+    "industry": "Resorts & Casinos"
+  },
+  "2723": {
+    "sector": "Consumer Cyclical",
+    "industry": "Restaurants"
+  },
+  "2727": {
+    "sector": "Consumer Cyclical",
+    "industry": "Restaurants"
+  },
+  "2731": {
+    "sector": "Consumer Cyclical",
+    "industry": "Travel Services"
+  },
+  "2739": {
+    "sector": "Consumer Cyclical",
+    "industry": "Lodging"
+  },
+  "2748": {
+    "sector": "Consumer Cyclical",
+    "industry": "Lodging"
+  },
+  "2753": {
+    "sector": "Consumer Cyclical",
+    "industry": "Restaurants"
+  },
+  "2762": {
+    "sector": "Consumer Cyclical",
+    "industry": "Leisure"
+  },
+  "2801": {
+    "sector": "Financial Services",
+    "industry": "Banks - Regional"
+  },
+  "2812": {
+    "sector": "Financial Services",
+    "industry": "Banks - Regional"
+  },
+  "2816": {
+    "sector": "Financial Services",
+    "industry": "Insurance - Diversified"
+  },
+  "2820": {
+    "sector": "Financial Services",
+    "industry": "Capital Markets"
+  },
+  "2832": {
+    "sector": "Financial Services",
+    "industry": "Insurance - Property & Casualty"
+  },
+  "2834": {
+    "sector": "Financial Services",
+    "industry": "Banks - Regional"
+  },
+  "2836": {
+    "sector": "Financial Services",
+    "industry": "Banks - Regional"
+  },
+  "2838": {
+    "sector": "Financial Services",
+    "industry": "Banks - Regional"
+  },
+  "2845": {
+    "sector": "Financial Services",
+    "industry": "Banks - Regional"
+  },
+  "2849": {
+    "sector": "Financial Services",
+    "industry": "Banks - Regional"
+  },
+  "2850": {
+    "sector": "Financial Services",
+    "industry": "Insurance - Property & Casualty"
+  },
+  "2851": {
+    "sector": "Financial Services",
+    "industry": "Insurance - Reinsurance"
+  },
+  "2852": {
+    "sector": "Financial Services",
+    "industry": "Insurance - Property & Casualty"
+  },
+  "2855": {
+    "sector": "Financial Services",
+    "industry": "Capital Markets"
+  },
+  "2867": {
+    "sector": "Financial Services",
+    "industry": "Insurance - Life"
+  },
+  "2880": {
+    "sector": "Financial Services",
+    "industry": "Banks - Regional"
+  },
+  "2882": {
+    "sector": "Financial Services",
+    "industry": "Insurance - Life"
+  },
+  "2883": {
+    "sector": "Financial Services",
+    "industry": "Insurance - Life"
+  },
+  "2884": {
+    "sector": "Financial Services",
+    "industry": "Banks - Regional"
+  },
+  "2885": {
+    "sector": "Financial Services",
+    "industry": "Financial Conglomerates"
+  },
+  "2886": {
+    "sector": "Financial Services",
+    "industry": "Banks - Regional"
+  },
+  "2887": {
+    "sector": "Financial Services",
+    "industry": "Banks - Regional"
+  },
+  "2889": {
+    "sector": "Financial Services",
+    "industry": "Capital Markets"
+  },
+  "2890": {
+    "sector": "Financial Services",
+    "industry": "Banks - Regional"
+  },
+  "2891": {
+    "sector": "Financial Services",
+    "industry": "Banks - Regional"
+  },
+  "2892": {
+    "sector": "Financial Services",
+    "industry": "Banks - Regional"
+  },
+  "2897": {
+    "sector": "Financial Services",
+    "industry": "Banks - Regional"
+  },
+  "2901": {
+    "sector": "Consumer Cyclical",
+    "industry": "Department Stores"
+  },
+  "2903": {
+    "sector": "Consumer Cyclical",
+    "industry": "Department Stores"
+  },
+  "2904": {
+    "sector": "Energy",
+    "industry": "Oil & Gas Equipment & Services"
+  },
+  "2905": {
+    "sector": "Financial Services",
+    "industry": "Insurance - Life"
+  },
+  "2906": {
+    "sector": "Consumer Cyclical",
+    "industry": "Specialty Retail"
+  },
+  "2908": {
+    "sector": "Consumer Cyclical",
+    "industry": "Home Improvement Retail"
+  },
+  "2910": {
+    "sector": "Consumer Cyclical",
+    "industry": "Department Stores"
+  },
+  "2911": {
+    "sector": "Consumer Cyclical",
+    "industry": "Apparel Retail"
+  },
+  "2912": {
+    "sector": "Consumer Defensive",
+    "industry": "Grocery Stores"
+  },
+  "2913": {
+    "sector": "Consumer Defensive",
+    "industry": "Farm Products"
+  },
+  "2915": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "2923": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Development"
+  },
+  "2929": {
+    "sector": "Consumer Cyclical",
+    "industry": "Apparel Manufacturing"
+  },
+  "2939": {
+    "sector": "Industrials",
+    "industry": "Conglomerates"
+  },
+  "2945": {
+    "sector": "Consumer Defensive",
+    "industry": "Grocery Stores"
+  },
+  "3002": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "3003": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "3004": {
+    "sector": "Industrials",
+    "industry": "Tools & Accessories"
+  },
+  "3005": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "3006": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "3008": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3010": {
+    "sector": "Technology",
+    "industry": "Electronics & Computer Distribution"
+  },
+  "3011": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3013": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "3014": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "3015": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "3016": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "3017": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3018": {
+    "sector": "Industrials",
+    "industry": "Engineering & Construction"
+  },
+  "3019": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3021": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "3022": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "3023": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3024": {
+    "sector": "Technology",
+    "industry": "Consumer Electronics"
+  },
+  "3025": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "3026": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3027": {
+    "sector": "Industrials",
+    "industry": "Conglomerates"
+  },
+  "3028": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "3029": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "3030": {
+    "sector": "Technology",
+    "industry": "Scientific & Technical Instruments"
+  },
+  "3031": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3032": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "3033": {
+    "sector": "Technology",
+    "industry": "Electronics & Computer Distribution"
+  },
+  "3034": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "3035": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "3036": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3037": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3038": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3040": {
+    "sector": "Technology",
+    "industry": "Consumer Electronics"
+  },
+  "3041": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "3042": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3043": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "3044": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3045": {
+    "sector": "Consumer Cyclical",
+    "industry": "Specialty Retail"
+  },
+  "3046": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "3047": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "3048": {
+    "sector": "Technology",
+    "industry": "Electronics & Computer Distribution"
+  },
+  "3049": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3050": {
+    "sector": "Technology",
+    "industry": "Consumer Electronics"
+  },
+  "3051": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3052": {
+    "sector": "Industrials",
+    "industry": "Engineering & Construction"
+  },
+  "3054": {
+    "sector": "Healthcare",
+    "industry": "Drug Manufacturers - Specialty & Generic"
+  },
+  "3055": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "3056": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Development"
+  },
+  "3057": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "3058": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "3059": {
+    "sector": "Technology",
+    "industry": "Scientific & Technical Instruments"
+  },
+  "3060": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3062": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "3090": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3092": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "3094": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "3130": {
+    "sector": "Industrials",
+    "industry": "Staffing & Employment Services"
+  },
+  "3135": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "3138": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "3149": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3150": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "3164": {
+    "sector": "Healthcare",
+    "industry": "Biotechnology"
+  },
+  "3167": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "3168": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3189": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "3209": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "3229": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3231": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "3257": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "3266": {
+    "sector": "Real Estate",
+    "industry": "Real Estate Services"
+  },
+  "3296": {
+    "sector": "Technology",
+    "industry": "Consumer Electronics"
+  },
+  "3305": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3308": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "3311": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3312": {
+    "sector": "Technology",
+    "industry": "Electronics & Computer Distribution"
+  },
+  "3321": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3338": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3346": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "3356": {
+    "sector": "Industrials",
+    "industry": "Security & Protection Services"
+  },
+  "3376": {
+    "sector": "Industrials",
+    "industry": "Metal Fabrication"
+  },
+  "3380": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "3406": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "3413": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "3416": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3419": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "3432": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "3437": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "3443": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "3447": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "3450": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "3481": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3494": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "3501": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "3504": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "3515": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "3518": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "3528": {
+    "sector": "Technology",
+    "industry": "Electronics & Computer Distribution"
+  },
+  "3530": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "3532": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "3533": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3535": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "3543": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3545": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "3550": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "3557": {
+    "sector": "Consumer Defensive",
+    "industry": "Household & Personal Products"
+  },
+  "3563": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "3576": {
+    "sector": "Technology",
+    "industry": "Solar"
+  },
+  "3583": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "3588": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "3591": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3592": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "3593": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3596": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "3605": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3607": {
+    "sector": "Consumer Cyclical",
+    "industry": "Packaging & Containers"
+  },
+  "3617": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "3622": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3645": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3652": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "3653": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3661": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "3665": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "3669": {
+    "sector": "Technology",
+    "industry": "Consumer Electronics"
+  },
+  "3673": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3679": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3686": {
+    "sector": "Technology",
+    "industry": "Solar"
+  },
+  "3694": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "3701": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "3702": {
+    "sector": "Technology",
+    "industry": "Electronics & Computer Distribution"
+  },
+  "3703": {
+    "sector": "Industrials",
+    "industry": "Engineering & Construction"
+  },
+  "3704": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "3705": {
+    "sector": "Healthcare",
+    "industry": "Drug Manufacturers - Specialty & Generic"
+  },
+  "3706": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "3708": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "3711": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "3712": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "3714": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3715": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "3716": {
+    "sector": "Healthcare",
+    "industry": "Medical Distribution"
+  },
+  "3717": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "4104": {
+    "sector": "Healthcare",
+    "industry": "Medical Distribution"
+  },
+  "4106": {
+    "sector": "Healthcare",
+    "industry": "Medical Devices"
+  },
+  "4108": {
+    "sector": "Healthcare",
+    "industry": "Drug Manufacturers - Specialty & Generic"
+  },
+  "4119": {
+    "sector": "Healthcare",
+    "industry": "Drug Manufacturers - Specialty & Generic"
+  },
+  "4133": {
+    "sector": "Healthcare",
+    "industry": "Biotechnology"
+  },
+  "4137": {
+    "sector": "Consumer Defensive",
+    "industry": "Household & Personal Products"
+  },
+  "4142": {
+    "sector": "Healthcare",
+    "industry": "Biotechnology"
+  },
+  "4148": {
+    "sector": "Basic Materials",
+    "industry": "Agricultural Inputs"
+  },
+  "4155": {
+    "sector": "Healthcare",
+    "industry": "Medical Devices"
+  },
+  "4164": {
+    "sector": "Healthcare",
+    "industry": "Medical Distribution"
+  },
+  "4169": {
+    "sector": "Healthcare",
+    "industry": "Biotechnology"
+  },
+  "4190": {
+    "sector": "Consumer Defensive",
+    "industry": "Household & Personal Products"
+  },
+  "4306": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "4414": {
+    "sector": "Consumer Cyclical",
+    "industry": "Apparel Manufacturing"
+  },
+  "4426": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "4438": {
+    "sector": "Consumer Cyclical",
+    "industry": "Apparel Manufacturing"
+  },
+  "4439": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "4440": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "4441": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "4526": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "4532": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "4536": {
+    "sector": "Consumer Cyclical",
+    "industry": "Leisure"
+  },
+  "4540": {
+    "sector": "Industrials",
+    "industry": "Tools & Accessories"
+  },
+  "4545": {
+    "sector": "Industrials",
+    "industry": "Metal Fabrication"
+  },
+  "4551": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "4552": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "4555": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "4557": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "4560": {
+    "sector": "Industrials",
+    "industry": "Tools & Accessories"
+  },
+  "4562": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "4564": {
+    "sector": "Consumer Cyclical",
+    "industry": "Furnishings, Fixtures & Appliances"
+  },
+  "4566": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "4569": {
+    "sector": "Industrials",
+    "industry": "Metal Fabrication"
+  },
+  "4571": {
+    "sector": "Industrials",
+    "industry": "Tools & Accessories"
+  },
+  "4572": {
+    "sector": "Industrials",
+    "industry": "Aerospace & Defense"
+  },
+  "4576": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "4581": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "4583": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "4585": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "4588": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "4590": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "4720": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "4722": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "4736": {
+    "sector": "Healthcare",
+    "industry": "Medical Devices"
+  },
+  "4737": {
+    "sector": "Healthcare",
+    "industry": "Medical Instruments & Supplies"
+  },
+  "4739": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "4746": {
+    "sector": "Healthcare",
+    "industry": "Drug Manufacturers - Specialty & Generic"
+  },
+  "4755": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "4763": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "4764": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "4766": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "4770": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "4771": {
+    "sector": "Healthcare",
+    "industry": "Medical Instruments & Supplies"
+  },
+  "4807": {
+    "sector": "Consumer Cyclical",
+    "industry": "Luxury Goods"
+  },
+  "4904": {
+    "sector": "Communication Services",
+    "industry": "Telecom Services"
+  },
+  "4906": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "4912": {
+    "sector": "Industrials",
+    "industry": "Metal Fabrication"
+  },
+  "4915": {
+    "sector": "Technology",
+    "industry": "Consumer Electronics"
+  },
+  "4916": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "4919": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "4927": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "4930": {
+    "sector": "Consumer Cyclical",
+    "industry": "Furnishings, Fixtures & Appliances"
+  },
+  "4934": {
+    "sector": "Technology",
+    "industry": "Solar"
+  },
+  "4935": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "4938": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "4942": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "4943": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "4949": {
+    "sector": "Technology",
+    "industry": "Solar"
+  },
+  "4952": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "4956": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "4958": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "4960": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "4961": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "4967": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "4968": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "4976": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "4977": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "4989": {
+    "sector": "Basic Materials",
+    "industry": "Copper"
+  },
+  "4994": {
+    "sector": "Communication Services",
+    "industry": "Electronic Gaming & Multimedia"
+  },
+  "4999": {
+    "sector": "Industrials",
+    "industry": "Tools & Accessories"
+  },
+  "5007": {
+    "sector": "Industrials",
+    "industry": "Tools & Accessories"
+  },
+  "5203": {
+    "sector": "Technology",
+    "industry": "Software - Application"
+  },
+  "5215": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "5222": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "5225": {
+    "sector": "Technology",
+    "industry": "Consumer Electronics"
+  },
+  "5234": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "5243": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "5244": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "5258": {
+    "sector": "Industrials",
+    "industry": "Business Equipment & Supplies"
+  },
+  "5269": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "5283": {
+    "sector": "Technology",
+    "industry": "Consumer Electronics"
+  },
+  "5284": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "5285": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "5288": {
+    "sector": "Industrials",
+    "industry": "Conglomerates"
+  },
+  "5292": {
+    "sector": "Industrials",
+    "industry": "Pollution & Treatment Controls"
+  },
+  "5306": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "5388": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "5434": {
+    "sector": "Technology",
+    "industry": "Electronics & Computer Distribution"
+  },
+  "5469": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "5471": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "5484": {
+    "sector": "Industrials",
+    "industry": "Security & Protection Services"
+  },
+  "5515": {
+    "sector": "Industrials",
+    "industry": "Engineering & Construction"
+  },
+  "5519": {
+    "sector": "Industrials",
+    "industry": "Engineering & Construction"
+  },
+  "5521": {
+    "sector": "Industrials",
+    "industry": "Engineering & Construction"
+  },
+  "5522": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Development"
+  },
+  "5525": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Development"
+  },
+  "5531": {
+    "sector": "Industrials",
+    "industry": "Engineering & Construction"
+  },
+  "5533": {
+    "sector": "Real Estate",
+    "industry": "Real Estate Services"
+  },
+  "5534": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Development"
+  },
+  "5538": {
+    "sector": "Basic Materials",
+    "industry": "Steel"
+  },
+  "5546": {
+    "sector": "Basic Materials",
+    "industry": "Building Materials"
+  },
+  "5607": {
+    "sector": "Industrials",
+    "industry": "Specialty Business Services"
+  },
+  "5608": {
+    "sector": "Industrials",
+    "industry": "Marine Shipping"
+  },
+  "5706": {
+    "sector": "Consumer Cyclical",
+    "industry": "Travel Services"
+  },
+  "5871": {
+    "sector": "Financial Services",
+    "industry": "Credit Services"
+  },
+  "5876": {
+    "sector": "Financial Services",
+    "industry": "Banks - Regional"
+  },
+  "5880": {
+    "sector": "Financial Services",
+    "industry": "Banks - Regional"
+  },
+  "5906": {
+    "sector": "Consumer Cyclical",
+    "industry": "Apparel Manufacturing"
+  },
+  "5907": {
+    "sector": "Consumer Cyclical",
+    "industry": "Department Stores"
+  },
+  "6005": {
+    "sector": "Financial Services",
+    "industry": "Capital Markets"
+  },
+  "6024": {
+    "sector": "Financial Services",
+    "industry": "Capital Markets"
+  },
+  "6108": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6112": {
+    "sector": "Technology",
+    "industry": "Information Technology Services"
+  },
+  "6115": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "6116": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6117": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "6120": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6128": {
+    "sector": "Industrials",
+    "industry": "Business Equipment & Supplies"
+  },
+  "6133": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "6136": {
+    "sector": "Communication Services",
+    "industry": "Advertising Agencies"
+  },
+  "6139": {
+    "sector": "Industrials",
+    "industry": "Engineering & Construction"
+  },
+  "6141": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6142": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "6152": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "6153": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6155": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6164": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "6165": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6166": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "6168": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "6176": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6177": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Development"
+  },
+  "6183": {
+    "sector": "Industrials",
+    "industry": "Specialty Business Services"
+  },
+  "6184": {
+    "sector": "Communication Services",
+    "industry": "Entertainment"
+  },
+  "6189": {
+    "sector": "Technology",
+    "industry": "Electronics & Computer Distribution"
+  },
+  "6191": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6192": {
+    "sector": "Industrials",
+    "industry": "Industrial Distribution"
+  },
+  "6196": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6197": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "6201": {
+    "sector": "Consumer Cyclical",
+    "industry": "Furnishings, Fixtures & Appliances"
+  },
+  "6202": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "6205": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6206": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "6209": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6213": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6214": {
+    "sector": "Technology",
+    "industry": "Information Technology Services"
+  },
+  "6215": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "6216": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "6224": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6225": {
+    "sector": "Technology",
+    "industry": "Consumer Electronics"
+  },
+  "6226": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6230": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6235": {
+    "sector": "Industrials",
+    "industry": "Metal Fabrication"
+  },
+  "6239": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "6243": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "6257": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "6269": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6271": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "6272": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6277": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "6278": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "6281": {
+    "sector": "Consumer Cyclical",
+    "industry": "Specialty Retail"
+  },
+  "6282": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "6283": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6285": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "6405": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6409": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "6412": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "6414": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "6415": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "6416": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "6426": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "6431": {
+    "sector": "Consumer Defensive",
+    "industry": "Household & Personal Products"
+  },
+  "6438": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "6442": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6443": {
+    "sector": "Technology",
+    "industry": "Solar"
+  },
+  "6446": {
+    "sector": "Healthcare",
+    "industry": "Drug Manufacturers - Specialty & Generic"
+  },
+  "6449": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6451": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "6456": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6464": {
+    "sector": "Communication Services",
+    "industry": "Entertainment"
+  },
+  "6472": {
+    "sector": "Healthcare",
+    "industry": "Drug Manufacturers - Specialty & Generic"
+  },
+  "6477": {
+    "sector": "Technology",
+    "industry": "Solar"
+  },
+  "6491": {
+    "sector": "Healthcare",
+    "industry": "Medical Instruments & Supplies"
+  },
+  "6504": {
+    "sector": "Consumer Defensive",
+    "industry": "Household & Personal Products"
+  },
+  "6505": {
+    "sector": "Energy",
+    "industry": "Oil & Gas Refining & Marketing"
+  },
+  "6515": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "6525": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "6526": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "6531": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "6533": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "6534": {
+    "sector": "Basic Materials",
+    "industry": "Agricultural Inputs"
+  },
+  "6541": {
+    "sector": "Healthcare",
+    "industry": "Biotechnology"
+  },
+  "6550": {
+    "sector": "Healthcare",
+    "industry": "Biotechnology"
+  },
+  "6552": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "6558": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "6573": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "6579": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "6581": {
+    "sector": "Industrials",
+    "industry": "Waste Management"
+  },
+  "6582": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "6585": {
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals"
+  },
+  "6589": {
+    "sector": "Healthcare",
+    "industry": "Biotechnology"
+  },
+  "6591": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "6592": {
+    "sector": "Financial Services",
+    "industry": "Credit Services"
+  },
+  "6598": {
+    "sector": "Healthcare",
+    "industry": "Medical Devices"
+  },
+  "6605": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "6606": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "6614": {
+    "sector": "Technology",
+    "industry": "Information Technology Services"
+  },
+  "6625": {
+    "sector": "Communication Services",
+    "industry": "Entertainment"
+  },
+  "6641": {
+    "sector": "Industrials",
+    "industry": "Pollution & Treatment Controls"
+  },
+  "6645": {
+    "sector": "Healthcare",
+    "industry": "Diagnostics & Research"
+  },
+  "6655": {
+    "sector": "Basic Materials",
+    "industry": "Lumber & Wood Production"
+  },
+  "6657": {
+    "sector": "Healthcare",
+    "industry": "Biotechnology"
+  },
+  "6658": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "6666": {
+    "sector": "Consumer Defensive",
+    "industry": "Household & Personal Products"
+  },
+  "6668": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6669": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "6670": {
+    "sector": "Consumer Cyclical",
+    "industry": "Leisure"
+  },
+  "6671": {
+    "sector": "Consumer Defensive",
+    "industry": "Household & Personal Products"
+  },
+  "6672": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6674": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "6689": {
+    "sector": "Technology",
+    "industry": "Software - Infrastructure"
+  },
+  "6691": {
+    "sector": "Industrials",
+    "industry": "Engineering & Construction"
+  },
+  "6695": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "6698": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6706": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "6715": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "6719": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "6722": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "6742": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6743": {
+    "sector": "Technology",
+    "industry": "Consumer Electronics"
+  },
+  "6753": {
+    "sector": "Industrials",
+    "industry": "Aerospace & Defense"
+  },
+  "6754": {
+    "sector": "Industrials",
+    "industry": "Consulting Services"
+  },
+  "6756": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6757": {
+    "sector": "Industrials",
+    "industry": "Airlines"
+  },
+  "6768": {
+    "sector": "Consumer Cyclical",
+    "industry": "Footwear & Accessories"
+  },
+  "6770": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "6771": {
+    "sector": "Industrials",
+    "industry": "Waste Management"
+  },
+  "6776": {
+    "sector": "Technology",
+    "industry": "Electronics & Computer Distribution"
+  },
+  "6781": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "6782": {
+    "sector": "Healthcare",
+    "industry": "Medical Instruments & Supplies"
+  },
+  "6789": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "6790": {
+    "sector": "Consumer Defensive",
+    "industry": "Household & Personal Products"
+  },
+  "6792": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6794": {
+    "sector": "Healthcare",
+    "industry": "Biotechnology"
+  },
+  "6796": {
+    "sector": "Healthcare",
+    "industry": "Medical Devices"
+  },
+  "6799": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "6805": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "6806": {
+    "sector": "Utilities",
+    "industry": "Utilities - Renewable"
+  },
+  "6807": {
+    "sector": "Consumer Cyclical",
+    "industry": "Furnishings, Fixtures & Appliances"
+  },
+  "6830": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "6831": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "6834": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6835": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "6838": {
+    "sector": "Healthcare",
+    "industry": "Biotechnology"
+  },
+  "6854": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6861": {
+    "sector": "Healthcare",
+    "industry": "Medical Devices"
+  },
+  "6862": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6863": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6869": {
+    "sector": "Utilities",
+    "industry": "Utilities - Renewable"
+  },
+  "6873": {
+    "sector": "Industrials",
+    "industry": "Engineering & Construction"
+  },
+  "6885": {
+    "sector": "Healthcare",
+    "industry": "Biotechnology"
+  },
+  "6887": {
+    "sector": "Industrials",
+    "industry": "Waste Management"
+  },
+  "6890": {
+    "sector": "Consumer Cyclical",
+    "industry": "Footwear & Accessories"
+  },
+  "6901": {
+    "sector": "Financial Services",
+    "industry": "Asset Management"
+  },
+  "6902": {
+    "sector": "Technology",
+    "industry": "Software - Application"
+  },
+  "6906": {
+    "sector": "Technology",
+    "industry": "Information Technology Services"
+  },
+  "6908": {
+    "sector": "Communication Services",
+    "industry": "Electronic Gaming & Multimedia"
+  },
+  "6909": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "6914": {
+    "sector": "Industrials",
+    "industry": "Business Equipment & Supplies"
+  },
+  "6916": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6918": {
+    "sector": "Healthcare",
+    "industry": "Medical Devices"
+  },
+  "6919": {
+    "sector": "Healthcare",
+    "industry": "Biotechnology"
+  },
+  "6921": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "6923": {
+    "sector": "Industrials",
+    "industry": "Waste Management"
+  },
+  "6924": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6928": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "6931": {
+    "sector": "Healthcare",
+    "industry": "Medical Care Facilities"
+  },
+  "6933": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "6934": {
+    "sector": "Healthcare",
+    "industry": "Medical Devices"
+  },
+  "6936": {
+    "sector": "Consumer Defensive",
+    "industry": "Farm Products"
+  },
+  "6937": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "6944": {
+    "sector": "Industrials",
+    "industry": "Pollution & Treatment Controls"
+  },
+  "6949": {
+    "sector": "Healthcare",
+    "industry": "Biotechnology"
+  },
+  "6951": {
+    "sector": "Industrials",
+    "industry": "Waste Management"
+  },
+  "6952": {
+    "sector": "Consumer Defensive",
+    "industry": "Farm Products"
+  },
+  "6955": {
+    "sector": "Healthcare",
+    "industry": "Medical Devices"
+  },
+  "6957": {
+    "sector": "Consumer Cyclical",
+    "industry": "Furnishings, Fixtures & Appliances"
+  },
+  "6958": {
+    "sector": "Financial Services",
+    "industry": "Credit Services"
+  },
+  "6962": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6965": {
+    "sector": "Consumer Cyclical",
+    "industry": "Footwear & Accessories"
+  },
+  "6969": {
+    "sector": "Industrials",
+    "industry": "Conglomerates"
+  },
+  "6988": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "6994": {
+    "sector": "Utilities",
+    "industry": "Utilities - Renewable"
+  },
+  "7610": {
+    "sector": "Basic Materials",
+    "industry": "Other Industrial Metals & Mining"
+  },
+  "7631": {
+    "sector": "Industrials",
+    "industry": "Engineering & Construction"
+  },
+  "7705": {
+    "sector": "Consumer Cyclical",
+    "industry": "Restaurants"
+  },
+  "7711": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "7721": {
+    "sector": "Technology",
+    "industry": "Software - Infrastructure"
+  },
+  "7722": {
+    "sector": "Technology",
+    "industry": "Software - Infrastructure"
+  },
+  "7730": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "7732": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "7736": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "7740": {
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Electric"
+  },
+  "7749": {
+    "sector": "Technology",
+    "industry": "Software - Infrastructure"
+  },
+  "7750": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "7765": {
+    "sector": "Technology",
+    "industry": "Information Technology Services"
+  },
+  "7769": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "7780": {
+    "sector": "Consumer Defensive",
+    "industry": "Packaged Foods"
+  },
+  "7786": {
+    "sector": "Industrials",
+    "industry": "Specialty Business Services"
+  },
+  "7788": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "7791": {
+    "sector": "Consumer Defensive",
+    "industry": "Packaged Foods"
+  },
+  "7795": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "7799": {
+    "sector": "Healthcare",
+    "industry": "Medical Devices"
+  },
+  "7822": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "7823": {
+    "sector": "Technology",
+    "industry": "Software - Infrastructure"
+  },
+  "8011": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "8016": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "8021": {
+    "sector": "Industrials",
+    "industry": "Tools & Accessories"
+  },
+  "8028": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "8033": {
+    "sector": "Consumer Cyclical",
+    "industry": "Leisure"
+  },
+  "8039": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "8045": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "8046": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "8070": {
+    "sector": "Technology",
+    "industry": "Electronics & Computer Distribution"
+  },
+  "8072": {
+    "sector": "Technology",
+    "industry": "Electronics & Computer Distribution"
+  },
+  "8081": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "8101": {
+    "sector": "Technology",
+    "industry": "Communication Equipment"
+  },
+  "8103": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "8104": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "8105": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "8110": {
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials"
+  },
+  "8112": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "8114": {
+    "sector": "Industrials",
+    "industry": "Business Equipment & Supplies"
+  },
+  "8131": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "8150": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "8162": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "8163": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "8201": {
+    "sector": "Technology",
+    "industry": "Consumer Electronics"
+  },
+  "8210": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "8213": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "8215": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "8222": {
+    "sector": "Industrials",
+    "industry": "Aerospace & Defense"
+  },
+  "8249": {
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts"
+  },
+  "8261": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "8271": {
+    "sector": "Technology",
+    "industry": "Semiconductors"
+  },
+  "8341": {
+    "sector": "Industrials",
+    "industry": "Waste Management"
+  },
+  "8367": {
+    "sector": "Industrials",
+    "industry": "Marine Shipping"
+  },
+  "8374": {
+    "sector": "Industrials",
+    "industry": "Industrial Distribution"
+  },
+  "8404": {
+    "sector": "Consumer Cyclical",
+    "industry": "Footwear & Accessories"
+  },
+  "8411": {
+    "sector": "Consumer Cyclical",
+    "industry": "Packaging & Containers"
+  },
+  "8422": {
+    "sector": "Industrials",
+    "industry": "Waste Management"
+  },
+  "8429": {
+    "sector": "Consumer Cyclical",
+    "industry": "Apparel Manufacturing"
+  },
+  "8438": {
+    "sector": "Basic Materials",
+    "industry": "Chemicals"
+  },
+  "8442": {
+    "sector": "Consumer Cyclical",
+    "industry": "Leisure"
+  },
+  "8443": {
+    "sector": "Consumer Cyclical",
+    "industry": "Footwear & Accessories"
+  },
+  "8454": {
+    "sector": "Consumer Cyclical",
+    "industry": "Internet Retail"
+  },
+  "8462": {
+    "sector": "Consumer Cyclical",
+    "industry": "Leisure"
+  },
+  "8463": {
+    "sector": "Basic Materials",
+    "industry": "Building Materials"
+  },
+  "8464": {
+    "sector": "Consumer Cyclical",
+    "industry": "Furnishings, Fixtures & Appliances"
+  },
+  "8466": {
+    "sector": "Industrials",
+    "industry": "Building Products & Equipment"
+  },
+  "8467": {
+    "sector": "Consumer Cyclical",
+    "industry": "Leisure"
+  },
+  "8473": {
+    "sector": "Industrials",
+    "industry": "Waste Management"
+  },
+  "8476": {
+    "sector": "Industrials",
+    "industry": "Waste Management"
+  },
+  "8478": {
+    "sector": "Consumer Cyclical",
+    "industry": "Recreational Vehicles"
+  },
+  "8481": {
+    "sector": "Industrials",
+    "industry": "Specialty Business Services"
+  },
+  "8482": {
+    "sector": "Consumer Cyclical",
+    "industry": "Furnishings, Fixtures & Appliances"
+  },
+  "8487": {
+    "sector": "Communication Services",
+    "industry": "Entertainment"
+  },
+  "8488": {
+    "sector": "Consumer Cyclical",
+    "industry": "Packaging & Containers"
+  },
+  "8499": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "8926": {
+    "sector": "Industrials",
+    "industry": "Engineering & Construction"
+  },
+  "8940": {
+    "sector": "Consumer Cyclical",
+    "industry": "Restaurants"
+  },
+  "8996": {
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery"
+  },
+  "9103": {
+    "sector": "Healthcare",
+    "industry": "Medical Instruments & Supplies"
+  },
+  "9105": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "9110": {
+    "sector": "Consumer Cyclical",
+    "industry": "Recreational Vehicles"
+  },
+  "9136": {
+    "sector": "Technology",
+    "industry": "Computer Hardware"
+  },
+  "9802": {
+    "sector": "Consumer Cyclical",
+    "industry": "Footwear & Accessories"
+  },
+  "9902": {
+    "sector": "Real Estate",
+    "industry": "Real Estate Services"
+  },
+  "9904": {
+    "sector": "Consumer Cyclical",
+    "industry": "Footwear & Accessories"
+  },
+  "9905": {
+    "sector": "Consumer Cyclical",
+    "industry": "Packaging & Containers"
+  },
+  "9906": {
+    "sector": "Industrials",
+    "industry": "Engineering & Construction"
+  },
+  "9907": {
+    "sector": "Consumer Cyclical",
+    "industry": "Packaging & Containers"
+  },
+  "9908": {
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Gas"
+  },
+  "9910": {
+    "sector": "Consumer Cyclical",
+    "industry": "Footwear & Accessories"
+  },
+  "9911": {
+    "sector": "Consumer Cyclical",
+    "industry": "Furnishings, Fixtures & Appliances"
+  },
+  "9912": {
+    "sector": "Technology",
+    "industry": "Electronic Components"
+  },
+  "9914": {
+    "sector": "Consumer Cyclical",
+    "industry": "Leisure"
+  },
+  "9917": {
+    "sector": "Industrials",
+    "industry": "Security & Protection Services"
+  },
+  "9918": {
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Gas"
+  },
+  "9919": {
+    "sector": "Consumer Defensive",
+    "industry": "Household & Personal Products"
+  },
+  "9921": {
+    "sector": "Consumer Cyclical",
+    "industry": "Leisure"
+  },
+  "9924": {
+    "sector": "Industrials",
+    "industry": "Building Products & Equipment"
+  },
+  "9925": {
+    "sector": "Industrials",
+    "industry": "Security & Protection Services"
+  },
+  "9926": {
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Gas"
+  },
+  "9927": {
+    "sector": "Basic Materials",
+    "industry": "Other Industrial Metals & Mining"
+  },
+  "9928": {
+    "sector": "Communication Services",
+    "industry": "Broadcasting"
+  },
+  "9929": {
+    "sector": "Industrials",
+    "industry": "Specialty Business Services"
+  },
+  "9930": {
+    "sector": "Basic Materials",
+    "industry": "Building Materials"
+  },
+  "9931": {
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Gas"
+  },
+  "9933": {
+    "sector": "Industrials",
+    "industry": "Engineering & Construction"
+  },
+  "9934": {
+    "sector": "Industrials",
+    "industry": "Building Products & Equipment"
+  },
+  "9935": {
+    "sector": "Consumer Cyclical",
+    "industry": "Furnishings, Fixtures & Appliances"
+  },
+  "9937": {
+    "sector": "Consumer Cyclical",
+    "industry": "Specialty Retail"
+  },
+  "9938": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "9939": {
+    "sector": "Consumer Cyclical",
+    "industry": "Packaging & Containers"
+  },
+  "9940": {
+    "sector": "Real Estate",
+    "industry": "Real Estate Services"
+  },
+  "9941": {
+    "sector": "Financial Services",
+    "industry": "Credit Services"
+  },
+  "9942": {
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts"
+  },
+  "9943": {
+    "sector": "Consumer Cyclical",
+    "industry": "Leisure"
+  },
+  "9944": {
+    "sector": "Consumer Cyclical",
+    "industry": "Textile Manufacturing"
+  },
+  "9945": {
+    "sector": "Industrials",
+    "industry": "Engineering & Construction"
+  },
+  "9946": {
+    "sector": "Real Estate",
+    "industry": "Real Estate - Diversified"
+  },
+  "9955": {
+    "sector": "Industrials",
+    "industry": "Pollution & Treatment Controls"
+  },
+  "9958": {
+    "sector": "Industrials",
+    "industry": "Metal Fabrication"
+  },
+  "1240": {
+    "sector": "",
+    "industry": ""
+  },
+  "1259": {
+    "sector": "",
+    "industry": ""
+  },
+  "1264": {
+    "sector": "",
+    "industry": ""
+  },
+  "1268": {
+    "sector": "",
+    "industry": ""
+  },
+  "1294": {
+    "sector": "",
+    "industry": ""
+  },
+  "1295": {
+    "sector": "",
+    "industry": ""
+  },
+  "1336": {
+    "sector": "",
+    "industry": ""
+  },
+  "1565": {
+    "sector": "",
+    "industry": ""
+  },
+  "1569": {
+    "sector": "",
+    "industry": ""
+  },
+  "1570": {
+    "sector": "",
+    "industry": ""
+  },
+  "1580": {
+    "sector": "",
+    "industry": ""
+  },
+  "1584": {
+    "sector": "",
+    "industry": ""
+  },
+  "1586": {
+    "sector": "",
+    "industry": ""
+  },
+  "1591": {
+    "sector": "",
+    "industry": ""
+  },
+  "1593": {
+    "sector": "",
+    "industry": ""
+  },
+  "1595": {
+    "sector": "",
+    "industry": ""
+  },
+  "1599": {
+    "sector": "",
+    "industry": ""
+  },
+  "1742": {
+    "sector": "",
+    "industry": ""
+  },
+  "1777": {
+    "sector": "",
+    "industry": ""
+  },
+  "1781": {
+    "sector": "",
+    "industry": ""
+  },
+  "1784": {
+    "sector": "",
+    "industry": ""
+  },
+  "1785": {
+    "sector": "",
+    "industry": ""
+  },
+  "1788": {
+    "sector": "",
+    "industry": ""
+  },
+  "1796": {
+    "sector": "",
+    "industry": ""
+  },
+  "1799": {
+    "sector": "",
+    "industry": ""
+  },
+  "1813": {
+    "sector": "",
+    "industry": ""
+  },
+  "1815": {
+    "sector": "",
+    "industry": ""
+  },
+  "2035": {
+    "sector": "",
+    "industry": ""
+  },
+  "2061": {
+    "sector": "",
+    "industry": ""
+  },
+  "2063": {
+    "sector": "",
+    "industry": ""
+  },
+  "2064": {
+    "sector": "",
+    "industry": ""
+  },
+  "2065": {
+    "sector": "",
+    "industry": ""
+  },
+  "2066": {
+    "sector": "",
+    "industry": ""
+  },
+  "2067": {
+    "sector": "",
+    "industry": ""
+  },
+  "2070": {
+    "sector": "",
+    "industry": ""
+  },
+  "2073": {
+    "sector": "",
+    "industry": ""
+  },
+  "2221": {
+    "sector": "",
+    "industry": ""
+  },
+  "2230": {
+    "sector": "",
+    "industry": ""
+  },
+  "2235": {
+    "sector": "",
+    "industry": ""
+  },
+  "2596": {
+    "sector": "",
+    "industry": ""
+  },
+  "2640": {
+    "sector": "",
+    "industry": ""
+  },
+  "2641": {
+    "sector": "",
+    "industry": ""
+  },
+  "2643": {
+    "sector": "",
+    "industry": ""
+  },
+  "2718": {
+    "sector": "",
+    "industry": ""
+  },
+  "2719": {
+    "sector": "",
+    "industry": ""
+  },
+  "2724": {
+    "sector": "",
+    "industry": ""
+  },
+  "2726": {
+    "sector": "",
+    "industry": ""
+  },
+  "2729": {
+    "sector": "",
+    "industry": ""
+  },
+  "2732": {
+    "sector": "",
+    "industry": ""
+  },
+  "2734": {
+    "sector": "",
+    "industry": ""
+  },
+  "2736": {
+    "sector": "",
+    "industry": ""
+  },
+  "2740": {
+    "sector": "",
+    "industry": ""
+  },
+  "2743": {
+    "sector": "",
+    "industry": ""
+  },
+  "2745": {
+    "sector": "",
+    "industry": ""
+  },
+  "2751": {
+    "sector": "",
+    "industry": ""
+  },
+  "2752": {
+    "sector": "",
+    "industry": ""
+  },
+  "2754": {
+    "sector": "",
+    "industry": ""
+  },
+  "2755": {
+    "sector": "",
+    "industry": ""
+  },
+  "2756": {
+    "sector": "",
+    "industry": ""
+  },
+  "2916": {
+    "sector": "",
+    "industry": ""
+  },
+  "2924": {
+    "sector": "",
+    "industry": ""
+  },
+  "2926": {
+    "sector": "",
+    "industry": ""
+  },
+  "2937": {
+    "sector": "",
+    "industry": ""
+  },
+  "2941": {
+    "sector": "",
+    "industry": ""
+  },
+  "2947": {
+    "sector": "",
+    "industry": ""
+  },
+  "2948": {
+    "sector": "",
+    "industry": ""
+  },
+  "2949": {
+    "sector": "",
+    "industry": ""
+  },
+  "3064": {
+    "sector": "",
+    "industry": ""
+  },
+  "3066": {
+    "sector": "",
+    "industry": ""
+  },
+  "3067": {
+    "sector": "",
+    "industry": ""
+  },
+  "3071": {
+    "sector": "",
+    "industry": ""
+  },
+  "3073": {
+    "sector": "",
+    "industry": ""
+  },
+  "3078": {
+    "sector": "",
+    "industry": ""
+  },
+  "3081": {
+    "sector": "",
+    "industry": ""
+  },
+  "3083": {
+    "sector": "",
+    "industry": ""
+  },
+  "3085": {
+    "sector": "",
+    "industry": ""
+  },
+  "3086": {
+    "sector": "",
+    "industry": ""
+  },
+  "3088": {
+    "sector": "",
+    "industry": ""
+  },
+  "3093": {
+    "sector": "",
+    "industry": ""
+  },
+  "3095": {
+    "sector": "",
+    "industry": ""
+  },
+  "3105": {
+    "sector": "",
+    "industry": ""
+  },
+  "3114": {
+    "sector": "",
+    "industry": ""
+  },
+  "3115": {
+    "sector": "",
+    "industry": ""
+  },
+  "3118": {
+    "sector": "",
+    "industry": ""
+  },
+  "3122": {
+    "sector": "",
+    "industry": ""
+  },
+  "3128": {
+    "sector": "",
+    "industry": ""
+  },
+  "3131": {
+    "sector": "",
+    "industry": ""
+  },
+  "3141": {
+    "sector": "",
+    "industry": ""
+  },
+  "3147": {
+    "sector": "",
+    "industry": ""
+  },
+  "3152": {
+    "sector": "",
+    "industry": ""
+  },
+  "3158": {
+    "sector": "",
+    "industry": ""
+  },
+  "3162": {
+    "sector": "",
+    "industry": ""
+  },
+  "3163": {
+    "sector": "",
+    "industry": ""
+  },
+  "3169": {
+    "sector": "",
+    "industry": ""
+  },
+  "3171": {
+    "sector": "",
+    "industry": ""
+  },
+  "3176": {
+    "sector": "",
+    "industry": ""
+  },
+  "3178": {
+    "sector": "",
+    "industry": ""
+  },
+  "3188": {
+    "sector": "",
+    "industry": ""
+  },
+  "3191": {
+    "sector": "",
+    "industry": ""
+  },
+  "3205": {
+    "sector": "",
+    "industry": ""
+  },
+  "3206": {
+    "sector": "",
+    "industry": ""
+  },
+  "3207": {
+    "sector": "",
+    "industry": ""
+  },
+  "3211": {
+    "sector": "",
+    "industry": ""
+  },
+  "3213": {
+    "sector": "",
+    "industry": ""
+  },
+  "3217": {
+    "sector": "",
+    "industry": ""
+  },
+  "3218": {
+    "sector": "",
+    "industry": ""
+  },
+  "3219": {
+    "sector": "",
+    "industry": ""
+  },
+  "3221": {
+    "sector": "",
+    "industry": ""
+  },
+  "3224": {
+    "sector": "",
+    "industry": ""
+  },
+  "3226": {
+    "sector": "",
+    "industry": ""
+  },
+  "3227": {
+    "sector": "",
+    "industry": ""
+  },
+  "3228": {
+    "sector": "",
+    "industry": ""
+  },
+  "3230": {
+    "sector": "",
+    "industry": ""
+  },
+  "3232": {
+    "sector": "",
+    "industry": ""
+  },
+  "3234": {
+    "sector": "",
+    "industry": ""
+  },
+  "3236": {
+    "sector": "",
+    "industry": ""
+  },
+  "3252": {
+    "sector": "",
+    "industry": ""
+  },
+  "3259": {
+    "sector": "",
+    "industry": ""
+  },
+  "3260": {
+    "sector": "",
+    "industry": ""
+  },
+  "3264": {
+    "sector": "",
+    "industry": ""
+  },
+  "3265": {
+    "sector": "",
+    "industry": ""
+  },
+  "3268": {
+    "sector": "",
+    "industry": ""
+  },
+  "3272": {
+    "sector": "",
+    "industry": ""
+  },
+  "3276": {
+    "sector": "",
+    "industry": ""
+  },
+  "3284": {
+    "sector": "",
+    "industry": ""
+  },
+  "3285": {
+    "sector": "",
+    "industry": ""
+  },
+  "3287": {
+    "sector": "",
+    "industry": ""
+  },
+  "3288": {
+    "sector": "",
+    "industry": ""
+  },
+  "3289": {
+    "sector": "",
+    "industry": ""
+  },
+  "3290": {
+    "sector": "",
+    "industry": ""
+  },
+  "3293": {
+    "sector": "",
+    "industry": ""
+  },
+  "3294": {
+    "sector": "",
+    "industry": ""
+  },
+  "3297": {
+    "sector": "",
+    "industry": ""
+  },
+  "3303": {
+    "sector": "",
+    "industry": ""
+  },
+  "3306": {
+    "sector": "",
+    "industry": ""
+  },
+  "3310": {
+    "sector": "",
+    "industry": ""
+  },
+  "3313": {
+    "sector": "",
+    "industry": ""
+  },
+  "3317": {
+    "sector": "",
+    "industry": ""
+  },
+  "3322": {
+    "sector": "",
+    "industry": ""
+  },
+  "3323": {
+    "sector": "",
+    "industry": ""
+  },
+  "3324": {
+    "sector": "",
+    "industry": ""
+  },
+  "3325": {
+    "sector": "",
+    "industry": ""
+  },
+  "3332": {
+    "sector": "",
+    "industry": ""
+  },
+  "3339": {
+    "sector": "",
+    "industry": ""
+  },
+  "3349": {
+    "sector": "",
+    "industry": ""
+  },
+  "3354": {
+    "sector": "",
+    "industry": ""
+  },
+  "3357": {
+    "sector": "",
+    "industry": ""
+  },
+  "3360": {
+    "sector": "",
+    "industry": ""
+  },
+  "3362": {
+    "sector": "",
+    "industry": ""
+  },
+  "3363": {
+    "sector": "",
+    "industry": ""
+  },
+  "3372": {
+    "sector": "",
+    "industry": ""
+  },
+  "3373": {
+    "sector": "",
+    "industry": ""
+  },
+  "3374": {
+    "sector": "",
+    "industry": ""
+  },
+  "3379": {
+    "sector": "",
+    "industry": ""
+  },
+  "3388": {
+    "sector": "",
+    "industry": ""
+  },
+  "3390": {
+    "sector": "",
+    "industry": ""
+  },
+  "3402": {
+    "sector": "",
+    "industry": ""
+  },
+  "3426": {
+    "sector": "",
+    "industry": ""
+  },
+  "3430": {
+    "sector": "",
+    "industry": ""
+  },
+  "3434": {
+    "sector": "",
+    "industry": ""
+  },
+  "3438": {
+    "sector": "",
+    "industry": ""
+  },
+  "3441": {
+    "sector": "",
+    "industry": ""
+  },
+  "3444": {
+    "sector": "",
+    "industry": ""
+  },
+  "3455": {
+    "sector": "",
+    "industry": ""
+  },
+  "3465": {
+    "sector": "",
+    "industry": ""
+  },
+  "3466": {
+    "sector": "",
+    "industry": ""
+  },
+  "3467": {
+    "sector": "",
+    "industry": ""
+  },
+  "3479": {
+    "sector": "",
+    "industry": ""
+  },
+  "3483": {
+    "sector": "",
+    "industry": ""
+  },
+  "3484": {
+    "sector": "",
+    "industry": ""
+  },
+  "3489": {
+    "sector": "",
+    "industry": ""
+  },
+  "3490": {
+    "sector": "",
+    "industry": ""
+  },
+  "3491": {
+    "sector": "",
+    "industry": ""
+  },
+  "3492": {
+    "sector": "",
+    "industry": ""
+  },
+  "3498": {
+    "sector": "",
+    "industry": ""
+  },
+  "3499": {
+    "sector": "",
+    "industry": ""
+  },
+  "3508": {
+    "sector": "",
+    "industry": ""
+  },
+  "3511": {
+    "sector": "",
+    "industry": ""
+  },
+  "3512": {
+    "sector": "",
+    "industry": ""
+  },
+  "3516": {
+    "sector": "",
+    "industry": ""
+  },
+  "3520": {
+    "sector": "",
+    "industry": ""
+  },
+  "3521": {
+    "sector": "",
+    "industry": ""
+  },
+  "3522": {
+    "sector": "",
+    "industry": ""
+  },
+  "3523": {
+    "sector": "",
+    "industry": ""
+  },
+  "3526": {
+    "sector": "",
+    "industry": ""
+  },
+  "3527": {
+    "sector": "",
+    "industry": ""
+  },
+  "3529": {
+    "sector": "",
+    "industry": ""
+  },
+  "3531": {
+    "sector": "",
+    "industry": ""
+  },
+  "3537": {
+    "sector": "",
+    "industry": ""
+  },
+  "3540": {
+    "sector": "",
+    "industry": ""
+  },
+  "3541": {
+    "sector": "",
+    "industry": ""
+  },
+  "3546": {
+    "sector": "",
+    "industry": ""
+  },
+  "3548": {
+    "sector": "",
+    "industry": ""
+  },
+  "3551": {
+    "sector": "",
+    "industry": ""
+  },
+  "3552": {
+    "sector": "",
+    "industry": ""
+  },
+  "3555": {
+    "sector": "",
+    "industry": ""
+  },
+  "3556": {
+    "sector": "",
+    "industry": ""
+  },
+  "3558": {
+    "sector": "",
+    "industry": ""
+  },
+  "3564": {
+    "sector": "",
+    "industry": ""
+  },
+  "3567": {
+    "sector": "",
+    "industry": ""
+  },
+  "3570": {
+    "sector": "",
+    "industry": ""
+  },
+  "3577": {
+    "sector": "",
+    "industry": ""
+  },
+  "3580": {
+    "sector": "",
+    "industry": ""
+  },
+  "3581": {
+    "sector": "",
+    "industry": ""
+  },
+  "3587": {
+    "sector": "",
+    "industry": ""
+  },
+  "3594": {
+    "sector": "",
+    "industry": ""
+  },
+  "3597": {
+    "sector": "",
+    "industry": ""
+  },
+  "3609": {
+    "sector": "",
+    "industry": ""
+  },
+  "3611": {
+    "sector": "",
+    "industry": ""
+  },
+  "3615": {
+    "sector": "",
+    "industry": ""
+  },
+  "3623": {
+    "sector": "",
+    "industry": ""
+  },
+  "3624": {
+    "sector": "",
+    "industry": ""
+  },
+  "3625": {
+    "sector": "",
+    "industry": ""
+  },
+  "3628": {
+    "sector": "",
+    "industry": ""
+  },
+  "3629": {
+    "sector": "",
+    "industry": ""
+  },
+  "3630": {
+    "sector": "",
+    "industry": ""
+  },
+  "3631": {
+    "sector": "",
+    "industry": ""
+  },
+  "3632": {
+    "sector": "",
+    "industry": ""
+  },
+  "3646": {
+    "sector": "",
+    "industry": ""
+  },
+  "3663": {
+    "sector": "",
+    "industry": ""
+  },
+  "3664": {
+    "sector": "",
+    "industry": ""
+  },
+  "3666": {
+    "sector": "",
+    "industry": ""
+  },
+  "3672": {
+    "sector": "",
+    "industry": ""
+  },
+  "3675": {
+    "sector": "",
+    "industry": ""
+  },
+  "3680": {
+    "sector": "",
+    "industry": ""
+  },
+  "3684": {
+    "sector": "",
+    "industry": ""
+  },
+  "3685": {
+    "sector": "",
+    "industry": ""
+  },
+  "3687": {
+    "sector": "",
+    "industry": ""
+  },
+  "3689": {
+    "sector": "",
+    "industry": ""
+  },
+  "3691": {
+    "sector": "",
+    "industry": ""
+  },
+  "3693": {
+    "sector": "",
+    "industry": ""
+  },
+  "3707": {
+    "sector": "",
+    "industry": ""
+  },
+  "3709": {
+    "sector": "",
+    "industry": ""
+  },
+  "3710": {
+    "sector": "",
+    "industry": ""
+  },
+  "3713": {
+    "sector": "",
+    "industry": ""
+  },
+  "4102": {
+    "sector": "",
+    "industry": ""
+  },
+  "4105": {
+    "sector": "",
+    "industry": ""
+  },
+  "4107": {
+    "sector": "",
+    "industry": ""
+  },
+  "4109": {
+    "sector": "",
+    "industry": ""
+  },
+  "4111": {
+    "sector": "",
+    "industry": ""
+  },
+  "4113": {
+    "sector": "",
+    "industry": ""
+  },
+  "4114": {
+    "sector": "",
+    "industry": ""
+  },
+  "4116": {
+    "sector": "",
+    "industry": ""
+  },
+  "4120": {
+    "sector": "",
+    "industry": ""
+  },
+  "4121": {
+    "sector": "",
+    "industry": ""
+  },
+  "4123": {
+    "sector": "",
+    "industry": ""
+  },
+  "4126": {
+    "sector": "",
+    "industry": ""
+  },
+  "4127": {
+    "sector": "",
+    "industry": ""
+  },
+  "4128": {
+    "sector": "",
+    "industry": ""
+  },
+  "4129": {
+    "sector": "",
+    "industry": ""
+  },
+  "4130": {
+    "sector": "",
+    "industry": ""
+  },
+  "4131": {
+    "sector": "",
+    "industry": ""
+  },
+  "4138": {
+    "sector": "",
+    "industry": ""
+  },
+  "4139": {
+    "sector": "",
+    "industry": ""
+  },
+  "4147": {
+    "sector": "",
+    "industry": ""
+  },
+  "4153": {
+    "sector": "",
+    "industry": ""
+  },
+  "4154": {
+    "sector": "",
+    "industry": ""
+  },
+  "4157": {
+    "sector": "",
+    "industry": ""
+  },
+  "4160": {
+    "sector": "",
+    "industry": ""
+  },
+  "4161": {
+    "sector": "",
+    "industry": ""
+  },
+  "4162": {
+    "sector": "",
+    "industry": ""
+  },
+  "4163": {
+    "sector": "",
+    "industry": ""
+  },
+  "4166": {
+    "sector": "",
+    "industry": ""
+  },
+  "4167": {
+    "sector": "",
+    "industry": ""
+  },
+  "4168": {
+    "sector": "",
+    "industry": ""
+  },
+  "4171": {
+    "sector": "",
+    "industry": ""
+  },
+  "4173": {
+    "sector": "",
+    "industry": ""
+  },
+  "4174": {
+    "sector": "",
+    "industry": ""
+  },
+  "4175": {
+    "sector": "",
+    "industry": ""
+  },
+  "4183": {
+    "sector": "",
+    "industry": ""
+  },
+  "4188": {
+    "sector": "",
+    "industry": ""
+  },
+  "4192": {
+    "sector": "",
+    "industry": ""
+  },
+  "4198": {
+    "sector": "",
+    "industry": ""
+  },
+  "4205": {
+    "sector": "",
+    "industry": ""
+  },
+  "4207": {
+    "sector": "",
+    "industry": ""
+  },
+  "4303": {
+    "sector": "",
+    "industry": ""
+  },
+  "4304": {
+    "sector": "",
+    "industry": ""
+  },
+  "4305": {
+    "sector": "",
+    "industry": ""
+  },
+  "4401": {
+    "sector": "",
+    "industry": ""
+  },
+  "4402": {
+    "sector": "",
+    "industry": ""
+  },
+  "4406": {
+    "sector": "",
+    "industry": ""
+  },
+  "4413": {
+    "sector": "",
+    "industry": ""
+  },
+  "4416": {
+    "sector": "",
+    "industry": ""
+  },
+  "4417": {
+    "sector": "",
+    "industry": ""
+  },
+  "4419": {
+    "sector": "",
+    "industry": ""
+  },
+  "4420": {
+    "sector": "",
+    "industry": ""
+  },
+  "4430": {
+    "sector": "",
+    "industry": ""
+  },
+  "4432": {
+    "sector": "",
+    "industry": ""
+  },
+  "4433": {
+    "sector": "",
+    "industry": ""
+  },
+  "4442": {
+    "sector": "",
+    "industry": ""
+  },
+  "4502": {
+    "sector": "",
+    "industry": ""
+  },
+  "4503": {
+    "sector": "",
+    "industry": ""
+  },
+  "4506": {
+    "sector": "",
+    "industry": ""
+  },
+  "4510": {
+    "sector": "",
+    "industry": ""
+  },
+  "4513": {
+    "sector": "",
+    "industry": ""
+  },
+  "4523": {
+    "sector": "",
+    "industry": ""
+  },
+  "4527": {
+    "sector": "",
+    "industry": ""
+  },
+  "4528": {
+    "sector": "",
+    "industry": ""
+  },
+  "4529": {
+    "sector": "",
+    "industry": ""
+  },
+  "4530": {
+    "sector": "",
+    "industry": ""
+  },
+  "4533": {
+    "sector": "",
+    "industry": ""
+  },
+  "4534": {
+    "sector": "",
+    "industry": ""
+  },
+  "4535": {
+    "sector": "",
+    "industry": ""
+  },
+  "4538": {
+    "sector": "",
+    "industry": ""
+  },
+  "4541": {
+    "sector": "",
+    "industry": ""
+  },
+  "4542": {
+    "sector": "",
+    "industry": ""
+  },
+  "4543": {
+    "sector": "",
+    "industry": ""
+  },
+  "4549": {
+    "sector": "",
+    "industry": ""
+  },
+  "4550": {
+    "sector": "",
+    "industry": ""
+  },
+  "4554": {
+    "sector": "",
+    "industry": ""
+  },
+  "4556": {
+    "sector": "",
+    "industry": ""
+  },
+  "4558": {
+    "sector": "",
+    "industry": ""
+  },
+  "4561": {
+    "sector": "",
+    "industry": ""
+  },
+  "4563": {
+    "sector": "",
+    "industry": ""
+  },
+  "4568": {
+    "sector": "",
+    "industry": ""
+  },
+  "4577": {
+    "sector": "",
+    "industry": ""
+  },
+  "4580": {
+    "sector": "",
+    "industry": ""
+  },
+  "4584": {
+    "sector": "",
+    "industry": ""
+  },
+  "4609": {
+    "sector": "",
+    "industry": ""
+  },
+  "4702": {
+    "sector": "",
+    "industry": ""
+  },
+  "4706": {
+    "sector": "",
+    "industry": ""
+  },
+  "4707": {
+    "sector": "",
+    "industry": ""
+  },
+  "4711": {
+    "sector": "",
+    "industry": ""
+  },
+  "4714": {
+    "sector": "",
+    "industry": ""
+  },
+  "4716": {
+    "sector": "",
+    "industry": ""
+  },
+  "4721": {
+    "sector": "",
+    "industry": ""
+  },
+  "4726": {
+    "sector": "",
+    "industry": ""
+  },
+  "4728": {
+    "sector": "",
+    "industry": ""
+  },
+  "4729": {
+    "sector": "",
+    "industry": ""
+  },
+  "4735": {
+    "sector": "",
+    "industry": ""
+  },
+  "4741": {
+    "sector": "",
+    "industry": ""
+  },
+  "4743": {
+    "sector": "",
+    "industry": ""
+  },
+  "4744": {
+    "sector": "",
+    "industry": ""
+  },
+  "4745": {
+    "sector": "",
+    "industry": ""
+  },
+  "4747": {
+    "sector": "",
+    "industry": ""
+  },
+  "4749": {
+    "sector": "",
+    "industry": ""
+  },
+  "4754": {
+    "sector": "",
+    "industry": ""
+  },
+  "4760": {
+    "sector": "",
+    "industry": ""
+  },
+  "4767": {
+    "sector": "",
+    "industry": ""
+  },
+  "4768": {
+    "sector": "",
+    "industry": ""
+  },
+  "4772": {
+    "sector": "",
+    "industry": ""
+  },
+  "4804": {
+    "sector": "",
+    "industry": ""
+  },
+  "4806": {
+    "sector": "",
+    "industry": ""
+  },
+  "4903": {
+    "sector": "",
+    "industry": ""
+  },
+  "4905": {
+    "sector": "",
+    "industry": ""
+  },
+  "4907": {
+    "sector": "",
+    "industry": ""
+  },
+  "4908": {
+    "sector": "",
+    "industry": ""
+  },
+  "4909": {
+    "sector": "",
+    "industry": ""
+  },
+  "4911": {
+    "sector": "",
+    "industry": ""
+  },
+  "4923": {
+    "sector": "",
+    "industry": ""
+  },
+  "4924": {
+    "sector": "",
+    "industry": ""
+  },
+  "4931": {
+    "sector": "",
+    "industry": ""
+  },
+  "4933": {
+    "sector": "",
+    "industry": ""
+  },
+  "4939": {
+    "sector": "",
+    "industry": ""
+  },
+  "4946": {
+    "sector": "",
+    "industry": ""
+  },
+  "4950": {
+    "sector": "",
+    "industry": ""
+  },
+  "4951": {
+    "sector": "",
+    "industry": ""
+  },
+  "4953": {
+    "sector": "",
+    "industry": ""
+  },
+  "4966": {
+    "sector": "",
+    "industry": ""
+  },
+  "4971": {
+    "sector": "",
+    "industry": ""
+  },
+  "4972": {
+    "sector": "",
+    "industry": ""
+  },
+  "4973": {
+    "sector": "",
+    "industry": ""
+  },
+  "4974": {
+    "sector": "",
+    "industry": ""
+  },
+  "4979": {
+    "sector": "",
+    "industry": ""
+  },
+  "4987": {
+    "sector": "",
+    "industry": ""
+  },
+  "4991": {
+    "sector": "",
+    "industry": ""
+  },
+  "4995": {
+    "sector": "",
+    "industry": ""
+  },
+  "5009": {
+    "sector": "",
+    "industry": ""
+  },
+  "5011": {
+    "sector": "",
+    "industry": ""
+  },
+  "5013": {
+    "sector": "",
+    "industry": ""
+  },
+  "5014": {
+    "sector": "",
+    "industry": ""
+  },
+  "5015": {
+    "sector": "",
+    "industry": ""
+  },
+  "5016": {
+    "sector": "",
+    "industry": ""
+  },
+  "5201": {
+    "sector": "",
+    "industry": ""
+  },
+  "5202": {
+    "sector": "",
+    "industry": ""
+  },
+  "5205": {
+    "sector": "",
+    "industry": ""
+  },
+  "5206": {
+    "sector": "",
+    "industry": ""
+  },
+  "5209": {
+    "sector": "",
+    "industry": ""
+  },
+  "5210": {
+    "sector": "",
+    "industry": ""
+  },
+  "5211": {
+    "sector": "",
+    "industry": ""
+  },
+  "5212": {
+    "sector": "",
+    "industry": ""
+  },
+  "5213": {
+    "sector": "",
+    "industry": ""
+  },
+  "5220": {
+    "sector": "",
+    "industry": ""
+  },
+  "5223": {
+    "sector": "",
+    "industry": ""
+  },
+  "5227": {
+    "sector": "",
+    "industry": ""
+  },
+  "5228": {
+    "sector": "",
+    "industry": ""
+  },
+  "5230": {
+    "sector": "",
+    "industry": ""
+  },
+  "5236": {
+    "sector": "",
+    "industry": ""
+  },
+  "5245": {
+    "sector": "",
+    "industry": ""
+  },
+  "5251": {
+    "sector": "",
+    "industry": ""
+  },
+  "5263": {
+    "sector": "",
+    "industry": ""
+  },
+  "5272": {
+    "sector": "",
+    "industry": ""
+  },
+  "5274": {
+    "sector": "",
+    "industry": ""
+  },
+  "5276": {
+    "sector": "",
+    "industry": ""
+  },
+  "5278": {
+    "sector": "",
+    "industry": ""
+  },
+  "5287": {
+    "sector": "",
+    "industry": ""
+  },
+  "5289": {
+    "sector": "",
+    "industry": ""
+  },
+  "5291": {
+    "sector": "",
+    "industry": ""
+  },
+  "5299": {
+    "sector": "",
+    "industry": ""
+  },
+  "5301": {
+    "sector": "",
+    "industry": ""
+  },
+  "5302": {
+    "sector": "",
+    "industry": ""
+  },
+  "5309": {
+    "sector": "",
+    "industry": ""
+  },
+  "5310": {
+    "sector": "",
+    "industry": ""
+  },
+  "5312": {
+    "sector": "",
+    "industry": ""
+  },
+  "5314": {
+    "sector": "",
+    "industry": ""
+  },
+  "5315": {
+    "sector": "",
+    "industry": ""
+  },
+  "5321": {
+    "sector": "",
+    "industry": ""
+  },
+  "5324": {
+    "sector": "",
+    "industry": ""
+  },
+  "5328": {
+    "sector": "",
+    "industry": ""
+  },
+  "5340": {
+    "sector": "",
+    "industry": ""
+  },
+  "5344": {
+    "sector": "",
+    "industry": ""
+  },
+  "5345": {
+    "sector": "",
+    "industry": ""
+  },
+  "5347": {
+    "sector": "",
+    "industry": ""
+  },
+  "5348": {
+    "sector": "",
+    "industry": ""
+  },
+  "5351": {
+    "sector": "",
+    "industry": ""
+  },
+  "5353": {
+    "sector": "",
+    "industry": ""
+  },
+  "5355": {
+    "sector": "",
+    "industry": ""
+  },
+  "5356": {
+    "sector": "",
+    "industry": ""
+  },
+  "5364": {
+    "sector": "",
+    "industry": ""
+  },
+  "5371": {
+    "sector": "",
+    "industry": ""
+  },
+  "5381": {
+    "sector": "",
+    "industry": ""
+  },
+  "5386": {
+    "sector": "",
+    "industry": ""
+  },
+  "5392": {
+    "sector": "",
+    "industry": ""
+  },
+  "5398": {
+    "sector": "",
+    "industry": ""
+  },
+  "5403": {
+    "sector": "",
+    "industry": ""
+  },
+  "5410": {
+    "sector": "",
+    "industry": ""
+  },
+  "5425": {
+    "sector": "",
+    "industry": ""
+  },
+  "5426": {
+    "sector": "",
+    "industry": ""
+  },
+  "5432": {
+    "sector": "",
+    "industry": ""
+  },
+  "5438": {
+    "sector": "",
+    "industry": ""
+  },
+  "5439": {
+    "sector": "",
+    "industry": ""
+  },
+  "5443": {
+    "sector": "",
+    "industry": ""
+  },
+  "5450": {
+    "sector": "",
+    "industry": ""
+  },
+  "5452": {
+    "sector": "",
+    "industry": ""
+  },
+  "5455": {
+    "sector": "",
+    "industry": ""
+  },
+  "5457": {
+    "sector": "",
+    "industry": ""
+  },
+  "5460": {
+    "sector": "",
+    "industry": ""
+  },
+  "5464": {
+    "sector": "",
+    "industry": ""
+  },
+  "5465": {
+    "sector": "",
+    "industry": ""
+  },
+  "5468": {
+    "sector": "",
+    "industry": ""
+  },
+  "5474": {
+    "sector": "",
+    "industry": ""
+  },
+  "5475": {
+    "sector": "",
+    "industry": ""
+  },
+  "5478": {
+    "sector": "",
+    "industry": ""
+  },
+  "5481": {
+    "sector": "",
+    "industry": ""
+  },
+  "5483": {
+    "sector": "",
+    "industry": ""
+  },
+  "5487": {
+    "sector": "",
+    "industry": ""
+  },
+  "5488": {
+    "sector": "",
+    "industry": ""
+  },
+  "5489": {
+    "sector": "",
+    "industry": ""
+  },
+  "5490": {
+    "sector": "",
+    "industry": ""
+  },
+  "5493": {
+    "sector": "",
+    "industry": ""
+  },
+  "5498": {
+    "sector": "",
+    "industry": ""
+  },
+  "5508": {
+    "sector": "",
+    "industry": ""
+  },
+  "5511": {
+    "sector": "",
+    "industry": ""
+  },
+  "5512": {
+    "sector": "",
+    "industry": ""
+  },
+  "5514": {
+    "sector": "",
+    "industry": ""
+  },
+  "5516": {
+    "sector": "",
+    "industry": ""
+  },
+  "5520": {
+    "sector": "",
+    "industry": ""
+  },
+  "5523": {
+    "sector": "",
+    "industry": ""
+  },
+  "5529": {
+    "sector": "",
+    "industry": ""
+  },
+  "5530": {
+    "sector": "",
+    "industry": ""
+  },
+  "5536": {
+    "sector": "",
+    "industry": ""
+  },
+  "5543": {
+    "sector": "",
+    "industry": ""
+  },
+  "5547": {
+    "sector": "",
+    "industry": ""
+  },
+  "5548": {
+    "sector": "",
+    "industry": ""
+  },
+  "5601": {
+    "sector": "",
+    "industry": ""
+  },
+  "5603": {
+    "sector": "",
+    "industry": ""
+  },
+  "5604": {
+    "sector": "",
+    "industry": ""
+  },
+  "5609": {
+    "sector": "",
+    "industry": ""
+  },
+  "5701": {
+    "sector": "",
+    "industry": ""
+  },
+  "5703": {
+    "sector": "",
+    "industry": ""
+  },
+  "5704": {
+    "sector": "",
+    "industry": ""
+  },
+  "5864": {
+    "sector": "",
+    "industry": ""
+  },
+  "5878": {
+    "sector": "",
+    "industry": ""
+  },
+  "5902": {
+    "sector": "",
+    "industry": ""
+  },
+  "5903": {
+    "sector": "",
+    "industry": ""
+  },
+  "5904": {
+    "sector": "",
+    "industry": ""
+  },
+  "5905": {
+    "sector": "",
+    "industry": ""
+  },
+  "6015": {
+    "sector": "",
+    "industry": ""
+  },
+  "6016": {
+    "sector": "",
+    "industry": ""
+  },
+  "6020": {
+    "sector": "",
+    "industry": ""
+  },
+  "6021": {
+    "sector": "",
+    "industry": ""
+  },
+  "6023": {
+    "sector": "",
+    "industry": ""
+  },
+  "6026": {
+    "sector": "",
+    "industry": ""
+  },
+  "6028": {
+    "sector": "",
+    "industry": ""
+  },
+  "6101": {
+    "sector": "",
+    "industry": ""
+  },
+  "6103": {
+    "sector": "",
+    "industry": ""
+  },
+  "6104": {
+    "sector": "",
+    "industry": ""
+  },
+  "6109": {
+    "sector": "",
+    "industry": ""
+  },
+  "6111": {
+    "sector": "",
+    "industry": ""
+  },
+  "6113": {
+    "sector": "",
+    "industry": ""
+  },
+  "6114": {
+    "sector": "",
+    "industry": ""
+  },
+  "6118": {
+    "sector": "",
+    "industry": ""
+  },
+  "6121": {
+    "sector": "",
+    "industry": ""
+  },
+  "6122": {
+    "sector": "",
+    "industry": ""
+  },
+  "6123": {
+    "sector": "",
+    "industry": ""
+  },
+  "6124": {
+    "sector": "",
+    "industry": ""
+  },
+  "6125": {
+    "sector": "",
+    "industry": ""
+  },
+  "6126": {
+    "sector": "",
+    "industry": ""
+  },
+  "6127": {
+    "sector": "",
+    "industry": ""
+  },
+  "6129": {
+    "sector": "",
+    "industry": ""
+  },
+  "6130": {
+    "sector": "",
+    "industry": ""
+  },
+  "6134": {
+    "sector": "",
+    "industry": ""
+  },
+  "6138": {
+    "sector": "",
+    "industry": ""
+  },
+  "6140": {
+    "sector": "",
+    "industry": ""
+  },
+  "6143": {
+    "sector": "",
+    "industry": ""
+  },
+  "6144": {
+    "sector": "",
+    "industry": ""
+  },
+  "6146": {
+    "sector": "",
+    "industry": ""
+  },
+  "6147": {
+    "sector": "",
+    "industry": ""
+  },
+  "6148": {
+    "sector": "",
+    "industry": ""
+  },
+  "6150": {
+    "sector": "",
+    "industry": ""
+  },
+  "6151": {
+    "sector": "",
+    "industry": ""
+  },
+  "6154": {
+    "sector": "",
+    "industry": ""
+  },
+  "6156": {
+    "sector": "",
+    "industry": ""
+  },
+  "6158": {
+    "sector": "",
+    "industry": ""
+  },
+  "6160": {
+    "sector": "",
+    "industry": ""
+  },
+  "6161": {
+    "sector": "",
+    "industry": ""
+  },
+  "6163": {
+    "sector": "",
+    "industry": ""
+  },
+  "6167": {
+    "sector": "",
+    "industry": ""
+  },
+  "6169": {
+    "sector": "",
+    "industry": ""
+  },
+  "6170": {
+    "sector": "",
+    "industry": ""
+  },
+  "6171": {
+    "sector": "",
+    "industry": ""
+  },
+  "6173": {
+    "sector": "",
+    "industry": ""
+  },
+  "6174": {
+    "sector": "",
+    "industry": ""
+  },
+  "6175": {
+    "sector": "",
+    "industry": ""
+  },
+  "6179": {
+    "sector": "",
+    "industry": ""
+  },
+  "6180": {
+    "sector": "",
+    "industry": ""
+  },
+  "6182": {
+    "sector": "",
+    "industry": ""
+  },
+  "6185": {
+    "sector": "",
+    "industry": ""
+  },
+  "6186": {
+    "sector": "",
+    "industry": ""
+  },
+  "6187": {
+    "sector": "",
+    "industry": ""
+  },
+  "6188": {
+    "sector": "",
+    "industry": ""
+  },
+  "6190": {
+    "sector": "",
+    "industry": ""
+  },
+  "6194": {
+    "sector": "",
+    "industry": ""
+  },
+  "6195": {
+    "sector": "",
+    "industry": ""
+  },
+  "6198": {
+    "sector": "",
+    "industry": ""
+  },
+  "6199": {
+    "sector": "",
+    "industry": ""
+  },
+  "6203": {
+    "sector": "",
+    "industry": ""
+  },
+  "6204": {
+    "sector": "",
+    "industry": ""
+  },
+  "6207": {
+    "sector": "",
+    "industry": ""
+  },
+  "6208": {
+    "sector": "",
+    "industry": ""
+  },
+  "6210": {
+    "sector": "",
+    "industry": ""
+  },
+  "6212": {
+    "sector": "",
+    "industry": ""
+  },
+  "6217": {
+    "sector": "",
+    "industry": ""
+  },
+  "6218": {
+    "sector": "",
+    "industry": ""
+  },
+  "6219": {
+    "sector": "",
+    "industry": ""
+  },
+  "6220": {
+    "sector": "",
+    "industry": ""
+  },
+  "6221": {
+    "sector": "",
+    "industry": ""
+  },
+  "6222": {
+    "sector": "",
+    "industry": ""
+  },
+  "6223": {
+    "sector": "",
+    "industry": ""
+  },
+  "6227": {
+    "sector": "",
+    "industry": ""
+  },
+  "6228": {
+    "sector": "",
+    "industry": ""
+  },
+  "6229": {
+    "sector": "",
+    "industry": ""
+  },
+  "6231": {
+    "sector": "",
+    "industry": ""
+  },
+  "6233": {
+    "sector": "",
+    "industry": ""
+  },
+  "6234": {
+    "sector": "",
+    "industry": ""
+  },
+  "6236": {
+    "sector": "",
+    "industry": ""
+  },
+  "6237": {
+    "sector": "",
+    "industry": ""
+  },
+  "6240": {
+    "sector": "",
+    "industry": ""
+  },
+  "6241": {
+    "sector": "",
+    "industry": ""
+  },
+  "6242": {
+    "sector": "",
+    "industry": ""
+  },
+  "6244": {
+    "sector": "",
+    "industry": ""
+  },
+  "6245": {
+    "sector": "",
+    "industry": ""
+  },
+  "6246": {
+    "sector": "",
+    "industry": ""
+  },
+  "6248": {
+    "sector": "",
+    "industry": ""
+  },
+  "6259": {
+    "sector": "",
+    "industry": ""
+  },
+  "6261": {
+    "sector": "",
+    "industry": ""
+  },
+  "6263": {
+    "sector": "",
+    "industry": ""
+  },
+  "6264": {
+    "sector": "",
+    "industry": ""
+  },
+  "6265": {
+    "sector": "",
+    "industry": ""
+  },
+  "6266": {
+    "sector": "",
+    "industry": ""
+  },
+  "6270": {
+    "sector": "",
+    "industry": ""
+  },
+  "6274": {
+    "sector": "",
+    "industry": ""
+  },
+  "6275": {
+    "sector": "",
+    "industry": ""
+  },
+  "6276": {
+    "sector": "",
+    "industry": ""
+  },
+  "6279": {
+    "sector": "",
+    "industry": ""
+  },
+  "6284": {
+    "sector": "",
+    "industry": ""
+  },
+  "6290": {
+    "sector": "",
+    "industry": ""
+  },
+  "6291": {
+    "sector": "",
+    "industry": ""
+  },
+  "6292": {
+    "sector": "",
+    "industry": ""
+  },
+  "6294": {
+    "sector": "",
+    "industry": ""
+  },
+  "6411": {
+    "sector": "",
+    "industry": ""
+  },
+  "6417": {
+    "sector": "",
+    "industry": ""
+  },
+  "6418": {
+    "sector": "",
+    "industry": ""
+  },
+  "6419": {
+    "sector": "",
+    "industry": ""
+  },
+  "6423": {
+    "sector": "",
+    "industry": ""
+  },
+  "6425": {
+    "sector": "",
+    "industry": ""
+  },
+  "6432": {
+    "sector": "",
+    "industry": ""
+  },
+  "6435": {
+    "sector": "",
+    "industry": ""
+  },
+  "6441": {
+    "sector": "",
+    "industry": ""
+  },
+  "6461": {
+    "sector": "",
+    "industry": ""
+  },
+  "6462": {
+    "sector": "",
+    "industry": ""
+  },
+  "6465": {
+    "sector": "",
+    "industry": ""
+  },
+  "6469": {
+    "sector": "",
+    "industry": ""
+  },
+  "6470": {
+    "sector": "",
+    "industry": ""
+  },
+  "6474": {
+    "sector": "",
+    "industry": ""
+  },
+  "6482": {
+    "sector": "",
+    "industry": ""
+  },
+  "6485": {
+    "sector": "",
+    "industry": ""
+  },
+  "6486": {
+    "sector": "",
+    "industry": ""
+  },
+  "6488": {
+    "sector": "",
+    "industry": ""
+  },
+  "6492": {
+    "sector": "",
+    "industry": ""
+  },
+  "6494": {
+    "sector": "",
+    "industry": ""
+  },
+  "6496": {
+    "sector": "",
+    "industry": ""
+  },
+  "6498": {
+    "sector": "",
+    "industry": ""
+  },
+  "6499": {
+    "sector": "",
+    "industry": ""
+  },
+  "6506": {
+    "sector": "",
+    "industry": ""
+  },
+  "6508": {
+    "sector": "",
+    "industry": ""
+  },
+  "6509": {
+    "sector": "",
+    "industry": ""
+  },
+  "6510": {
+    "sector": "",
+    "industry": ""
+  },
+  "6512": {
+    "sector": "",
+    "industry": ""
+  },
+  "6516": {
+    "sector": "",
+    "industry": ""
+  },
+  "6517": {
+    "sector": "",
+    "industry": ""
+  },
+  "6523": {
+    "sector": "",
+    "industry": ""
+  },
+  "6527": {
+    "sector": "",
+    "industry": ""
+  },
+  "6530": {
+    "sector": "",
+    "industry": ""
+  },
+  "6532": {
+    "sector": "",
+    "industry": ""
+  },
+  "6535": {
+    "sector": "",
+    "industry": ""
+  },
+  "6538": {
+    "sector": "",
+    "industry": ""
+  },
+  "6542": {
+    "sector": "",
+    "industry": ""
+  },
+  "6546": {
+    "sector": "",
+    "industry": ""
+  },
+  "6547": {
+    "sector": "",
+    "industry": ""
+  },
+  "6548": {
+    "sector": "",
+    "industry": ""
+  },
+  "6556": {
+    "sector": "",
+    "industry": ""
+  },
+  "6560": {
+    "sector": "",
+    "industry": ""
+  },
+  "6561": {
+    "sector": "",
+    "industry": ""
+  },
+  "6568": {
+    "sector": "",
+    "industry": ""
+  },
+  "6569": {
+    "sector": "",
+    "industry": ""
+  },
+  "6570": {
+    "sector": "",
+    "industry": ""
+  },
+  "6574": {
+    "sector": "",
+    "industry": ""
+  },
+  "6576": {
+    "sector": "",
+    "industry": ""
+  },
+  "6577": {
+    "sector": "",
+    "industry": ""
+  },
+  "6578": {
+    "sector": "",
+    "industry": ""
+  },
+  "6584": {
+    "sector": "",
+    "industry": ""
+  },
+  "6588": {
+    "sector": "",
+    "industry": ""
+  },
+  "6590": {
+    "sector": "",
+    "industry": ""
+  },
+  "6593": {
+    "sector": "",
+    "industry": ""
+  },
+  "6596": {
+    "sector": "",
+    "industry": ""
+  },
+  "6597": {
+    "sector": "",
+    "industry": ""
+  },
+  "6603": {
+    "sector": "",
+    "industry": ""
+  },
+  "6609": {
+    "sector": "",
+    "industry": ""
+  },
+  "6612": {
+    "sector": "",
+    "industry": ""
+  },
+  "6613": {
+    "sector": "",
+    "industry": ""
+  },
+  "6615": {
+    "sector": "",
+    "industry": ""
+  },
+  "6616": {
+    "sector": "",
+    "industry": ""
+  },
+  "6617": {
+    "sector": "",
+    "industry": ""
+  },
+  "6620": {
+    "sector": "",
+    "industry": ""
+  },
+  "6624": {
+    "sector": "",
+    "industry": ""
+  },
+  "6629": {
+    "sector": "",
+    "industry": ""
+  },
+  "6637": {
+    "sector": "",
+    "industry": ""
+  },
+  "6640": {
+    "sector": "",
+    "industry": ""
+  },
+  "6642": {
+    "sector": "",
+    "industry": ""
+  },
+  "6643": {
+    "sector": "",
+    "industry": ""
+  },
+  "6649": {
+    "sector": "",
+    "industry": ""
+  },
+  "6651": {
+    "sector": "",
+    "industry": ""
+  },
+  "6654": {
+    "sector": "",
+    "industry": ""
+  },
+  "6661": {
+    "sector": "",
+    "industry": ""
+  },
+  "6662": {
+    "sector": "",
+    "industry": ""
+  },
+  "6664": {
+    "sector": "",
+    "industry": ""
+  },
+  "6667": {
+    "sector": "",
+    "industry": ""
+  },
+  "6679": {
+    "sector": "",
+    "industry": ""
+  },
+  "6680": {
+    "sector": "",
+    "industry": ""
+  },
+  "6683": {
+    "sector": "",
+    "industry": ""
+  },
+  "6684": {
+    "sector": "",
+    "industry": ""
+  },
+  "6690": {
+    "sector": "",
+    "industry": ""
+  },
+  "6692": {
+    "sector": "",
+    "industry": ""
+  },
+  "6693": {
+    "sector": "",
+    "industry": ""
+  },
+  "6697": {
+    "sector": "",
+    "industry": ""
+  },
+  "6703": {
+    "sector": "",
+    "industry": ""
+  },
+  "6708": {
+    "sector": "",
+    "industry": ""
+  },
+  "6712": {
+    "sector": "",
+    "industry": ""
+  },
+  "6716": {
+    "sector": "",
+    "industry": ""
+  },
+  "6720": {
+    "sector": "",
+    "industry": ""
+  },
+  "6721": {
+    "sector": "",
+    "industry": ""
+  },
+  "6725": {
+    "sector": "",
+    "industry": ""
+  },
+  "6727": {
+    "sector": "",
+    "industry": ""
+  },
+  "6728": {
+    "sector": "",
+    "industry": ""
+  },
+  "6730": {
+    "sector": "",
+    "industry": ""
+  },
+  "6732": {
+    "sector": "",
+    "industry": ""
+  },
+  "6733": {
+    "sector": "",
+    "industry": ""
+  },
+  "6735": {
+    "sector": "",
+    "industry": ""
+  },
+  "6739": {
+    "sector": "",
+    "industry": ""
+  },
+  "6741": {
+    "sector": "",
+    "industry": ""
+  },
+  "6751": {
+    "sector": "",
+    "industry": ""
+  },
+  "6752": {
+    "sector": "",
+    "industry": ""
+  },
+  "6761": {
+    "sector": "",
+    "industry": ""
+  },
+  "6762": {
+    "sector": "",
+    "industry": ""
+  },
+  "6763": {
+    "sector": "",
+    "industry": ""
+  },
+  "6767": {
+    "sector": "",
+    "industry": ""
+  },
+  "6785": {
+    "sector": "",
+    "industry": ""
+  },
+  "6788": {
+    "sector": "",
+    "industry": ""
+  },
+  "6791": {
+    "sector": "",
+    "industry": ""
+  },
+  "6803": {
+    "sector": "",
+    "industry": ""
+  },
+  "6804": {
+    "sector": "",
+    "industry": ""
+  },
+  "6811": {
+    "sector": "",
+    "industry": ""
+  },
+  "6821": {
+    "sector": "",
+    "industry": ""
+  },
+  "6823": {
+    "sector": "",
+    "industry": ""
+  },
+  "6829": {
+    "sector": "",
+    "industry": ""
+  },
+  "6840": {
+    "sector": "",
+    "industry": ""
+  },
+  "6841": {
+    "sector": "",
+    "industry": ""
+  },
+  "6843": {
+    "sector": "",
+    "industry": ""
+  },
+  "6844": {
+    "sector": "",
+    "industry": ""
+  },
+  "6846": {
+    "sector": "",
+    "industry": ""
+  },
+  "6855": {
+    "sector": "",
+    "industry": ""
+  },
+  "6856": {
+    "sector": "",
+    "industry": ""
+  },
+  "6859": {
+    "sector": "",
+    "industry": ""
+  },
+  "6865": {
+    "sector": "",
+    "industry": ""
+  },
+  "6870": {
+    "sector": "",
+    "industry": ""
+  },
+  "6872": {
+    "sector": "",
+    "industry": ""
+  },
+  "6874": {
+    "sector": "",
+    "industry": ""
+  },
+  "6875": {
+    "sector": "",
+    "industry": ""
+  },
+  "6877": {
+    "sector": "",
+    "industry": ""
+  },
+  "6881": {
+    "sector": "",
+    "industry": ""
+  },
+  "6884": {
+    "sector": "",
+    "industry": ""
+  },
+  "6894": {
+    "sector": "",
+    "industry": ""
+  },
+  "6895": {
+    "sector": "",
+    "industry": ""
+  },
+  "6899": {
+    "sector": "",
+    "industry": ""
+  },
+  "6903": {
+    "sector": "",
+    "industry": ""
+  },
+  "6904": {
+    "sector": "",
+    "industry": ""
+  },
+  "6907": {
+    "sector": "",
+    "industry": ""
+  },
+  "6910": {
+    "sector": "",
+    "industry": ""
+  },
+  "6913": {
+    "sector": "",
+    "industry": ""
+  },
+  "6922": {
+    "sector": "",
+    "industry": ""
+  },
+  "6925": {
+    "sector": "",
+    "industry": ""
+  },
+  "6929": {
+    "sector": "",
+    "industry": ""
+  },
+  "6953": {
+    "sector": "",
+    "industry": ""
+  },
+  "6961": {
+    "sector": "",
+    "industry": ""
+  },
+  "6967": {
+    "sector": "",
+    "industry": ""
+  },
+  "6968": {
+    "sector": "",
+    "industry": ""
+  },
+  "6971": {
+    "sector": "",
+    "industry": ""
+  },
+  "6982": {
+    "sector": "",
+    "industry": ""
+  },
+  "6996": {
+    "sector": "",
+    "industry": ""
+  },
+  "6997": {
+    "sector": "",
+    "industry": ""
+  },
+  "7402": {
+    "sector": "",
+    "industry": ""
+  },
+  "7547": {
+    "sector": "",
+    "industry": ""
+  },
+  "7556": {
+    "sector": "",
+    "industry": ""
+  },
+  "7584": {
+    "sector": "",
+    "industry": ""
+  },
+  "7642": {
+    "sector": "",
+    "industry": ""
+  },
+  "7703": {
+    "sector": "",
+    "industry": ""
+  },
+  "7704": {
+    "sector": "",
+    "industry": ""
+  },
+  "7708": {
+    "sector": "",
+    "industry": ""
+  },
+  "7709": {
+    "sector": "",
+    "industry": ""
+  },
+  "7712": {
+    "sector": "",
+    "industry": ""
+  },
+  "7713": {
+    "sector": "",
+    "industry": ""
+  },
+  "7714": {
+    "sector": "",
+    "industry": ""
+  },
+  "7715": {
+    "sector": "",
+    "industry": ""
+  },
+  "7716": {
+    "sector": "",
+    "industry": ""
+  },
+  "7717": {
+    "sector": "",
+    "industry": ""
+  },
+  "7718": {
+    "sector": "",
+    "industry": ""
+  },
+  "7723": {
+    "sector": "",
+    "industry": ""
+  },
+  "7728": {
+    "sector": "",
+    "industry": ""
+  },
+  "7734": {
+    "sector": "",
+    "industry": ""
+  },
+  "7738": {
+    "sector": "",
+    "industry": ""
+  },
+  "7743": {
+    "sector": "",
+    "industry": ""
+  },
+  "7744": {
+    "sector": "",
+    "industry": ""
+  },
+  "7747": {
+    "sector": "",
+    "industry": ""
+  },
+  "7751": {
+    "sector": "",
+    "industry": ""
+  },
+  "7753": {
+    "sector": "",
+    "industry": ""
+  },
+  "7757": {
+    "sector": "",
+    "industry": ""
+  },
+  "7767": {
+    "sector": "",
+    "industry": ""
+  },
+  "7770": {
+    "sector": "",
+    "industry": ""
+  },
+  "7777": {
+    "sector": "",
+    "industry": ""
+  },
+  "7782": {
+    "sector": "",
+    "industry": ""
+  },
+  "7792": {
+    "sector": "",
+    "industry": ""
+  },
+  "7794": {
+    "sector": "",
+    "industry": ""
+  },
+  "7805": {
+    "sector": "",
+    "industry": ""
+  },
+  "7810": {
+    "sector": "",
+    "industry": ""
+  },
+  "7811": {
+    "sector": "",
+    "industry": ""
+  },
+  "8024": {
+    "sector": "",
+    "industry": ""
+  },
+  "8027": {
+    "sector": "",
+    "industry": ""
+  },
+  "8032": {
+    "sector": "",
+    "industry": ""
+  },
+  "8034": {
+    "sector": "",
+    "industry": ""
+  },
+  "8038": {
+    "sector": "",
+    "industry": ""
+  },
+  "8040": {
+    "sector": "",
+    "industry": ""
+  },
+  "8042": {
+    "sector": "",
+    "industry": ""
+  },
+  "8043": {
+    "sector": "",
+    "industry": ""
+  },
+  "8044": {
+    "sector": "",
+    "industry": ""
+  },
+  "8047": {
+    "sector": "",
+    "industry": ""
+  },
+  "8048": {
+    "sector": "",
+    "industry": ""
+  },
+  "8049": {
+    "sector": "",
+    "industry": ""
+  },
+  "8050": {
+    "sector": "",
+    "industry": ""
+  },
+  "8054": {
+    "sector": "",
+    "industry": ""
+  },
+  "8059": {
+    "sector": "",
+    "industry": ""
+  },
+  "8064": {
+    "sector": "",
+    "industry": ""
+  },
+  "8066": {
+    "sector": "",
+    "industry": ""
+  },
+  "8067": {
+    "sector": "",
+    "industry": ""
+  },
+  "8068": {
+    "sector": "",
+    "industry": ""
+  },
+  "8069": {
+    "sector": "",
+    "industry": ""
+  },
+  "8071": {
+    "sector": "",
+    "industry": ""
+  },
+  "8074": {
+    "sector": "",
+    "industry": ""
+  },
+  "8076": {
+    "sector": "",
+    "industry": ""
+  },
+  "8077": {
+    "sector": "",
+    "industry": ""
+  },
+  "8080": {
+    "sector": "",
+    "industry": ""
+  },
+  "8083": {
+    "sector": "",
+    "industry": ""
+  },
+  "8084": {
+    "sector": "",
+    "industry": ""
+  },
+  "8085": {
+    "sector": "",
+    "industry": ""
+  },
+  "8086": {
+    "sector": "",
+    "industry": ""
+  },
+  "8087": {
+    "sector": "",
+    "industry": ""
+  },
+  "8088": {
+    "sector": "",
+    "industry": ""
+  },
+  "8089": {
+    "sector": "",
+    "industry": ""
+  },
+  "8091": {
+    "sector": "",
+    "industry": ""
+  },
+  "8092": {
+    "sector": "",
+    "industry": ""
+  },
+  "8093": {
+    "sector": "",
+    "industry": ""
+  },
+  "8096": {
+    "sector": "",
+    "industry": ""
+  },
+  "8097": {
+    "sector": "",
+    "industry": ""
+  },
+  "8099": {
+    "sector": "",
+    "industry": ""
+  },
+  "8102": {
+    "sector": "",
+    "industry": ""
+  },
+  "8107": {
+    "sector": "",
+    "industry": ""
+  },
+  "8109": {
+    "sector": "",
+    "industry": ""
+  },
+  "8111": {
+    "sector": "",
+    "industry": ""
+  },
+  "8121": {
+    "sector": "",
+    "industry": ""
+  },
+  "8147": {
+    "sector": "",
+    "industry": ""
+  },
+  "8155": {
+    "sector": "",
+    "industry": ""
+  },
+  "8171": {
+    "sector": "",
+    "industry": ""
+  },
+  "8176": {
+    "sector": "",
+    "industry": ""
+  },
+  "8182": {
+    "sector": "",
+    "industry": ""
+  },
+  "8183": {
+    "sector": "",
+    "industry": ""
+  },
+  "8227": {
+    "sector": "",
+    "industry": ""
+  },
+  "8234": {
+    "sector": "",
+    "industry": ""
+  },
+  "8240": {
+    "sector": "",
+    "industry": ""
+  },
+  "8255": {
+    "sector": "",
+    "industry": ""
+  },
+  "8272": {
+    "sector": "",
+    "industry": ""
+  },
+  "8277": {
+    "sector": "",
+    "industry": ""
+  },
+  "8279": {
+    "sector": "",
+    "industry": ""
+  },
+  "8284": {
+    "sector": "",
+    "industry": ""
+  },
+  "8289": {
+    "sector": "",
+    "industry": ""
+  },
+  "8291": {
+    "sector": "",
+    "industry": ""
+  },
+  "8299": {
+    "sector": "",
+    "industry": ""
+  },
+  "8342": {
+    "sector": "",
+    "industry": ""
+  },
+  "8349": {
+    "sector": "",
+    "industry": ""
+  },
+  "8354": {
+    "sector": "",
+    "industry": ""
+  },
+  "8358": {
+    "sector": "",
+    "industry": ""
+  },
+  "8383": {
+    "sector": "",
+    "industry": ""
+  },
+  "8390": {
+    "sector": "",
+    "industry": ""
+  },
+  "8401": {
+    "sector": "",
+    "industry": ""
+  },
+  "8403": {
+    "sector": "",
+    "industry": ""
+  },
+  "8409": {
+    "sector": "",
+    "industry": ""
+  },
+  "8410": {
+    "sector": "",
+    "industry": ""
+  },
+  "8415": {
+    "sector": "",
+    "industry": ""
+  },
+  "8416": {
+    "sector": "",
+    "industry": ""
+  },
+  "8421": {
+    "sector": "",
+    "industry": ""
+  },
+  "8423": {
+    "sector": "",
+    "industry": ""
+  },
+  "8424": {
+    "sector": "",
+    "industry": ""
+  },
+  "8426": {
+    "sector": "",
+    "industry": ""
+  },
+  "8431": {
+    "sector": "",
+    "industry": ""
+  },
+  "8432": {
+    "sector": "",
+    "industry": ""
+  },
+  "8433": {
+    "sector": "",
+    "industry": ""
+  },
+  "8435": {
+    "sector": "",
+    "industry": ""
+  },
+  "8436": {
+    "sector": "",
+    "industry": ""
+  },
+  "8437": {
+    "sector": "",
+    "industry": ""
+  },
+  "8440": {
+    "sector": "",
+    "industry": ""
+  },
+  "8444": {
+    "sector": "",
+    "industry": ""
+  },
+  "8446": {
+    "sector": "",
+    "industry": ""
+  },
+  "8450": {
+    "sector": "",
+    "industry": ""
+  },
+  "8455": {
+    "sector": "",
+    "industry": ""
+  },
+  "8472": {
+    "sector": "",
+    "industry": ""
+  },
+  "8477": {
+    "sector": "",
+    "industry": ""
+  },
+  "8489": {
+    "sector": "",
+    "industry": ""
+  },
+  "8905": {
+    "sector": "",
+    "industry": ""
+  },
+  "8906": {
+    "sector": "",
+    "industry": ""
+  },
+  "8908": {
+    "sector": "",
+    "industry": ""
+  },
+  "8916": {
+    "sector": "",
+    "industry": ""
+  },
+  "8917": {
+    "sector": "",
+    "industry": ""
+  },
+  "8921": {
+    "sector": "",
+    "industry": ""
+  },
+  "8923": {
+    "sector": "",
+    "industry": ""
+  },
+  "8924": {
+    "sector": "",
+    "industry": ""
+  },
+  "8927": {
+    "sector": "",
+    "industry": ""
+  },
+  "8928": {
+    "sector": "",
+    "industry": ""
+  },
+  "8929": {
+    "sector": "",
+    "industry": ""
+  },
+  "8930": {
+    "sector": "",
+    "industry": ""
+  },
+  "8931": {
+    "sector": "",
+    "industry": ""
+  },
+  "8932": {
+    "sector": "",
+    "industry": ""
+  },
+  "8933": {
+    "sector": "",
+    "industry": ""
+  },
+  "8935": {
+    "sector": "",
+    "industry": ""
+  },
+  "8936": {
+    "sector": "",
+    "industry": ""
+  },
+  "8937": {
+    "sector": "",
+    "industry": ""
+  },
+  "8938": {
+    "sector": "",
+    "industry": ""
+  },
+  "8941": {
+    "sector": "",
+    "industry": ""
+  },
+  "8942": {
+    "sector": "",
+    "industry": ""
+  },
+  "9949": {
+    "sector": "",
+    "industry": ""
+  },
+  "9950": {
+    "sector": "",
+    "industry": ""
+  },
+  "9951": {
+    "sector": "",
+    "industry": ""
+  },
+  "9960": {
+    "sector": "",
+    "industry": ""
+  },
+  "9962": {
+    "sector": "",
+    "industry": ""
+  }
+}

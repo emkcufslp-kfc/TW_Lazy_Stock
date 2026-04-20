@@ -198,7 +198,8 @@ def get_historical_prices_batch(
         close = raw["Close"] if "Close" in raw.columns else raw
 
         prices: dict[str, float] = {}
-        if hasattr(close.columns, "levels"):          # MultiIndex (multiple tickers)
+        if isinstance(close, pd.DataFrame) and len(ticker_to_code) > 1:
+            # yfinance 1.0+: multi-ticker → DataFrame with ticker names as columns
             for ticker, code in ticker_to_code.items():
                 try:
                     col = close[ticker].dropna()
@@ -206,9 +207,11 @@ def get_historical_prices_batch(
                         prices[code] = float(col.iloc[-1])
                 except Exception:
                     pass
-        else:                                          # flat (single ticker)
+        else:
+            # single ticker → Series
             code = list(ticker_to_code.values())[0]
-            col = close.dropna()
+            col = (close.dropna() if isinstance(close, pd.Series)
+                   else close.iloc[:, 0].dropna())
             if not col.empty:
                 prices[code] = float(col.iloc[-1])
 
