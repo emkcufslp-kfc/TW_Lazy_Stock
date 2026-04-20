@@ -108,7 +108,27 @@ st.markdown("""
 # --- 路徑設定 ---
 DATA_DIR = Path("data")
 SCREENED_FILE = DATA_DIR / "screened_dataset.csv"
-DIV_FILE = DATA_DIR / "dividend_history.csv"
+DIV_FILE      = DATA_DIR / "dividend_history.csv"
+WATCHLIST_DIR = DATA_DIR / "watchlists"
+WATCHLIST_MAX = 20
+
+WATCHLIST_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def _save_watchlist_csv(df: pd.DataFrame, filename: str) -> None:
+    """Save watchlist CSV to WATCHLIST_DIR and prune to keep newest WATCHLIST_MAX files."""
+    dest = WATCHLIST_DIR / filename
+    df.to_csv(dest, index=False, encoding="utf-8-sig")
+    # prune oldest if over limit
+    existing = sorted(WATCHLIST_DIR.glob("TW_Div_*.csv"), key=lambda p: p.stat().st_mtime)
+    for old in existing[:-WATCHLIST_MAX]:
+        old.unlink(missing_ok=True)
+
+
+def _list_watchlist_csvs() -> list[Path]:
+    """Return saved watchlist CSVs sorted newest-first."""
+    return sorted(WATCHLIST_DIR.glob("TW_Div_*.csv"),
+                  key=lambda p: p.stat().st_mtime, reverse=True)[:WATCHLIST_MAX]
 
 
 # --- 資料載入 ---
@@ -484,7 +504,17 @@ def main():
         and _meta["date"] < date.today()
     )
     if _is_historical:
-        display_df = _wl.copy()
+        _wl_view = _wl[
+            (_wl["current_yield_pct"] >= min_current) &
+            (_wl["avg_5y_yield_pct"]  >= min_avg5)
+        ].copy()
+        if market == "上市 (TWSE)":
+            _wl_view = _wl_view[_wl_view["market"] == "TWSE"]
+        elif market == "上櫃 (TPEX)":
+            _wl_view = _wl_view[_wl_view["market"] == "TPEX"]
+        sort_cols_v, sort_asc_v = sort_map[sort_by]
+        _wl_view = _wl_view.sort_values(sort_cols_v, ascending=sort_asc_v).reset_index(drop=True)
+        display_df = _wl_view
         _date_label = _meta["date"].strftime("%d.%b.%Y")
     else:
         display_df = filtered
@@ -609,7 +639,10 @@ def main():
                 for c in watchlist_cols
             ]
 
-            st.success(f"✅ 觀察清單已建立：**{filename}**（{len(wl)} 檔股票）")
+            # Auto-save to watchlists folder
+            _save_watchlist_csv(wl_export, filename)
+
+            st.success(f"✅ 觀察清單已建立並儲存：**{filename}**（{len(wl)} 檔股票）")
             st.download_button(
                 f"💾 下載觀察清單 {filename}",
                 wl_export.to_csv(index=False, encoding="utf-8-sig").encode("utf-8-sig"),
@@ -697,19 +730,52 @@ def main():
     wl_session = st.session_state.get("watchlist_df")
     wl_meta    = st.session_state.get("watchlist_meta")
 
+    _saved_csvs = _list_watchlist_csvs()
+
     src_options = []
     if wl_session is not None and not wl_session.empty:
         label = "目前觀察清單（session）"
         if wl_meta:
             label += f" — {wl_meta['date'].strftime('%d.%b.%Y')} · {len(wl_session)} 檔"
         src_options.append(label)
+    if _saved_csvs:
+        src_options.append("已儲存觀察清單 CSV")
     src_options.append("上傳觀察清單 CSV")
 
     wvf_src = st.radio("📂 掃描來源", src_options, horizontal=True, key="wvf_src")
 
+    _col_map = {"代號": "code", "名稱": "name", "產業別": "sector",
+                "市場": "market", "現價": "price",
+                "目前殖利率%": "current_yield_pct",
+                "平均5年殖利率%": "avg_5y_yield_pct"}
+
+    def _load_csv_df(p: Path) -> pd.DataFrame | None:
+        try:
+            df = pd.read_csv(p)
+            df = df.rename(columns=_col_map)
+            df["code"] = df["code"].astype(str)
+            if "market" not in df.columns:
+                df["market"] = "TWSE"
+            return df
+        except Exception as e:
+            st.error(f"CSV 解析失敗：{e}")
+            return None
+
     wl_df: pd.DataFrame | None = None
     if wvf_src.startswith("目前觀察清單"):
         wl_df = wl_session
+    elif wvf_src == "已儲存觀察清單 CSV":
+        _csv_names = [p.name for p in _saved_csvs]
+        _sel_name = st.selectbox(
+            "選擇觀察清單",
+            _csv_names,
+            key="wvf_saved_sel",
+        )
+        if _sel_name:
+            _sel_path = WATCHLIST_DIR / _sel_name
+            wl_df = _load_csv_df(_sel_path)
+            if wl_df is not None:
+                st.success(f"已載入：{_sel_name}（{len(wl_df)} 檔股票）")
     else:
         uploaded = st.file_uploader(
             "上傳觀察清單 CSV（格式：TW_Div_xx_dd.mmm.yyyy.csv）",
@@ -718,15 +784,10 @@ def main():
         if uploaded is not None:
             try:
                 raw_csv = pd.read_csv(uploaded)
-                # Map 繁體中文欄位 → 內部欄位名
-                col_map = {"代號": "code", "名稱": "name", "產業別": "sector",
-                           "市場": "market", "現價": "price",
-                           "目前殖利率%": "current_yield_pct",
-                           "平均5年殖利率%": "avg_5y_yield_pct"}
-                raw_csv = raw_csv.rename(columns=col_map)
+                raw_csv = raw_csv.rename(columns=_col_map)
                 raw_csv["code"] = raw_csv["code"].astype(str)
                 if "market" not in raw_csv.columns:
-                    raw_csv["market"] = "TWSE"   # fallback
+                    raw_csv["market"] = "TWSE"
                 wl_df = raw_csv
                 st.success(f"已載入：{uploaded.name}（{len(wl_df)} 檔股票）")
             except Exception as e:
