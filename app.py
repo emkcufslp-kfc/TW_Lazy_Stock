@@ -903,7 +903,7 @@ def main():
 
                     # Fetch 三大法人 data
                     from technical import fetch_institutional_flow
-                    _flow = fetch_institutional_flow(code, days=5)
+                    _flow = fetch_institutional_flow(code, days=60)
 
                     def _fmt_net(v: int) -> str:
                         return f'<span style="color:#00D4AA;">▲ +{v:,}</span>' if v >= 0 else f'<span style="color:#ff6b6b;">▼ {v:,}</span>'
