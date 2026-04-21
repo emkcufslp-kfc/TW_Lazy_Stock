@@ -283,14 +283,79 @@ def fetch_institutional_flow(code: str, days: int = 5) -> dict | None:
         dealer  = int(agg.get("dealer",  0)) // 1000
         total   = foreign + trust + dealer
 
+        # Daily breakdown for charting: pivot to date × bucket
+        daily = (
+            df.groupby(["date", "bucket"])["net"].sum()
+            .unstack(fill_value=0)
+            .rename(columns={"foreign": "外資", "trust": "投信", "dealer": "自營商"})
+        )
+        for col in ["外資", "投信", "自營商"]:
+            if col not in daily.columns:
+                daily[col] = 0
+        daily = daily[["外資", "投信", "自營商"]].div(1000).astype(int)
+        daily.index = pd.to_datetime(daily.index)
+        daily["合計"] = daily.sum(axis=1)
+
         return {
             "foreign": foreign, "trust": trust, "dealer": dealer,
             "total": total, "days": len(all_dates),
             "latest_date": all_dates[-1] if all_dates else "",
+            "daily": daily,   # DataFrame with columns 外資/投信/自營商/合計, index=date
         }
     except Exception as e:
         logger.warning(f"[{code}] FinMind institutional flow error: {e}")
         return None
+
+
+def make_institutional_chart(flow: dict, code: str, name: str):
+    """Build a Plotly grouped-bar chart of daily 三大法人 net buy/sell (張)."""
+    import plotly.graph_objects as go
+
+    daily: pd.DataFrame = flow["daily"]
+    dates = daily.index
+
+    colors = {"外資": "#00D4AA", "投信": "#00B4D8", "自營商": "#FFD700"}
+
+    fig = go.Figure()
+    for col, color in colors.items():
+        vals = daily[col].tolist()
+        bar_colors = [color if v >= 0 else "#ff6b6b" for v in vals]
+        fig.add_trace(go.Bar(
+            name=col,
+            x=dates,
+            y=vals,
+            marker_color=bar_colors,
+            opacity=0.85,
+        ))
+
+    # Total line
+    fig.add_trace(go.Scatter(
+        name="合計",
+        x=dates,
+        y=daily["合計"].tolist(),
+        mode="lines+markers",
+        line=dict(color="#ffffff", width=2, dash="dot"),
+        marker=dict(size=6),
+    ))
+
+    fig.add_hline(y=0, line_color="rgba(255,255,255,0.2)", line_width=1)
+
+    fig.update_layout(
+        title=dict(
+            text=f"{code} {name} — 三大法人近期買賣超（張）",
+            font=dict(size=13, color="#e0e0e0"),
+        ),
+        barmode="group",
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        font=dict(color="#c0c8d4"),
+        legend=dict(orientation="h", y=1.12, x=0),
+        margin=dict(l=40, r=20, t=55, b=30),
+        height=260,
+        xaxis=dict(gridcolor="rgba(255,255,255,0.05)", tickformat="%m/%d"),
+        yaxis=dict(title="張", gridcolor="rgba(255,255,255,0.08)"),
+    )
+    return fig
 
 
 def make_wvf_chart(result: dict, name: str, n_days: int = 60):

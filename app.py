@@ -960,9 +960,13 @@ def main():
                     st.markdown(_card, unsafe_allow_html=True)
 
                     if r.get("wvf_data") is not None:
-                        with st.expander(f"📊 {code} {name} — WVF 走勢圖"):
+                        with st.expander(f"📊 {code} {name} — WVF 走勢圖 ＋ 三大法人"):
                             fig = make_wvf_chart(r, name)
                             st.plotly_chart(fig, use_container_width=True)
+                            if _flow and _flow.get("daily") is not None:
+                                from technical import make_institutional_chart
+                                fig_inst = make_institutional_chart(_flow, code, name)
+                                st.plotly_chart(fig_inst, use_container_width=True)
 
             else:
                 st.info(f"近 {lkb} 個交易日內，觀察清單中無股票出現 WVF 綠色訊號。")
