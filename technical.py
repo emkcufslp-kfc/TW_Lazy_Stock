@@ -226,6 +226,73 @@ def get_historical_prices_batch(
         return {}
 
 
+def fetch_institutional_flow(code: str, days: int = 5) -> dict | None:
+    """
+    Fetch 三大法人 net buy/sell (張) for the last `days` trading days via FinMind free API.
+
+    Returns dict with keys:
+      foreign (int), trust (int), dealer (int), total (int),
+      dates (list[str]), rows (list[dict])   ← all in 張 (÷1000)
+    Returns None on error.
+
+    FinMind dataset: TaiwanStockInstitutionalInvestorsBuySell
+    Names mapped: Foreign_Investor+Foreign_Dealer_Self → foreign
+                  Investment_Trust                     → trust
+                  Dealer_self+Dealer_Hedging           → dealer
+    """
+    from datetime import date as _date, timedelta
+    try:
+        import requests as _req
+        import urllib3; urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+    except ImportError:
+        return None
+
+    start = (_date.today() - timedelta(days=days * 2 + 7)).strftime("%Y-%m-%d")
+    url = (
+        f"https://api.finmindtrade.com/api/v4/data"
+        f"?dataset=TaiwanStockInstitutionalInvestorsBuySell"
+        f"&data_id={code}&start_date={start}"
+    )
+    try:
+        r = _req.get(url, timeout=8, verify=False)
+        j = r.json()
+        if j.get("status") != 200 or not j.get("data"):
+            return None
+
+        df = pd.DataFrame(j["data"])
+        df["net"] = df["buy"] - df["sell"]
+
+        # Keep last `days` unique trading dates
+        all_dates = sorted(df["date"].unique())[-days:]
+        df = df[df["date"].isin(all_dates)]
+
+        # Map category → big-three bucket
+        _map = {
+            "Foreign_Investor":   "foreign",
+            "Foreign_Dealer_Self": "foreign",
+            "Investment_Trust":   "trust",
+            "Dealer_self":        "dealer",
+            "Dealer_Hedging":     "dealer",
+        }
+        df["bucket"] = df["name"].map(_map)
+        df = df.dropna(subset=["bucket"])
+
+        agg = df.groupby("bucket")["net"].sum()
+        foreign = int(agg.get("foreign", 0)) // 1000
+        trust   = int(agg.get("trust",   0)) // 1000
+        dealer  = int(agg.get("dealer",  0)) // 1000
+        total   = foreign + trust + dealer
+
+        return {
+            "foreign": foreign, "trust": trust, "dealer": dealer,
+            "total": total, "days": len(all_dates),
+            "latest_date": all_dates[-1] if all_dates else "",
+        }
+    except Exception as e:
+        logger.warning(f"[{code}] FinMind institutional flow error: {e}")
+        return None
+
+
 def make_wvf_chart(result: dict, name: str, n_days: int = 60):
     """Build a Plotly figure of the WVF for the last n_days sessions."""
     import plotly.graph_objects as go

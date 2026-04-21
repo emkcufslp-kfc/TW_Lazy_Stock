@@ -900,6 +900,43 @@ def main():
                     import html as _html
                     _name_s   = _html.escape(str(name))
                     _sector_s = _html.escape(str(sector))
+
+                    # Fetch 三大法人 data
+                    from technical import fetch_institutional_flow
+                    _flow = fetch_institutional_flow(code, days=5)
+
+                    def _fmt_net(v: int) -> str:
+                        return f'<span style="color:#00D4AA;">▲ +{v:,}</span>' if v >= 0 else f'<span style="color:#ff6b6b;">▼ {v:,}</span>'
+
+                    if _flow:
+                        _f, _t, _d, _tot = _flow["foreign"], _flow["trust"], _flow["dealer"], _flow["total"]
+                        _n = _flow["days"]
+                        _inst_row = (
+                            f'<div style="margin-top:10px;font-size:0.83rem;background:rgba(0,0,0,0.25);'
+                            f'border-radius:8px;padding:8px 12px;">'
+                            f'<span style="color:#8892a4;">三大法人近 {_n} 日（張）：</span> &nbsp;'
+                            f'外資 {_fmt_net(_f)} &nbsp;｜&nbsp;'
+                            f'投信 {_fmt_net(_t)} &nbsp;｜&nbsp;'
+                            f'自營商 {_fmt_net(_d)} &nbsp;｜&nbsp;'
+                            f'合計 <strong>{_fmt_net(_tot)}</strong>'
+                            '</div>'
+                        )
+                        # Verdict
+                        if _tot > 0 and days_hit >= 2:
+                            _verdict = ('▶ <strong style="color:#00D4AA;">法人合計買超，與 WVF 底部訊號一致</strong>'
+                                        '，可列為重點觀察，評估進場時機。')
+                        elif _tot > 0:
+                            _verdict = ('▶ 法人小幅買超，WVF 出現底部訊號，<strong style="color:#e0e0e0;">關注後續量能</strong>。')
+                        elif _tot < 0 and abs(_tot) > 1000:
+                            _verdict = ('▶ <strong style="color:#ff6b6b;">法人明顯賣超</strong>'
+                                        '，WVF 訊號雖現，資金面偏空，建議<strong style="color:#ffd700;">暫觀</strong>，待賣壓減輕再評估。')
+                        else:
+                            _verdict = '▶ 法人動向中性，WVF 底部訊號供參，建議觀察量價配合再決策。'
+                        _verdict_row = f'<div style="margin-top:8px;font-size:0.84rem;color:#c0c8d4;">{_verdict}</div>'
+                    else:
+                        _inst_row = '<div style="margin-top:10px;font-size:0.83rem;color:#6b7b8d;">三大法人資料暫無法取得（FinMind API）</div>'
+                        _verdict_row = '<div style="margin-top:6px;font-size:0.84rem;color:#ffd700;">&#9888; WVF 顯示恐慌底部訊號，請自行查閱法人動向後評估。</div>'
+
                     # Build card as single string — no blank lines that break markdown HTML blocks
                     _card = (
                         '<div style="background:linear-gradient(135deg,#0d2a1f 0%,#1a3a2a 100%);'
@@ -917,10 +954,7 @@ def main():
                         '<div style="margin-top:6px;font-size:0.82rem;color:#6b7b8d;">'
                         f'WVF = {wvf_val:.2f} &nbsp;｜&nbsp;Upper Band = {ub_val:.2f} &nbsp;｜&nbsp;Range High = {rh_val:.2f}'
                         '</div>'
-                        + ma_row +
-                        '<div style="margin-top:10px;font-size:0.85rem;color:#ffd700;">'
-                        '&#9888; 建議留意此股，Williams VIX Fix 顯示潛在市場恐慌底部，可評估是否買入。'
-                        '</div>'
+                        + ma_row + _inst_row + _verdict_row +
                         '</div>'
                     )
                     st.markdown(_card, unsafe_allow_html=True)
