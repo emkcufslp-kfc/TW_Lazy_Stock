@@ -358,41 +358,74 @@ def make_institutional_chart(flow: dict, code: str, name: str):
     return fig
 
 
-def make_wvf_chart(result: dict, name: str, n_days: int = 60):
-    """Build a Plotly figure of the WVF for the last n_days sessions."""
+def make_wvf_chart(result: dict, name: str, n_days: int = 60, flow: dict | None = None):
+    """
+    Build a Plotly figure of WVF (and optionally 三大法人) with shared x-axis.
+
+    Rows:
+      Row 1 (optional, when MA filter on): Price + MA
+      Row N: WVF bars + Upper Band + Range High
+      Row N+1 (when flow provided): 三大法人 grouped bars aligned to same x range
+    """
     import plotly.graph_objects as go
     from plotly.subplots import make_subplots
 
     data: pd.DataFrame = result["wvf_data"].tail(n_days)
-    has_ma = "ma" in data.columns and data["ma"].notna().any()
-    colors = ["#00D4AA" if g else "#4a5568" for g in data["green"]]
+    has_ma  = "ma" in data.columns and data["ma"].notna().any()
+    has_inst = flow is not None and flow.get("daily") is not None
 
-    # Two rows when MA is present: top = price + MA, bottom = WVF
-    if has_ma:
-        fig = make_subplots(rows=2, cols=1, shared_xaxes=True,
-                            row_heights=[0.45, 0.55], vertical_spacing=0.04)
-        # Price line
-        fig.add_trace(go.Scatter(
-            x=data.index, y=data["Close"],
-            line=dict(color="#c0c8d4", width=1.5), name="Close", showlegend=True,
-        ), row=1, col=1)
-        # MA line
-        ma_label = result.get("ma_label", "MA")
-        fig.add_trace(go.Scatter(
-            x=data.index, y=data["ma"],
-            line=dict(color="#FFD700", width=2), name=ma_label, showlegend=True,
-        ), row=1, col=1)
-        wvf_row = 2
-    else:
+    # Build daily institutional data aligned to WVF date range
+    inst_daily: pd.DataFrame | None = None
+    if has_inst:
+        inst_daily = flow["daily"].copy()
+        inst_daily.index = pd.to_datetime(inst_daily.index)
+        # Restrict to WVF date range so x-axes align
+        inst_daily = inst_daily[
+            (inst_daily.index >= data.index.min()) &
+            (inst_daily.index <= data.index.max())
+        ]
+        if inst_daily.empty:
+            has_inst = False
+
+    # Determine subplot layout
+    n_rows = (1 if has_ma else 0) + 1 + (1 if has_inst else 0)
+    if n_rows == 1:
         fig = go.Figure()
-        wvf_row = None
+        price_row = wvf_row = inst_row = None
+    else:
+        if has_ma and has_inst:
+            heights = [0.30, 0.40, 0.30]
+        elif has_ma:
+            heights = [0.40, 0.60]
+        else:
+            heights = [0.55, 0.45]
+        fig = make_subplots(
+            rows=n_rows, cols=1, shared_xaxes=True,
+            row_heights=heights, vertical_spacing=0.03,
+        )
+        price_row = 1 if has_ma else None
+        wvf_row   = 2 if has_ma else 1
+        inst_row  = n_rows if has_inst else None
 
     def _add(trace, row=None):
-        if row:
+        if row is not None:
             fig.add_trace(trace, row=row, col=1)
         else:
             fig.add_trace(trace)
 
+    # ── Price + MA row ──
+    if has_ma and price_row:
+        fig.add_trace(go.Scatter(
+            x=data.index, y=data["Close"],
+            line=dict(color="#c0c8d4", width=1.5), name="Close",
+        ), row=price_row, col=1)
+        fig.add_trace(go.Scatter(
+            x=data.index, y=data["ma"],
+            line=dict(color="#FFD700", width=2), name=result.get("ma_label", "MA"),
+        ), row=price_row, col=1)
+
+    # ── WVF row ──
+    colors = ["#00D4AA" if g else "#4a5568" for g in data["green"]]
     _add(go.Bar(x=data.index, y=data["wvf"],
                 marker_color=colors, name="WVF", opacity=0.9), wvf_row)
     _add(go.Scatter(x=data.index, y=data["upper_band"],
@@ -400,26 +433,53 @@ def make_wvf_chart(result: dict, name: str, n_days: int = 60):
     _add(go.Scatter(x=data.index, y=data["range_high"],
                     line=dict(color="orange", width=2, dash="dot"), name="Range High"), wvf_row)
 
+    # ── 三大法人 row ──
+    if has_inst and inst_row and inst_daily is not None:
+        _inst_colors = {"外資": "#00D4AA", "投信": "#00B4D8", "自營商": "#FFD700"}
+        for col, base_color in _inst_colors.items():
+            vals = inst_daily[col].tolist()
+            bar_colors = [base_color if v >= 0 else "#ff6b6b" for v in vals]
+            fig.add_trace(go.Bar(
+                name=col, x=inst_daily.index, y=vals,
+                marker_color=bar_colors, opacity=0.85,
+            ), row=inst_row, col=1)
+        fig.add_trace(go.Scatter(
+            name="合計", x=inst_daily.index, y=inst_daily["合計"].tolist(),
+            mode="lines+markers",
+            line=dict(color="#ffffff", width=1.5, dash="dot"),
+            marker=dict(size=5),
+        ), row=inst_row, col=1)
+        fig.add_hline(y=0, line_color="rgba(255,255,255,0.15)",
+                      line_width=1, row=inst_row, col=1)
+
+    # ── Layout ──
+    total_height = 260 + (120 if has_ma else 0) + (200 if has_inst else 0)
     layout = dict(
-        title=dict(text=f"{result['code']} {name} — Williams VIX Fix", font=dict(size=14, color="#e0e0e0")),
+        title=dict(
+            text=f"{result['code']} {name} — WVF" + (" ＋ 三大法人" if has_inst else ""),
+            font=dict(size=14, color="#e0e0e0"),
+        ),
+        barmode="group",
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
         font=dict(color="#c0c8d4"),
-        legend=dict(orientation="h", y=1.12, x=0),
-        margin=dict(l=40, r=20, t=55, b=30),
-        height=380 if has_ma else 280,
+        legend=dict(orientation="h", y=1.08, x=0, font=dict(size=11)),
+        margin=dict(l=50, r=20, t=55, b=30),
+        height=total_height,
         showlegend=True,
     )
-    if has_ma:
-        layout.update({
-            "xaxis2": dict(gridcolor="rgba(255,255,255,0.05)"),
-            "yaxis":  dict(title="Price", gridcolor="rgba(255,255,255,0.08)"),
-            "yaxis2": dict(title="WVF",   gridcolor="rgba(255,255,255,0.08)"),
-        })
-    else:
-        layout.update({
-            "xaxis": dict(gridcolor="rgba(255,255,255,0.05)"),
-            "yaxis": dict(title="WVF", gridcolor="rgba(255,255,255,0.08)"),
-        })
+    # Axis styling — apply to all xaxes/yaxes
+    axis_style = dict(gridcolor="rgba(255,255,255,0.07)", showgrid=True)
+    for i in range(1, n_rows + 1):
+        suffix = "" if i == 1 else str(i)
+        layout[f"xaxis{suffix}"] = {**axis_style, "tickformat": "%m/%d"}
+        layout[f"yaxis{suffix}"] = {**axis_style}
+    if wvf_row:
+        layout[f"yaxis{'' if wvf_row == 1 else wvf_row}"]["title"] = "WVF"
+    if has_ma and price_row:
+        layout["yaxis"]["title"] = "Price"
+    if has_inst and inst_row:
+        layout[f"yaxis{inst_row}"]["title"] = "張"
+
     fig.update_layout(**layout)
     return fig
