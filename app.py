@@ -839,13 +839,13 @@ def render_kpi_cell(label: str, value: str, unit: str = "", accent: str = "",
     klass = f"kpi-value {accent}".strip()
     unit_html = f'<span class="unit">{unit}</span>' if unit else ""
     sub_html  = f'<div class="kpi-sub">{sub}</div>' if sub else ""
-    return f"""
-    <div class="kpi-cell">
-        <div class="kpi-label">{label}</div>
-        <div class="{klass}">{value}{unit_html}</div>
-        {sub_html}
-    </div>
-    """
+    return (
+        f'<div class="kpi-cell">'
+        f'<div class="kpi-label">{label}</div>'
+        f'<div class="{klass}">{value}{unit_html}</div>'
+        f'{sub_html}'
+        f'</div>'
+    )
 
 
 def render_kpi_strip(cells_html: list[str]) -> str:
