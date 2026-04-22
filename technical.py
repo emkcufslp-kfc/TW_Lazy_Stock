@@ -314,18 +314,20 @@ def make_institutional_chart(flow: dict, code: str, name: str):
     daily: pd.DataFrame = flow["daily"]
     dates = daily.index
 
-    colors = {"外資": "#00D4AA", "投信": "#00B4D8", "自營商": "#FFD700"}
+    # Terminal palette: FOREIGN=green, TRUST=cyan, DEALER=amber
+    colors = {"外資": "#10B981", "投信": "#22D3EE", "自營商": "#FFB800"}
+    _mono = "JetBrains Mono, ui-monospace, monospace"
 
     fig = go.Figure()
     for col, color in colors.items():
         vals = daily[col].tolist()
-        bar_colors = [color if v >= 0 else "#ff6b6b" for v in vals]
+        bar_colors = [color if v >= 0 else "#EF4444" for v in vals]
         fig.add_trace(go.Bar(
             name=col,
             x=dates,
             y=vals,
-            marker_color=bar_colors,
-            opacity=0.85,
+            marker=dict(color=bar_colors, line=dict(width=0)),
+            opacity=0.95,
         ))
 
     # Total line
@@ -334,26 +336,40 @@ def make_institutional_chart(flow: dict, code: str, name: str):
         x=dates,
         y=daily["合計"].tolist(),
         mode="lines+markers",
-        line=dict(color="#ffffff", width=2, dash="dot"),
-        marker=dict(size=6),
+        line=dict(color="#E5E7EB", width=1.5, dash="dot"),
+        marker=dict(size=5, color="#E5E7EB",
+                    line=dict(color="#0A0D12", width=1)),
     ))
 
-    fig.add_hline(y=0, line_color="rgba(255,255,255,0.2)", line_width=1)
+    fig.add_hline(y=0, line_color="#1F2936", line_width=1)
 
     fig.update_layout(
         title=dict(
-            text=f"{code} {name} — 三大法人近期買賣超（張）",
-            font=dict(size=13, color="#e0e0e0"),
+            text=f"  {code} · {name.upper()} / INST · FLOW · LOTS",
+            font=dict(size=12, color="#9CA3AF", family=_mono),
+            x=0, xanchor="left", y=0.96,
         ),
         barmode="group",
-        plot_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="#0E1219",
         paper_bgcolor="rgba(0,0,0,0)",
-        font=dict(color="#c0c8d4"),
-        legend=dict(orientation="h", y=1.12, x=0),
-        margin=dict(l=40, r=20, t=55, b=30),
+        font=dict(color="#9CA3AF", family=_mono),
+        legend=dict(orientation="h", y=1.12, x=0,
+                    font=dict(family=_mono, size=10, color="#9CA3AF"),
+                    bgcolor="rgba(0,0,0,0)"),
+        margin=dict(l=44, r=20, t=55, b=32),
         height=260,
-        xaxis=dict(gridcolor="rgba(255,255,255,0.05)", tickformat="%m/%d"),
-        yaxis=dict(title="張", gridcolor="rgba(255,255,255,0.08)"),
+        xaxis=dict(gridcolor="rgba(255,255,255,0.04)",
+                   linecolor="#1F2936",
+                   tickformat="%m/%d",
+                   tickfont=dict(family=_mono, size=10, color="#9CA3AF")),
+        yaxis=dict(title=dict(text="LOTS",
+                              font=dict(family=_mono, size=10, color="#6B7280")),
+                   gridcolor="rgba(255,255,255,0.04)",
+                   linecolor="#1F2936",
+                   tickfont=dict(family=_mono, size=10, color="#9CA3AF"),
+                   zerolinecolor="#1F2936"),
+        hoverlabel=dict(bgcolor="#0A0D12", bordercolor="#FFB800",
+                        font=dict(family=_mono, color="#E5E7EB")),
     )
     return fig
 
@@ -413,73 +429,98 @@ def make_wvf_chart(result: dict, name: str, n_days: int = 60, flow: dict | None 
         else:
             fig.add_trace(trace)
 
+    _mono = "JetBrains Mono, ui-monospace, monospace"
+
     # ── Price + MA row ──
     if has_ma and price_row:
         fig.add_trace(go.Scatter(
             x=data.index, y=data["Close"],
-            line=dict(color="#c0c8d4", width=1.5), name="Close",
+            line=dict(color="#E5E7EB", width=1.3), name="CLOSE",
         ), row=price_row, col=1)
         fig.add_trace(go.Scatter(
             x=data.index, y=data["ma"],
-            line=dict(color="#FFD700", width=2), name=result.get("ma_label", "MA"),
+            line=dict(color="#FFB800", width=1.8),
+            name=result.get("ma_label", "MA").upper(),
         ), row=price_row, col=1)
 
-    # ── WVF row ──
-    colors = ["#00D4AA" if g else "#4a5568" for g in data["green"]]
+    # ── WVF row ── (green fire / dim)
+    colors = ["#10B981" if g else "#2B3542" for g in data["green"]]
     _add(go.Bar(x=data.index, y=data["wvf"],
-                marker_color=colors, name="WVF", opacity=0.9), wvf_row)
+                marker=dict(color=colors, line=dict(width=0)),
+                name="WVF", opacity=0.95), wvf_row)
     _add(go.Scatter(x=data.index, y=data["upper_band"],
-                    line=dict(color="#00B4D8", width=2), name="Upper Band"), wvf_row)
+                    line=dict(color="#22D3EE", width=1.5), name="BB UPPER"), wvf_row)
     _add(go.Scatter(x=data.index, y=data["range_high"],
-                    line=dict(color="orange", width=2, dash="dot"), name="Range High"), wvf_row)
+                    line=dict(color="#FFB800", width=1.5, dash="dot"),
+                    name="RANGE HIGH"), wvf_row)
 
     # ── 三大法人 row ──
     if has_inst and inst_row and inst_daily is not None:
-        _inst_colors = {"外資": "#00D4AA", "投信": "#00B4D8", "自營商": "#FFD700"}
+        _inst_colors = {"外資": "#10B981", "投信": "#22D3EE", "自營商": "#FFB800"}
+        _inst_labels = {"外資": "FOREIGN", "投信": "TRUST", "自營商": "DEALER"}
         for col, base_color in _inst_colors.items():
             vals = inst_daily[col].tolist()
-            bar_colors = [base_color if v >= 0 else "#ff6b6b" for v in vals]
+            bar_colors = [base_color if v >= 0 else "#EF4444" for v in vals]
             fig.add_trace(go.Bar(
-                name=col, x=inst_daily.index, y=vals,
-                marker_color=bar_colors, opacity=0.85,
+                name=_inst_labels[col], x=inst_daily.index, y=vals,
+                marker=dict(color=bar_colors, line=dict(width=0)),
+                opacity=0.95,
             ), row=inst_row, col=1)
         fig.add_trace(go.Scatter(
-            name="合計", x=inst_daily.index, y=inst_daily["合計"].tolist(),
+            name="TOTAL", x=inst_daily.index, y=inst_daily["合計"].tolist(),
             mode="lines+markers",
-            line=dict(color="#ffffff", width=1.5, dash="dot"),
-            marker=dict(size=5),
+            line=dict(color="#E5E7EB", width=1.2, dash="dot"),
+            marker=dict(size=4, color="#E5E7EB"),
         ), row=inst_row, col=1)
-        fig.add_hline(y=0, line_color="rgba(255,255,255,0.15)",
+        fig.add_hline(y=0, line_color="#1F2936",
                       line_width=1, row=inst_row, col=1)
 
     # ── Layout ──
     total_height = 260 + (120 if has_ma else 0) + (200 if has_inst else 0)
+    _title_text = (
+        f"  {result['code']} · {name.upper()} / WVF · SIGNAL"
+        + (" + INST · FLOW" if has_inst else "")
+    )
     layout = dict(
         title=dict(
-            text=f"{result['code']} {name} — WVF" + (" ＋ 三大法人" if has_inst else ""),
-            font=dict(size=14, color="#e0e0e0"),
+            text=_title_text,
+            font=dict(size=12, color="#9CA3AF", family=_mono),
+            x=0, xanchor="left", y=0.98,
         ),
         barmode="group",
-        plot_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="#0E1219",
         paper_bgcolor="rgba(0,0,0,0)",
-        font=dict(color="#c0c8d4"),
-        legend=dict(orientation="h", y=1.08, x=0, font=dict(size=11)),
-        margin=dict(l=50, r=20, t=55, b=30),
+        font=dict(color="#9CA3AF", family=_mono),
+        legend=dict(orientation="h", y=1.08, x=0,
+                    font=dict(family=_mono, size=10, color="#9CA3AF"),
+                    bgcolor="rgba(0,0,0,0)"),
+        margin=dict(l=52, r=20, t=60, b=32),
         height=total_height,
         showlegend=True,
+        hoverlabel=dict(bgcolor="#0A0D12", bordercolor="#FFB800",
+                        font=dict(family=_mono, color="#E5E7EB")),
     )
     # Axis styling — apply to all xaxes/yaxes
-    axis_style = dict(gridcolor="rgba(255,255,255,0.07)", showgrid=True)
+    axis_style = dict(
+        gridcolor="rgba(255,255,255,0.04)",
+        linecolor="#1F2936",
+        zerolinecolor="#1F2936",
+        tickfont=dict(family=_mono, size=10, color="#9CA3AF"),
+        showgrid=True,
+    )
     for i in range(1, n_rows + 1):
         suffix = "" if i == 1 else str(i)
         layout[f"xaxis{suffix}"] = {**axis_style, "tickformat": "%m/%d"}
         layout[f"yaxis{suffix}"] = {**axis_style}
     if wvf_row:
-        layout[f"yaxis{'' if wvf_row == 1 else wvf_row}"]["title"] = "WVF"
+        layout[f"yaxis{'' if wvf_row == 1 else wvf_row}"]["title"] = dict(
+            text="WVF", font=dict(family=_mono, size=10, color="#6B7280"))
     if has_ma and price_row:
-        layout["yaxis"]["title"] = "Price"
+        layout["yaxis"]["title"] = dict(
+            text="PRICE", font=dict(family=_mono, size=10, color="#6B7280"))
     if has_inst and inst_row:
-        layout[f"yaxis{inst_row}"]["title"] = "張"
+        layout[f"yaxis{inst_row}"]["title"] = dict(
+            text="LOTS", font=dict(family=_mono, size=10, color="#6B7280"))
 
     fig.update_layout(**layout)
     return fig

@@ -1,9 +1,10 @@
 [theme]
-primaryColor = "#00D4AA"
-backgroundColor = "#0E1117"
-secondaryBackgroundColor = "#1A1F2E"
-textColor = "#E0E0E0"
-font = "sans serif"
+# Terminal / Bloomberg-inspired palette
+primaryColor = "#FFB800"
+backgroundColor = "#0A0D12"
+secondaryBackgroundColor = "#12161D"
+textColor = "#E5E7EB"
+font = "monospace"
 
 [server]
 headless = true

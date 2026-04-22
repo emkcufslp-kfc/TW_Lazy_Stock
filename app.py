@@ -20,87 +20,751 @@ from data_sources import fetch_company_info
 
 # --- 頁面設定 ---
 st.set_page_config(
-    page_title="台股股利選股 Dashboard",
-    page_icon="💰",
+    page_title="TW-DIV · Terminal",
+    page_icon="▌",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
-# --- 自訂 CSS （Premium 風格）---
+# --- 自訂 CSS （Terminal / Bloomberg-inspired）---
 st.markdown("""
 <style>
-    /* Google Fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+    /* ─────────────  FONTS  ───────────── */
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@200;400;500;700;800&family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
 
-    * { font-family: 'Noto Sans TC', sans-serif; }
-
-    /* KPI 卡片 */
-    .kpi-card {
-        background: linear-gradient(135deg, #1a1f2e 0%, #2d3548 100%);
-        border: 1px solid rgba(0, 212, 170, 0.2);
-        border-radius: 16px;
-        padding: 24px;
-        text-align: center;
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .kpi-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 32px rgba(0, 212, 170, 0.15);
-    }
-    .kpi-icon { font-size: 2rem; margin-bottom: 8px; }
-    .kpi-value {
-        font-size: 2.2rem;
-        font-weight: 700;
-        color: #00D4AA;
-        margin: 4px 0;
-    }
-    .kpi-label {
-        font-size: 0.9rem;
-        color: #8892a4;
-        letter-spacing: 0.5px;
+    :root {
+        --bg:           #0A0D12;
+        --bg-elev:      #12161D;
+        --bg-hover:     #1A2028;
+        --bg-panel:     #0E1219;
+        --border:       #1F2936;
+        --border-strong:#2B3542;
+        --text:         #E5E7EB;
+        --text-muted:   #9CA3AF;
+        --text-dim:     #6B7280;
+        --amber:        #FFB800;
+        --amber-dim:    #A37700;
+        --cyan:         #22D3EE;
+        --cyan-dim:     #0E7C8F;
+        --green:        #10B981;
+        --red:          #EF4444;
+        --purple:       #A78BFA;
+        --mono:         'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        --cjk:          'Noto Sans TC', sans-serif;
     }
 
-    /* 規則說明區 */
-    .rule-box {
-        background: linear-gradient(135deg, #1e2740 0%, #1a2035 100%);
-        border-left: 4px solid #00D4AA;
-        border-radius: 8px;
-        padding: 16px 20px;
-        margin-bottom: 16px;
-        font-size: 0.88rem;
-        color: #b0b8c8;
+    /* ─── Global reset ─── */
+    html, body, [class*="css"]  {
+        font-family: var(--mono), var(--cjk);
+        font-feature-settings: "tnum", "ss01", "cv11";
     }
-    .rule-box strong { color: #e0e0e0; }
+    .stApp {
+        background:
+            radial-gradient(ellipse 90% 60% at 50% -10%, rgba(255,184,0,0.05) 0%, transparent 60%),
+            radial-gradient(ellipse 70% 50% at 85% 100%, rgba(34,211,238,0.04) 0%, transparent 60%),
+            var(--bg);
+    }
+    /* subtle scanline overlay */
+    .stApp::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image: repeating-linear-gradient(
+            0deg,
+            rgba(255,255,255,0.012) 0px,
+            rgba(255,255,255,0.012) 1px,
+            transparent 1px,
+            transparent 3px
+        );
+        z-index: 9999;
+        mix-blend-mode: overlay;
+    }
 
-    /* 標題裝飾 */
-    .main-title {
-        font-size: 2rem;
-        font-weight: 700;
-        background: linear-gradient(90deg, #00D4AA, #00B4D8);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 4px;
-    }
-    .subtitle {
-        color: #6b7b8d;
-        font-size: 0.95rem;
-        margin-bottom: 24px;
-    }
+    /* Chinese characters use Noto Sans TC, latin/numbers stay mono */
+    :lang(zh), :lang(zh-TW) { font-family: var(--cjk); }
 
-    /* 隱藏 Streamlit 預設 footer */
+    /* Hide Streamlit chrome */
+    #MainMenu { visibility: hidden; }
+    header[data-testid="stHeader"] { background: transparent; }
     footer { visibility: hidden; }
 
-    /* 表格標題美化 */
-    .section-header {
-        font-size: 1.3rem;
-        font-weight: 600;
-        color: #e0e0e0;
-        border-bottom: 2px solid #00D4AA;
-        padding-bottom: 8px;
-        margin-top: 32px;
-        margin-bottom: 16px;
+    /* ─────────────  TERMINAL HEADER BAR  ───────────── */
+    .term-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 18px;
+        margin: 0 0 18px 0;
+        background: linear-gradient(180deg, #0E1219 0%, #0A0D12 100%);
+        border: 1px solid var(--border);
+        border-top: 2px solid var(--amber);
+        border-radius: 2px;
+        position: relative;
+        overflow: hidden;
     }
+    .term-header::after {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--amber), transparent);
+        opacity: 0.6;
+        animation: scan 8s linear infinite;
+    }
+    @keyframes scan {
+        0%   { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+    .term-brand {
+        font-family: var(--mono);
+        display: flex;
+        align-items: baseline;
+        gap: 14px;
+    }
+    .term-brand .brand {
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: var(--amber);
+        letter-spacing: 0.08em;
+    }
+    .term-brand .brand .cursor {
+        display: inline-block;
+        width: 0.55em;
+        height: 1em;
+        background: var(--amber);
+        vertical-align: -2px;
+        margin-left: 4px;
+        animation: blink 1.05s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+    .term-brand .slash {
+        color: var(--text-dim);
+        font-weight: 400;
+    }
+    .term-brand .tagline {
+        color: var(--text-muted);
+        font-size: 0.78rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    .term-header-right {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    .status-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border: 1px solid var(--border-strong);
+        color: var(--text-muted);
+        background: rgba(255,255,255,0.02);
+    }
+    .status-chip .dot {
+        width: 6px; height: 6px; border-radius: 50%;
+        background: var(--green);
+        box-shadow: 0 0 6px currentColor;
+        animation: blink 1.4s ease-in-out infinite;
+    }
+    .status-chip.live { color: var(--green); border-color: rgba(16,185,129,0.4); }
+    .status-chip.hist { color: var(--cyan); border-color: rgba(34,211,238,0.4); }
+    .status-chip.hist .dot { background: var(--cyan); }
+    .status-chip .kv-key { color: var(--text-dim); }
+    .status-chip .kv-val { color: var(--text); font-weight: 500; }
+
+    /* ─────────────  PROCEDURE · 4-STEP WORKFLOW  ───────────── */
+    .procedure {
+        border: 1px solid var(--border);
+        background: var(--bg-panel);
+        padding: 12px 16px;
+        margin-bottom: 14px;
+    }
+    .procedure-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+        font-family: var(--mono);
+        font-size: 0.72rem;
+    }
+    .procedure-head .pt { color: var(--amber); }
+    .procedure-head .title {
+        color: var(--text);
+        font-weight: 700;
+        letter-spacing: 0.14em;
+    }
+    .procedure-head .hint {
+        color: var(--text-dim);
+        letter-spacing: 0.05em;
+        margin-left: auto;
+    }
+    .procedure-steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 8px;
+    }
+    .step {
+        padding: 12px 14px;
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.01);
+        font-family: var(--mono);
+        transition: all 0.2s;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        position: relative;
+    }
+    .step .step-num {
+        font-size: 0.66rem;
+        font-weight: 500;
+        color: var(--text-dim);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+    }
+    .step .step-title {
+        font-size: 0.98rem;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: 0.02em;
+    }
+    .step .step-sub {
+        font-size: 0.72rem;
+        color: var(--text-dim);
+        line-height: 1.5;
+        letter-spacing: 0.02em;
+    }
+    /* done: green check */
+    .step.done {
+        border-color: rgba(16,185,129,0.35);
+        background: linear-gradient(180deg, rgba(16,185,129,0.05) 0%, transparent 100%);
+    }
+    .step.done .step-num { color: var(--green); }
+    .step.done .step-num::before { content: "✓ "; color: var(--green); }
+    .step.done .step-title { color: var(--text); }
+    /* active: amber with glow */
+    .step.active {
+        border-color: var(--amber);
+        background: linear-gradient(180deg, rgba(255,184,0,0.08) 0%, rgba(255,184,0,0.02) 100%);
+        box-shadow:
+            inset 3px 0 0 var(--amber),
+            0 0 20px rgba(255,184,0,0.08);
+    }
+    .step.active .step-num {
+        color: var(--amber);
+        animation: blink 1.4s ease-in-out infinite;
+    }
+    .step.active .step-num::before {
+        content: "▶ ";
+        color: var(--amber);
+    }
+    .step.active .step-title { color: var(--amber); }
+    /* pending: dim */
+    .step.pending { opacity: 0.55; }
+    .step.pending .step-title { color: var(--text-muted); }
+
+    /* ─────────────  TICKER RULE STRIP  ───────────── */
+    .ticker-strip {
+        border: 1px solid var(--border);
+        background: var(--bg-panel);
+        padding: 10px 16px;
+        margin-bottom: 18px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 22px;
+        align-items: center;
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        color: var(--text-muted);
+    }
+    .ticker-strip .pt { color: var(--amber); margin-right: 6px; }
+    .ticker-strip .k  { color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; margin-right: 6px; }
+    .ticker-strip .v  { color: var(--text); font-weight: 500; }
+    .ticker-strip .warn{ color: var(--amber); }
+    .ticker-strip .div{ color: var(--border-strong); margin: 0 2px; }
+
+    /* ─────────────  KPI STRIP  ───────────── */
+    .kpi-strip {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        border: 1px solid var(--border);
+        background:
+            linear-gradient(180deg, rgba(255,184,0,0.02) 0%, transparent 100%),
+            var(--bg-panel);
+        margin: 8px 0 18px 0;
+    }
+    .kpi-cell {
+        padding: 18px 20px;
+        border-right: 1px solid var(--border);
+        position: relative;
+    }
+    .kpi-cell:last-child { border-right: none; }
+    .kpi-cell::before {
+        content: "";
+        position: absolute;
+        top: 10px; left: 0;
+        width: 3px; height: 18px;
+        background: var(--amber);
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+    .kpi-cell:hover::before { opacity: 1; }
+    .kpi-label {
+        font-family: var(--mono);
+        font-size: 0.68rem;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .kpi-label::before {
+        content: "■";
+        color: var(--amber);
+        font-size: 0.6rem;
+    }
+    .kpi-value {
+        font-family: var(--mono);
+        font-size: 1.9rem;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.01em;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+    }
+    .kpi-value .unit {
+        font-size: 0.75rem;
+        color: var(--text-dim);
+        font-weight: 400;
+        margin-left: 4px;
+        letter-spacing: 0.05em;
+    }
+    .kpi-value.amber { color: var(--amber); }
+    .kpi-value.cyan  { color: var(--cyan); }
+    .kpi-sub {
+        margin-top: 4px;
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        color: var(--text-dim);
+    }
+
+    /* ─────────────  RULE PANEL  ───────────── */
+    .rule-box {
+        background: var(--bg-panel);
+        border: 1px solid var(--border);
+        border-left: 2px solid var(--cyan);
+        padding: 14px 18px;
+        margin-bottom: 14px;
+        font-family: var(--mono);
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        line-height: 1.7;
+    }
+    .rule-box .lbl {
+        color: var(--cyan);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+        display: block;
+        margin-bottom: 6px;
+    }
+    .rule-box code, .rule-box b, .rule-box strong {
+        color: var(--text);
+        background: rgba(255,184,0,0.08);
+        padding: 1px 5px;
+        border-radius: 2px;
+    }
+    .rule-box .rule-line { display: flex; gap: 8px; align-items: flex-start; }
+    .rule-box .rule-line .ix { color: var(--amber); min-width: 1.5em; }
+
+    /* ─────────────  SECTION HEADER  ───────────── */
+    .section-header {
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        margin: 26px 0 14px 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .section-header::before {
+        content: ">_";
+        color: var(--amber);
+        font-weight: 800;
+    }
+    .section-header::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, var(--border) 0%, transparent 100%);
+        margin-left: 6px;
+    }
+    .section-header .count {
+        color: var(--text-dim);
+        font-weight: 400;
+        font-size: 0.72rem;
+        letter-spacing: 0.1em;
+    }
+
+    /* ─────────────  SIDEBAR  ───────────── */
+    [data-testid="stSidebar"] {
+        background: var(--bg-panel);
+        border-right: 1px solid var(--border);
+    }
+    [data-testid="stSidebar"] > div {
+        padding-top: 12px;
+    }
+    [data-testid="stSidebar"] h3 {
+        font-family: var(--mono);
+        font-size: 0.75rem !important;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--amber);
+        margin-bottom: 16px !important;
+    }
+    [data-testid="stSidebar"] label {
+        font-family: var(--mono);
+        font-size: 0.72rem !important;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-muted) !important;
+        font-weight: 500 !important;
+    }
+
+    /* Data-status chip inside sidebar */
+    .sb-status {
+        background: linear-gradient(180deg, rgba(16,185,129,0.08) 0%, transparent 100%);
+        border: 1px solid var(--border);
+        border-left: 2px solid var(--green);
+        padding: 10px 12px;
+        margin-bottom: 12px;
+        font-family: var(--mono);
+    }
+    .sb-status .k {
+        font-size: 0.65rem;
+        color: var(--text-dim);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    .sb-status .v {
+        font-size: 0.85rem;
+        color: var(--green);
+        font-weight: 700;
+        margin: 2px 0;
+    }
+    .sb-status .t {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+    }
+
+    /* ─────────────  WIDGETS  ───────────── */
+    /* Buttons — terminal style */
+    .stButton > button {
+        font-family: var(--mono) !important;
+        font-size: 0.78rem !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.12em !important;
+        text-transform: uppercase !important;
+        border-radius: 2px !important;
+        border: 1px solid var(--border-strong) !important;
+        background: var(--bg-elev) !important;
+        color: var(--text) !important;
+        transition: all 0.15s;
+    }
+    .stButton > button:hover {
+        border-color: var(--amber) !important;
+        color: var(--amber) !important;
+        background: rgba(255,184,0,0.06) !important;
+        box-shadow: 0 0 0 1px var(--amber) inset;
+    }
+    .stButton > button[kind="primary"] {
+        background: var(--amber) !important;
+        color: #0A0D12 !important;
+        border-color: var(--amber) !important;
+    }
+    .stButton > button[kind="primary"]:hover {
+        background: #FFCC33 !important;
+        color: #0A0D12 !important;
+        box-shadow: 0 0 12px rgba(255,184,0,0.4);
+    }
+
+    /* Download button */
+    .stDownloadButton > button {
+        font-family: var(--mono) !important;
+        font-size: 0.78rem !important;
+        letter-spacing: 0.1em !important;
+        text-transform: uppercase !important;
+        border-radius: 2px !important;
+    }
+
+    /* Inputs */
+    .stTextInput > div > div > input,
+    .stNumberInput > div > div > input,
+    .stDateInput input {
+        font-family: var(--mono) !important;
+        background: var(--bg-elev) !important;
+        border: 1px solid var(--border-strong) !important;
+        border-radius: 2px !important;
+        color: var(--text) !important;
+        font-variant-numeric: tabular-nums;
+    }
+    .stTextInput > div > div > input:focus,
+    .stNumberInput > div > div > input:focus {
+        border-color: var(--amber) !important;
+        box-shadow: 0 0 0 1px var(--amber) !important;
+    }
+
+    /* Select / Radio */
+    [data-baseweb="select"] > div {
+        background: var(--bg-elev) !important;
+        border: 1px solid var(--border-strong) !important;
+        border-radius: 2px !important;
+        font-family: var(--mono) !important;
+    }
+    .stRadio label {
+        font-family: var(--mono);
+    }
+
+    /* Slider — amber accent */
+    .stSlider [data-baseweb="slider"] > div > div {
+        background: var(--border) !important;
+    }
+    .stSlider [role="slider"] {
+        background: var(--amber) !important;
+        box-shadow: 0 0 0 4px rgba(255,184,0,0.15) !important;
+    }
+
+    /* Expander */
+    [data-testid="stExpander"] {
+        background: var(--bg-panel);
+        border: 1px solid var(--border) !important;
+        border-radius: 2px !important;
+    }
+    [data-testid="stExpander"] summary {
+        font-family: var(--mono);
+        letter-spacing: 0.08em;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+
+    /* Tabs */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 0;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 18px;
+    }
+    .stTabs [data-baseweb="tab"] {
+        font-family: var(--mono) !important;
+        font-size: 0.8rem !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.16em !important;
+        text-transform: uppercase !important;
+        color: var(--text-muted) !important;
+        background: transparent !important;
+        border: 1px solid transparent !important;
+        border-bottom: none !important;
+        border-radius: 2px 2px 0 0 !important;
+        padding: 10px 22px !important;
+        margin-right: 2px;
+    }
+    .stTabs [data-baseweb="tab"]:hover {
+        color: var(--text) !important;
+        background: var(--bg-panel) !important;
+    }
+    .stTabs [aria-selected="true"] {
+        color: var(--amber) !important;
+        border-color: var(--border) !important;
+        border-bottom: 1px solid var(--bg) !important;
+        background: var(--bg-panel) !important;
+        position: relative;
+    }
+    .stTabs [aria-selected="true"]::before {
+        content: "";
+        position: absolute;
+        top: -1px; left: 0; right: 0;
+        height: 2px;
+        background: var(--amber);
+    }
+    .stTabs [data-baseweb="tab-highlight"] { display: none; }
+
+    /* DataFrame / Tables */
+    [data-testid="stDataFrame"] {
+        border: 1px solid var(--border);
+        border-radius: 2px;
+    }
+    [data-testid="stDataFrame"] table {
+        font-family: var(--mono) !important;
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Metric widget */
+    [data-testid="stMetric"] {
+        background: var(--bg-panel);
+        border: 1px solid var(--border);
+        padding: 12px 14px;
+        border-radius: 2px;
+        position: relative;
+    }
+    [data-testid="stMetric"]::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0;
+        width: 2px; height: 100%;
+        background: var(--amber);
+        opacity: 0.5;
+    }
+    [data-testid="stMetricLabel"] {
+        font-family: var(--mono) !important;
+        font-size: 0.66rem !important;
+        font-weight: 500 !important;
+        letter-spacing: 0.14em !important;
+        text-transform: uppercase !important;
+        color: var(--text-dim) !important;
+    }
+    [data-testid="stMetricValue"] {
+        font-family: var(--mono) !important;
+        font-weight: 700 !important;
+        color: var(--text) !important;
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Alerts */
+    [data-testid="stAlert"] {
+        font-family: var(--mono);
+        border-radius: 2px !important;
+        border: 1px solid var(--border) !important;
+        font-size: 0.82rem;
+    }
+
+    /* ─────────────  SIGNAL CARD  ───────────── */
+    .sig-card {
+        background: linear-gradient(90deg, rgba(16,185,129,0.08) 0%, var(--bg-panel) 30%);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--green);
+        padding: 14px 18px;
+        margin-bottom: 10px;
+        font-family: var(--mono);
+        position: relative;
+    }
+    .sig-card::after {
+        content: "● 訊號";
+        position: absolute;
+        top: 10px; right: 14px;
+        font-size: 0.65rem;
+        letter-spacing: 0.2em;
+        color: var(--green);
+        animation: blink 1.8s ease-in-out infinite;
+    }
+    .sig-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 8px;
+        padding-right: 80px;
+    }
+    .sig-code {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: 0.05em;
+    }
+    .sig-code .code-num { color: var(--amber); margin-right: 10px; }
+    .sig-sector {
+        font-size: 0.72rem;
+        color: var(--text-dim);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    .sig-row {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-top: 4px;
+    }
+    .sig-row .k  { color: var(--text-dim); }
+    .sig-row .v  { color: var(--text); font-weight: 500; }
+    .sig-row .up { color: var(--green); }
+    .sig-row .dn { color: var(--red); }
+    .sig-row .bar-sep { color: var(--border-strong); margin: 0 8px; }
+    .sig-flow {
+        margin-top: 10px;
+        padding: 8px 12px;
+        background: rgba(255,255,255,0.02);
+        border: 1px dashed var(--border);
+        font-size: 0.76rem;
+        color: var(--text-muted);
+    }
+    .sig-verdict {
+        margin-top: 8px;
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        padding-left: 12px;
+        border-left: 2px solid var(--amber);
+    }
+
+    /* Sector/business inline pill */
+    .inline-pill {
+        display: inline-block;
+        padding: 2px 10px;
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        border: 1px solid var(--border-strong);
+        color: var(--text-muted);
+        letter-spacing: 0.08em;
+        background: rgba(255,255,255,0.02);
+        margin-right: 6px;
+    }
+    .inline-pill.amber { border-color: rgba(255,184,0,0.4); color: var(--amber); }
+
+    /* Success/Info banner (for watchlist feedback) */
+    .wl-banner {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 12px 16px;
+        margin: 12px 0;
+        background: linear-gradient(90deg, rgba(16,185,129,0.08) 0%, transparent 100%);
+        border: 1px solid var(--border);
+        border-left: 2px solid var(--green);
+        font-family: var(--mono);
+        font-size: 0.82rem;
+        color: var(--text);
+    }
+    .wl-banner .tag {
+        color: var(--green);
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        font-size: 0.72rem;
+    }
+    .wl-banner .path {
+        color: var(--amber);
+        font-weight: 500;
+    }
+
+    /* Footer */
+    .term-footer {
+        margin-top: 32px;
+        padding: 14px 0;
+        border-top: 1px solid var(--border);
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        color: var(--text-dim);
+        text-align: center;
+        letter-spacing: 0.1em;
+    }
+    .term-footer .sep { color: var(--border-strong); margin: 0 8px; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -166,113 +830,168 @@ def get_data_freshness() -> str:
     return "未知"
 
 
-def render_kpi_card(icon: str, value: str, label: str) -> str:
-    """生成 KPI 卡片的 HTML。"""
+def render_kpi_cell(label: str, value: str, unit: str = "", accent: str = "",
+                    sub: str = "") -> str:
+    """Generate terminal-style KPI cell HTML.
+
+    accent: "" | "amber" | "cyan" — controls value color.
+    """
+    klass = f"kpi-value {accent}".strip()
+    unit_html = f'<span class="unit">{unit}</span>' if unit else ""
+    sub_html  = f'<div class="kpi-sub">{sub}</div>' if sub else ""
     return f"""
-    <div class="kpi-card">
-        <div class="kpi-icon">{icon}</div>
-        <div class="kpi-value">{value}</div>
+    <div class="kpi-cell">
         <div class="kpi-label">{label}</div>
+        <div class="{klass}">{value}{unit_html}</div>
+        {sub_html}
     </div>
     """
 
 
+def render_kpi_strip(cells_html: list[str]) -> str:
+    """Wrap KPI cells in a single grid strip."""
+    return f'<div class="kpi-strip">{"".join(cells_html)}</div>'
+
+
 def create_dividend_trend_chart(sub: pd.DataFrame, code: str, name: str) -> go.Figure:
-    """建立股利趨勢圖（分組長條圖 + 總額折線）。"""
+    """Terminal-styled dividend trend chart (stacked bars + total line)."""
     fig = go.Figure()
 
-    # 現金股利 (藍色)
+    # Cash dividend — cyan
     fig.add_trace(go.Bar(
         x=sub["year"],
         y=sub["cash_div"],
-        name="現金股利",
-        marker_color="#00B4D8",
-        opacity=0.85,
+        name="CASH DIV",
+        marker=dict(color="#22D3EE", line=dict(width=0)),
+        opacity=0.95,
+        hovertemplate="%{x}<br>CASH  %{y:.2f}<extra></extra>",
     ))
 
-    # 股票股利 (橙色)
+    # Stock dividend — purple
     fig.add_trace(go.Bar(
         x=sub["year"],
         y=sub["stock_div"],
-        name="股票股利",
-        marker_color="#FF8C42",
-        opacity=0.85,
+        name="STOCK DIV",
+        marker=dict(color="#A78BFA", line=dict(width=0)),
+        opacity=0.95,
+        hovertemplate="%{x}<br>STOCK %{y:.2f}<extra></extra>",
     ))
 
-    # 合計折線 (綠色)
+    # Total line — amber
     fig.add_trace(go.Scatter(
         x=sub["year"],
         y=sub["total_div"],
-        name="股利合計",
+        name="TOTAL",
         mode="lines+markers",
-        line=dict(color="#00D4AA", width=3),
-        marker=dict(size=8),
+        line=dict(color="#FFB800", width=2, shape="linear"),
+        marker=dict(size=7, color="#FFB800",
+                    line=dict(color="#0A0D12", width=1.5)),
+        hovertemplate="%{x}<br>TOTAL %{y:.2f}<extra></extra>",
     ))
 
     fig.update_layout(
         title=dict(
-            text=f"{code} {name} — 歷年股利趨勢",
-            font=dict(size=16, color="#e0e0e0"),
+            text=f"  {code} · {name.upper()} / DIVIDEND HISTORY",
+            font=dict(size=12, color="#9CA3AF",
+                      family="JetBrains Mono, monospace"),
+            x=0, xanchor="left", y=0.96,
         ),
         xaxis=dict(
-            title="年度", dtick=1,
-            gridcolor="rgba(255,255,255,0.05)",
+            title=dict(text="YEAR",
+                       font=dict(size=10, color="#6B7280",
+                                 family="JetBrains Mono, monospace")),
+            dtick=1,
+            gridcolor="rgba(255,255,255,0.03)",
+            linecolor="#1F2936",
+            tickfont=dict(family="JetBrains Mono, monospace",
+                          size=10, color="#9CA3AF"),
+            showspikes=True, spikecolor="#FFB800",
+            spikethickness=1, spikedash="dot",
         ),
         yaxis=dict(
-            title="股利（元）",
-            gridcolor="rgba(255,255,255,0.08)",
+            title=dict(text="DIVIDEND (TWD)",
+                       font=dict(size=10, color="#6B7280",
+                                 family="JetBrains Mono, monospace")),
+            gridcolor="rgba(255,255,255,0.04)",
+            linecolor="#1F2936",
+            tickfont=dict(family="JetBrains Mono, monospace",
+                          size=10, color="#9CA3AF"),
+            zerolinecolor="#1F2936",
         ),
         barmode="stack",
-        plot_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="#0E1219",
         paper_bgcolor="rgba(0,0,0,0)",
-        font=dict(color="#c0c8d4"),
+        font=dict(color="#9CA3AF", family="JetBrains Mono, monospace"),
         legend=dict(
             orientation="h", yanchor="bottom", y=1.02,
             xanchor="right", x=1,
+            font=dict(family="JetBrains Mono, monospace",
+                      size=10, color="#9CA3AF"),
+            bgcolor="rgba(0,0,0,0)",
         ),
-        margin=dict(l=40, r=20, t=60, b=40),
-        height=400,
+        margin=dict(l=50, r=20, t=56, b=44),
+        height=380,
+        hoverlabel=dict(bgcolor="#0A0D12",
+                        bordercolor="#FFB800",
+                        font=dict(family="JetBrains Mono, monospace",
+                                  color="#E5E7EB", size=11)),
     )
     return fig
 
 
 def create_yield_comparison_chart(current_yield: float, avg_5y: float) -> go.Figure:
-    """建立殖利率比較圖（水平長條）。"""
+    """Terminal-styled horizontal yield comparison."""
     fig = go.Figure()
 
-    categories = ["目前殖利率", "平均 5 年殖利率"]
+    categories = ["CUR YLD", "5Y AVG"]
     values = [current_yield, avg_5y]
-    colors = ["#00D4AA", "#00B4D8"]
+    colors = ["#FFB800", "#22D3EE"]
 
     fig.add_trace(go.Bar(
         y=categories,
         x=values,
         orientation="h",
-        marker=dict(
-            color=colors,
-            line=dict(width=0),
-        ),
+        marker=dict(color=colors, line=dict(width=0)),
         text=[f"{v:.2f}%" for v in values],
-        textposition="auto",
-        textfont=dict(size=14, color="white"),
+        textposition="outside",
+        textfont=dict(size=12, color="#E5E7EB",
+                      family="JetBrains Mono, monospace"),
+        hovertemplate="%{y} · %{x:.2f}%<extra></extra>",
     ))
 
     fig.update_layout(
         title=dict(
-            text="殖利率比較",
-            font=dict(size=16, color="#e0e0e0"),
+            text="  YIELD COMPARISON",
+            font=dict(size=12, color="#9CA3AF",
+                      family="JetBrains Mono, monospace"),
+            x=0, xanchor="left", y=0.95,
         ),
         xaxis=dict(
-            title="殖利率 (%)",
-            gridcolor="rgba(255,255,255,0.08)",
+            title=dict(text="YIELD (%)",
+                       font=dict(size=10, color="#6B7280",
+                                 family="JetBrains Mono, monospace")),
+            gridcolor="rgba(255,255,255,0.04)",
+            linecolor="#1F2936",
+            tickfont=dict(family="JetBrains Mono, monospace",
+                          size=10, color="#9CA3AF"),
+            zerolinecolor="#1F2936",
         ),
-        yaxis=dict(autorange="reversed"),
-        plot_bgcolor="rgba(0,0,0,0)",
+        yaxis=dict(
+            autorange="reversed",
+            linecolor="#1F2936",
+            tickfont=dict(family="JetBrains Mono, monospace",
+                          size=11, color="#E5E7EB"),
+        ),
+        plot_bgcolor="#0E1219",
         paper_bgcolor="rgba(0,0,0,0)",
-        font=dict(color="#c0c8d4"),
-        margin=dict(l=20, r=20, t=50, b=40),
+        font=dict(color="#9CA3AF", family="JetBrains Mono, monospace"),
+        margin=dict(l=10, r=40, t=50, b=44),
         height=220,
         showlegend=False,
+        hoverlabel=dict(bgcolor="#0A0D12",
+                        bordercolor="#FFB800",
+                        font=dict(family="JetBrains Mono, monospace",
+                                  color="#E5E7EB")),
     )
     return fig
 
@@ -282,20 +1001,8 @@ def create_yield_comparison_chart(current_yield: float, avg_5y: float) -> go.Fig
 # ============================================================
 
 def main():
-    # --- 標題 ---
-    st.markdown('<div class="main-title">💰 台股股利選股 Dashboard</div>', unsafe_allow_html=True)
-    st.markdown('<div class="subtitle">基於連續 10 年股利發放紀錄的機構級選股系統</div>', unsafe_allow_html=True)
-
-    # --- 規則說明 ---
-    st.markdown("""
-    <div class="rule-box">
-        <strong>📋 篩選規則：</strong><br>
-        ① 最近 10 個曆年（2016–2025），每一年都有發放股利<br>
-        ② 目前殖利率 ≥ 使用者設定門檻<br>
-        ③ 平均 5 年殖利率 ≥ 使用者設定門檻<br>
-        <strong>⚠️ 殖利率定義 = （現金股利 + 股票股利）/ 現價</strong>
-    </div>
-    """, unsafe_allow_html=True)
+    # --- Data freshness / universe size (needed in header) ---
+    _freshness = get_data_freshness()
 
     # --- 檢查資料檔 ---
     if not SCREENED_FILE.exists() or not DIV_FILE.exists():
@@ -304,87 +1011,173 @@ def main():
         st.stop()
 
     screened, div_hist = load_data()
+    _universe = len(screened)
+
+    # --- Determine current workflow step ---
+    _wl_exists      = st.session_state.get("watchlist_df") is not None
+    _wvf_has_result = st.session_state.get("wvf_results") is not None
+    if _wvf_has_result:
+        _active_step = 4
+    elif _wl_exists:
+        _active_step = 3
+    else:
+        _active_step = 1   # waiting on user to pick date & screen
+
+    # --- TERMINAL HEADER ---
+    st.markdown(f"""
+    <div class="term-header">
+        <div class="term-brand">
+            <span class="brand">TW-DIV<span class="cursor"></span></span>
+            <span class="slash">//</span>
+            <span class="tagline">台股股利智能選股 · 終端機</span>
+        </div>
+        <div class="term-header-right">
+            <span class="status-chip live">
+                <span class="dot"></span>即時
+            </span>
+            <span class="status-chip">
+                <span class="kv-key">同步</span>
+                <span class="kv-val">{_freshness}</span>
+            </span>
+            <span class="status-chip">
+                <span class="kv-key">母體</span>
+                <span class="kv-val">{_universe:03d}</span>
+            </span>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # --- PROCEDURE · 4-STEP WORKFLOW ---
+    def _step(n: int, title: str, sub: str, active: int) -> str:
+        state = "done" if n < active else ("active" if n == active else "pending")
+        return (
+            f'<div class="step {state}">'
+            f'<div class="step-num">步驟 {n:02d}</div>'
+            f'<div class="step-title">{title}</div>'
+            f'<div class="step-sub">{sub}</div>'
+            f'</div>'
+        )
+    _steps_html = (
+        _step(1, "選擇日期",        "左側欄 · 設定觀察日期與殖利率門檻", _active_step)
+        + _step(2, "建立 CSV 清單",  "點擊 [ 執行選股 ] · 自動儲存觀察清單", _active_step)
+        + _step(3, "選擇 CSV",       "WVF 區 · 選擇來源（session／檔案／上傳）", _active_step)
+        + _step(4, "執行 WVF 掃描",  "點擊 [ 執行掃描 ] · 查看綠色底部訊號", _active_step)
+    )
+    st.markdown(f"""
+    <div class="procedure">
+        <div class="procedure-head">
+            <span class="pt">▸</span>
+            <span class="title">使用流程 · PROCEDURE</span>
+            <span class="hint">依序執行 · 當前進度：步驟 {_active_step:02d} / 04</span>
+        </div>
+        <div class="procedure-steps">{_steps_html}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # --- TICKER STRIP — rules as a single scanning line ---
+    st.markdown("""
+    <div class="ticker-strip">
+        <span><span class="pt">▸</span><span class="k">篩選規則</span>
+            <span class="v">連續 10 年配息</span>
+            <span class="div">│</span>
+            <span class="v">目前殖利率 ≥ X</span>
+            <span class="div">│</span>
+            <span class="v">5 年平均殖利率 ≥ Y</span>
+        </span>
+        <span><span class="k">觀察期間</span><span class="v">2016 — 2025</span></span>
+        <span><span class="k">公式</span><span class="v">（現金 + 股票股利）÷ 現價</span></span>
+        <span class="warn">⚠ 非標準定義：含股票股利</span>
+    </div>
+    """, unsafe_allow_html=True)
 
     # ========== SIDEBAR ==========
     with st.sidebar:
-        st.markdown("### 📊 篩選條件")
-        
-        # 資料狀態卡片
-        freshness = get_data_freshness()
+        st.markdown("### ▌ 控制面板 · 篩選參數")
+
+        # Data status chip
         st.markdown(f"""
-        <div style="background-color:rgba(0,212,170,0.1); border-radius:10px; padding:12px; border:1px solid rgba(0,212,170,0.3); margin-bottom:10px;">
-            <div style="font-size:0.75rem; color:#8892a4;">資料同步狀態</div>
-            <div style="font-weight:600; color:#00D4AA;">✅ 已離線預建完成</div>
-            <div style="font-size:0.75rem; color:#6b7b8d; margin-top:4px;">最後更新: {freshness}</div>
+        <div class="sb-status">
+            <div class="k">資料狀態</div>
+            <div class="v">● 離線預建 · 正常</div>
+            <div class="t">最後同步 · {_freshness}</div>
         </div>
         """, unsafe_allow_html=True)
 
-        if st.button("🔄 清除快取並重新載入"):
+        if st.button("↻ 清除快取 · 重新載入", use_container_width=True):
             st.cache_data.clear()
             st.rerun()
 
         st.divider()
 
         min_current = st.slider(
-            "目前殖利率最低門檻 (%)",
+            "目前殖利率 ≥ (%)",
             min_value=0.0, max_value=20.0, value=4.0, step=0.1,
-            help="設定目前殖利率的最低門檻"
+            help="目前殖利率最低門檻"
         )
         min_avg5 = st.slider(
-            "平均 5 年殖利率最低門檻 (%)",
+            "5 年平均殖利率 ≥ (%)",
             min_value=0.0, max_value=20.0, value=4.0, step=0.1,
-            help="設定近 5 年平均殖利率的最低門檻"
+            help="近 5 年平均殖利率最低門檻"
         )
 
         st.divider()
 
         market = st.radio(
-            "🏢 市場",
+            "市場別",
             ["全部", "上市 (TWSE)", "上櫃 (TPEX)"],
             index=0
         )
 
         sort_by = st.selectbox(
-            "📋 排序方式",
+            "排序方式",
             ["平均 5 年殖利率 ↓", "目前殖利率 ↓", "股票代號 ↑"]
         )
 
         st.divider()
 
-        # 觀察清單日期 + Screen 按鈕
+        # Watchlist date + Screen button
         today = date.today()
         watchlist_date = st.date_input(
-            "📅 觀察清單日期",
+            "觀察日期 · AS-OF",
             value=st.session_state.get("watchlist_date", today),
             min_value=today.replace(year=today.year - 10),
             max_value=today,
-            help="選擇標記此觀察清單的日期，每次更改日期後按 Screen 重新篩選",
+            help="標記此觀察清單的日期。變更日期後需重新點擊 [ 執行選股 ]。",
             key="watchlist_date_input",
         )
-        apply_btn = st.button("📋 Screen", use_container_width=True, type="primary")
+        apply_btn = st.button("▶ 執行選股 · 建立觀察清單",
+                              use_container_width=True, type="primary")
 
-        # 顯示上次篩選結果摘要
+        # Show last screen summary
         meta = st.session_state.get("watchlist_meta")
         if meta:
             prev_date = meta["date"].strftime("%d.%b.%Y")
             prev_n = len(st.session_state.get("watchlist_df", []))
             st.markdown(
-                f'<div style="font-size:0.75rem; color:#6b7b8d; padding:4px 2px;">'
-                f'上次篩選：{prev_date} · {prev_n} 檔 · '
+                f'<div style="font-size:0.7rem; color:#6B7280; padding:6px 2px; '
+                f'font-family:JetBrains Mono,monospace; letter-spacing:0.05em;">'
+                f'<span style="color:#FFB800;">›</span> 上次 · {prev_date} · '
+                f'<span style="color:#E5E7EB;">{prev_n}</span> 檔 · '
                 f'殖利率 ≥ {meta["min_current"]:.1f}%</div>',
                 unsafe_allow_html=True,
             )
 
         st.divider()
         st.markdown("""
-        <div style="font-size:0.8rem; color:#6b7b8d; padding:8px;">
-            💡 <strong>如何更新資料？</strong><br>
-            由於 Goodinfo 限制，雲端無法自動抓取。請於本機執行 <code>build_dataset.py</code> 後推送到 GitHub 即可更新。
+        <div style="font-family:JetBrains Mono,monospace; font-size:0.72rem;
+                    color:#9CA3AF; line-height:1.75; padding:6px 2px;">
+            <div style="color:#FFB800; font-weight:700; letter-spacing:0.14em;
+                        margin-bottom:4px;">› 提示 · 資料更新</div>
+            Goodinfo 限制雲端抓取。請於本機執行
+            <code style="color:#22D3EE;">build_dataset.py</code>，
+            推送至 GitHub 後即可更新雲端資料。
         </div>
-        <div style="font-size:0.8rem; color:#6b7b8d; padding:8px; margin-top:8px;">
-            💡 <strong>殖利率定義：</strong><br>
-            本系統之殖利率 = 現金股利 + 股票股利<br>
-            與市場常見「現金殖利率」不同
+        <div style="font-family:JetBrains Mono,monospace; font-size:0.72rem;
+                    color:#9CA3AF; line-height:1.75; padding:6px 2px; margin-top:12px;">
+            <div style="color:#FFB800; font-weight:700; letter-spacing:0.14em;
+                        margin-bottom:4px;">› 提示 · 殖利率定義</div>
+            本系統殖利率 = 現金股利 + 股票股利<br>
+            與市場常見「現金殖利率」不同。
         </div>
         """, unsafe_allow_html=True)
 
@@ -525,45 +1318,72 @@ def main():
         _b1, _b2 = st.columns([5, 1])
         with _b1:
             st.markdown(
-                f'<div style="background:rgba(0,180,216,0.12);border:1px solid #00B4D8;border-radius:10px;'
-                f'padding:10px 18px;font-size:0.9rem;color:#b0d8e8;">'
-                f'🕐 <strong style="color:#00B4D8;">歷史模式</strong> — 顯示 <strong>{_date_label}</strong> '
-                f'股價回溯篩選結果（殖利率 ≥ {_meta["min_current"]:.1f}%）。'
-                f' 調整門檻後需重新點擊「📋 Screen」才會更新。</div>',
+                f'<div style="background:linear-gradient(90deg,rgba(34,211,238,0.08) 0%,transparent 100%);'
+                f'border:1px solid #1F2936;border-left:2px solid #22D3EE;padding:10px 16px;'
+                f'font-family:JetBrains Mono,monospace;font-size:0.82rem;color:#9CA3AF;">'
+                f'<span style="color:#22D3EE;font-weight:700;letter-spacing:0.15em;">◷ 歷史模式</span>'
+                f' &nbsp;觀察日期 <strong style="color:#E5E7EB;">{_date_label}</strong>'
+                f' · 門檻 <strong style="color:#FFB800;">≥ {_meta["min_current"]:.1f}%</strong>'
+                f' &nbsp;<span style="color:#6B7280;">— 變更門檻後需重新 [ 執行選股 ]</span>'
+                f'</div>',
                 unsafe_allow_html=True,
             )
         with _b2:
-            if st.button("✖ 回即時", help="清除歷史篩選結果，回到即時資料", use_container_width=True):
+            if st.button("✖ 回即時", help="清除歷史篩選結果 · 回到即時資料",
+                         use_container_width=True):
                 st.session_state.pop("watchlist_df", None)
                 st.session_state.pop("watchlist_meta", None)
                 st.session_state.pop("wvf_results", None)
                 st.rerun()
 
-    # ========== KPI 卡片 ==========
-    c1, c2, c3 = st.columns(3)
+    # ========== KPI STRIP ==========
+    _n_hits   = len(display_df)
+    _hit_rate = (_n_hits / _universe * 100) if _universe else 0
+    if not display_df.empty:
+        _avg_cur = f"{display_df['current_yield_pct'].mean():.2f}"
+        _avg_5y  = f"{display_df['avg_5y_yield_pct'].mean():.2f}"
+        _max_cur = f"{display_df['current_yield_pct'].max():.2f}"
+    else:
+        _avg_cur = _avg_5y = _max_cur = "—"
 
-    with c1:
-        st.markdown(render_kpi_card(
-            "📊", str(len(display_df)), "符合條件股票數"
-        ), unsafe_allow_html=True)
-
-    with c2:
-        avg_curr = f"{display_df['current_yield_pct'].mean():.2f}%" if not display_df.empty else "-"
-        st.markdown(render_kpi_card(
-            "💹", avg_curr, "平均目前殖利率"
-        ), unsafe_allow_html=True)
-
-    with c3:
-        avg_5y = f"{display_df['avg_5y_yield_pct'].mean():.2f}%" if not display_df.empty else "-"
-        st.markdown(render_kpi_card(
-            "📈", avg_5y, "平均 5 年殖利率"
-        ), unsafe_allow_html=True)
-
-    st.markdown("", unsafe_allow_html=True)  # 間距
+    _kpi_cells = [
+        render_kpi_cell(
+            "符合檔數 · MATCHES",
+            f"{_n_hits:03d}",
+            accent="amber",
+            sub=f"佔母體 {_hit_rate:.1f}%",
+        ),
+        render_kpi_cell(
+            "平均目前殖利率",
+            _avg_cur,
+            unit="%" if _avg_cur != "—" else "",
+            accent="",
+            sub="算術平均 · 已篩選",
+        ),
+        render_kpi_cell(
+            "5 年平均殖利率",
+            _avg_5y,
+            unit="%" if _avg_5y != "—" else "",
+            accent="cyan",
+            sub="5 年算術平均",
+        ),
+        render_kpi_cell(
+            "最高殖利率",
+            _max_cur,
+            unit="%" if _max_cur != "—" else "",
+            accent="amber",
+            sub="篩選集 · 最大值",
+        ),
+    ]
+    st.markdown(render_kpi_strip(_kpi_cells), unsafe_allow_html=True)
 
     # ========== 股票清單 ==========
-    _list_title = f"📋 篩選結果股票清單" + (f" — {_date_label}" if _date_label else "")
-    st.markdown(f'<div class="section-header">{_list_title}</div>', unsafe_allow_html=True)
+    _list_title = "選股結果 · 觀察清單" + (f" · {_date_label}" if _date_label else "")
+    _count_badge = f'<span class="count">{len(display_df):03d} 檔</span>'
+    st.markdown(
+        f'<div class="section-header">{_list_title}{_count_badge}</div>',
+        unsafe_allow_html=True,
+    )
 
     if display_df.empty:
         st.info("🔍 目前沒有符合條件的股票，請嘗試調低殖利率門檻。")
@@ -642,53 +1462,68 @@ def main():
             # Auto-save to watchlists folder
             _save_watchlist_csv(wl_export, filename)
 
-            st.success(f"✅ 觀察清單已建立並儲存：**{filename}**（{len(wl)} 檔股票）")
+            st.markdown(
+                f'<div class="wl-banner">'
+                f'<span class="tag">✔ 寫入成功</span>'
+                f'<span>觀察清單已建立 → <span class="path">{filename}</span> '
+                f'· <span style="color:#FFB800;">{len(wl):03d}</span> 檔</span>'
+                f'</div>',
+                unsafe_allow_html=True,
+            )
             st.download_button(
-                f"💾 下載觀察清單 {filename}",
+                f"⇩ 下載觀察清單 · {filename}",
                 wl_export.to_csv(index=False, encoding="utf-8-sig").encode("utf-8-sig"),
                 file_name=filename,
                 mime="text/csv",
                 type="primary",
             )
         else:
-            st.info("👈 在左側設定殖利率門檻與日期，點擊「📋 Screen」即可建立觀察清單。")
+            st.info("◁ 請於左側設定殖利率門檻與觀察日期，點擊 [ 執行選股 ] 建立觀察清單。")
 
     # ========== 個股詳情 ==========
     if not display_df.empty:
-        st.markdown('<div class="section-header">🔍 個股詳情</div>', unsafe_allow_html=True)
+        st.markdown(
+            '<div class="section-header">個股深度分析 · 深入檢視</div>',
+            unsafe_allow_html=True,
+        )
 
         code_options = (display_df["code"].astype(str) + " — " + display_df["name"].astype(str)).tolist()
-        selected = st.selectbox("選擇個股查看詳情", code_options, key="stock_select")
+        selected = st.selectbox("選擇個股", code_options, key="stock_select")
         selected_code = selected.split(" — ")[0].strip()
 
         row = display_df[display_df["code"].astype(str) == selected_code].iloc[0]
         sub = div_hist[div_hist["code"].astype(str) == selected_code].sort_values("year").copy()
 
-        # 個股基本資訊
+        # 個股基本資訊 — sector/business as inline pills
         if "sector" in row.index and row["sector"]:
             import html as _html
             _sec = _html.escape(str(row["sector"]))
             _biz = _html.escape(str(row.get("business_nature", "") or ""))
+            _pills = f'<span class="inline-pill amber">▸ {_sec}</span>'
+            if _biz:
+                _pills += f'<span class="inline-pill">{_biz}</span>'
             st.markdown(
-                f'<div style="color:#8892a4; font-size:0.9rem; margin-bottom:4px;">'
-                f'🏭 <strong style="color:#c0c8d4;">{_sec}</strong>'
-                + (f' &nbsp;|&nbsp; {_biz}' if _biz else "")
-                + "</div>",
+                f'<div style="margin:6px 0 14px 0;">{_pills}</div>',
                 unsafe_allow_html=True,
             )
 
         # 個股 KPI
         d1, d2, d3, d4 = st.columns(4)
-        d1.metric("現價", f"${row['price']:.2f}")
-        d2.metric("目前殖利率", f"{row['current_yield_pct']:.2f}%")
-        d3.metric("平均 5 年殖利率", f"{row['avg_5y_yield_pct']:.2f}%")
+        d1.metric("現價 · TWD", f"{row['price']:.2f}")
+        d2.metric("目前殖利率 %", f"{row['current_yield_pct']:.2f}")
+        d3.metric("5 年平均 %", f"{row['avg_5y_yield_pct']:.2f}")
         d4.metric("最新配息年度", str(int(row["latest_paid_year"])))
 
         # 圖表與明細
         left, right = st.columns([1, 1])
 
         with left:
-            st.markdown("#### 📊 歷年股利明細")
+            st.markdown(
+                '<div style="font-family:JetBrains Mono,monospace;font-size:0.78rem;'
+                'font-weight:700;letter-spacing:0.16em;'
+                'color:#9CA3AF;margin:10px 0 8px 0;">›&nbsp; 歷年股利明細</div>',
+                unsafe_allow_html=True,
+            )
             detail_df = sub[["year", "cash_div", "stock_div", "total_div"]].copy()
             detail_df.columns = ["年度", "現金股利", "股票股利", "合計"]
             st.dataframe(
@@ -715,18 +1550,21 @@ def main():
         st.plotly_chart(fig_yield, use_container_width=True)
 
     # ========== WILLIAMS VIX FIX 技術面掃描 ==========
-    st.markdown('<div class="section-header">📡 技術面警示 — Williams VIX Fix</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="section-header">技術訊號 · WILLIAMS VIX FIX</div>',
+        unsafe_allow_html=True,
+    )
 
     st.markdown("""
     <div class="rule-box">
-        <strong>📌 Williams VIX Fix 說明：</strong><br>
-        模擬 VIX 恐慌指數，<strong style="color:#00D4AA;">綠色柱</strong> 代表近期出現恐慌底部訊號——
-        當 WVF ≥ 布林上軌 <em>或</em> WVF ≥ 百分位高點時觸發。<br>
-        本功能掃描觀察清單各股，找出 <strong>過去 3 個交易日</strong> 出現綠色訊號者，列為潛在買入提示。
+        <span class="lbl">▸ WVF · Williams VIX Fix 說明</span>
+        <div class="rule-line"><span class="ix">01</span><span>以股價歷史合成類 VIX 的恐慌代理指標。</span></div>
+        <div class="rule-line"><span class="ix">02</span><span><strong>綠色柱</strong> 於 <strong>WVF ≥ 布林上軌</strong> <em>或</em> <strong>WVF ≥ 百分位高點</strong> 時觸發 — 代表恐慌底部訊號。</span></div>
+        <div class="rule-line"><span class="ix">03</span><span>本掃描器針對觀察清單個股，找出最近 <strong>3 個交易日</strong> 出現 ≥ 1 支綠色柱者 — 列為潛在買進候選。</span></div>
     </div>
     """, unsafe_allow_html=True)
 
-    # ── 選擇掃描來源 ──
+    # ── Select scan source ──
     wl_session = st.session_state.get("watchlist_df")
     wl_meta    = st.session_state.get("watchlist_meta")
 
@@ -742,7 +1580,7 @@ def main():
         src_options.append("已儲存觀察清單 CSV")
     src_options.append("上傳觀察清單 CSV")
 
-    wvf_src = st.radio("📂 掃描來源", src_options, horizontal=True, key="wvf_src")
+    wvf_src = st.radio("掃描來源", src_options, horizontal=True, key="wvf_src")
 
     _col_map = {"代號": "code", "名稱": "name", "產業別": "sector",
                 "市場": "market", "現價": "price",
@@ -794,9 +1632,9 @@ def main():
                 st.error(f"CSV 解析失敗：{e}")
 
     if wl_df is None or wl_df.empty:
-        st.info("👈 請先建立觀察清單（點擊 Screen）或上傳 CSV，再執行掃描。")
+        st.info("◁ 請先建立觀察清單（步驟 02）或上傳 CSV（步驟 03），再執行掃描。")
     else:
-        with st.expander("⚙️ 指標參數（選填，預設值與 Pine Script 原版相同）"):
+        with st.expander("⚙ 指標參數（選填 · 預設值與 Pine Script 原版相同）"):
             pc1, pc2, pc3 = st.columns(3)
             wvf_pd  = pc1.number_input("回望期 pd", 5, 50, 22, help="highest(close, pd) 的回望天數")
             wvf_bbl = pc2.number_input("BB 長度 bbl", 5, 50, 20, help="布林帶計算長度")
@@ -815,7 +1653,7 @@ def main():
             else:
                 ma_type, ma_period = "SMA", 20
 
-        scan_btn = st.button("📡 掃描（Williams VIX Fix）", use_container_width=True)
+        scan_btn = st.button("▶ 執行 WVF 掃描", use_container_width=True, type="primary")
 
         if scan_btn:
             from technical import check_signal, make_wvf_chart
@@ -869,8 +1707,11 @@ def main():
 
             if green_hits:
                 st.markdown(
-                    f'<div style="font-size:1.1rem; font-weight:700; color:#00D4AA; margin:16px 0 8px;">'
-                    f'🟢 發現 {len(green_hits)} 檔潛在買入提示（近 {lkb} 日出現 WVF 綠色訊號）</div>',
+                    f'<div style="font-family:JetBrains Mono,monospace;font-size:0.82rem;'
+                    f'font-weight:700;letter-spacing:0.12em;'
+                    f'color:#10B981;margin:18px 0 10px 0;">'
+                    f'● 發現 {len(green_hits):03d} 檔 · 恐慌底部候選 · '
+                    f'回看 {lkb} 日</div>',
                     unsafe_allow_html=True,
                 )
                 for r in green_hits:
@@ -891,68 +1732,85 @@ def main():
                     ma_row = ""
                     if above_ma is not None and last_close is not None:
                         ma_badge = (
-                            f'<span style="color:#00D4AA;">▲ 收盤 {last_close} &gt; {ma_label} {last_ma}</span>'
+                            f'<span class="up">▲ 收盤 {last_close} &gt; {ma_label} {last_ma}</span>'
                             if above_ma else
-                            f'<span style="color:#ff6b6b;">▼ 收盤 {last_close} &lt; {ma_label} {last_ma}</span>'
+                            f'<span class="dn">▼ 收盤 {last_close} &lt; {ma_label} {last_ma}</span>'
                         )
-                        ma_row = f'<div style="margin-top:4px; font-size:0.85rem;">{ma_badge}</div>'
+                        ma_row = f'<div class="sig-row">{ma_badge}</div>'
 
                     import html as _html
                     _name_s   = _html.escape(str(name))
-                    _sector_s = _html.escape(str(sector))
+                    _sector_s = _html.escape(str(sector)) if sector else ""
 
                     # Fetch 三大法人 data
                     from technical import fetch_institutional_flow
                     _flow = fetch_institutional_flow(code, days=60)
 
                     def _fmt_net(v: int) -> str:
-                        return f'<span style="color:#00D4AA;">▲ +{v:,}</span>' if v >= 0 else f'<span style="color:#ff6b6b;">▼ {v:,}</span>'
+                        return f'<span class="up">▲ +{v:,}</span>' if v >= 0 else f'<span class="dn">▼ {v:,}</span>'
 
                     if _flow:
                         _f, _t, _d, _tot = _flow["foreign"], _flow["trust"], _flow["dealer"], _flow["total"]
                         _n = _flow["days"]
                         _inst_row = (
-                            f'<div style="margin-top:10px;font-size:0.83rem;background:rgba(0,0,0,0.25);'
-                            f'border-radius:8px;padding:8px 12px;">'
-                            f'<span style="color:#8892a4;">三大法人近 {_n} 日（張）：</span> &nbsp;'
-                            f'外資 {_fmt_net(_f)} &nbsp;｜&nbsp;'
-                            f'投信 {_fmt_net(_t)} &nbsp;｜&nbsp;'
-                            f'自營商 {_fmt_net(_d)} &nbsp;｜&nbsp;'
-                            f'合計 <strong>{_fmt_net(_tot)}</strong>'
-                            '</div>'
+                            f'<div class="sig-flow">'
+                            f'<span style="color:#6B7280;letter-spacing:0.1em;font-size:0.7rem;">'
+                            f'三大法人 · 近 {_n} 日（張）</span><br>'
+                            f'<span class="k">外資</span> {_fmt_net(_f)} '
+                            f'<span class="bar-sep">│</span> '
+                            f'<span class="k">投信</span> {_fmt_net(_t)} '
+                            f'<span class="bar-sep">│</span> '
+                            f'<span class="k">自營商</span> {_fmt_net(_d)} '
+                            f'<span class="bar-sep">│</span> '
+                            f'<span class="k">合計</span> <strong>{_fmt_net(_tot)}</strong>'
+                            f'</div>'
                         )
                         # Verdict
                         if _tot > 0 and days_hit >= 2:
-                            _verdict = ('▶ <strong style="color:#00D4AA;">法人合計買超，與 WVF 底部訊號一致</strong>'
-                                        '，可列為重點觀察，評估進場時機。')
+                            _verdict = ('▶ <strong style="color:#10B981;">法人合計買超，與 WVF 底部訊號一致</strong>'
+                                        ' — 可列為重點觀察，評估進場時機。')
                         elif _tot > 0:
-                            _verdict = ('▶ 法人小幅買超，WVF 出現底部訊號，<strong style="color:#e0e0e0;">關注後續量能</strong>。')
+                            _verdict = ('▶ 法人小幅買超，WVF 出現底部訊號 — '
+                                        '<strong style="color:#E5E7EB;">建議關注後續量能</strong>。')
                         elif _tot < 0 and abs(_tot) > 1000:
-                            _verdict = ('▶ <strong style="color:#ff6b6b;">法人明顯賣超</strong>'
-                                        '，WVF 訊號雖現，資金面偏空，建議<strong style="color:#ffd700;">暫觀</strong>，待賣壓減輕再評估。')
+                            _verdict = ('▶ <strong style="color:#EF4444;">法人明顯賣超</strong>'
+                                        ' · 資金面偏空，WVF 訊號雖現，建議 '
+                                        '<strong style="color:#FFB800;">暫觀</strong>，待賣壓減輕再評估。')
                         else:
-                            _verdict = '▶ 法人動向中性，WVF 底部訊號供參，建議觀察量價配合再決策。'
-                        _verdict_row = f'<div style="margin-top:8px;font-size:0.84rem;color:#c0c8d4;">{_verdict}</div>'
+                            _verdict = '▶ 法人動向中性 · WVF 底部訊號僅供參考，建議觀察量價配合再決策。'
+                        _verdict_row = f'<div class="sig-verdict">{_verdict}</div>'
                     else:
-                        _inst_row = '<div style="margin-top:10px;font-size:0.83rem;color:#6b7b8d;">三大法人資料暫無法取得（FinMind API）</div>'
-                        _verdict_row = '<div style="margin-top:6px;font-size:0.84rem;color:#ffd700;">&#9888; WVF 顯示恐慌底部訊號，請自行查閱法人動向後評估。</div>'
+                        _inst_row = (
+                            '<div class="sig-flow" style="color:#6B7280;">'
+                            '三大法人 · 資料暫無法取得（FinMind API）'
+                            '</div>'
+                        )
+                        _verdict_row = (
+                            '<div class="sig-verdict" style="border-left-color:#FFB800;">'
+                            '⚠ WVF 顯示恐慌底部訊號 · 請自行查閱法人動向後評估。'
+                            '</div>'
+                        )
 
-                    # Build card as single string — no blank lines that break markdown HTML blocks
+                    # Build card
                     _card = (
-                        '<div style="background:linear-gradient(135deg,#0d2a1f 0%,#1a3a2a 100%);'
-                        'border:1px solid #00D4AA;border-left:5px solid #00D4AA;'
-                        'border-radius:12px;padding:16px 20px;margin-bottom:12px;">'
-                        '<div style="display:flex;justify-content:space-between;align-items:center;">'
-                        f'<span style="font-size:1.15rem;font-weight:700;color:#e0e0e0;">🟢 {code} &nbsp; {_name_s}</span>'
-                        f'<span style="font-size:0.82rem;color:#8892a4;">{_sector_s}</span>'
+                        '<div class="sig-card">'
+                        '<div class="sig-head">'
+                        f'<span class="sig-code"><span class="code-num">{code}</span>{_name_s}</span>'
+                        + (f'<span class="sig-sector">{_sector_s}</span>' if _sector_s else "")
+                        + '</div>'
+                        '<div class="sig-row">'
+                        f'<span class="k">殖利率</span> <span class="v" style="color:#FFB800;">{cy:.2f}%</span>'
+                        '<span class="bar-sep">│</span>'
+                        f'<span class="k">5年平均</span> <span class="v" style="color:#22D3EE;">{ay:.2f}%</span>'
+                        '<span class="bar-sep">│</span>'
+                        f'<span class="k">訊號</span> <span class="v" style="color:#10B981;">近 {lkb} 日觸發 {days_hit} 日</span>'
                         '</div>'
-                        '<div style="margin-top:8px;font-size:0.88rem;color:#b0b8c8;">'
-                        f'殖利率：<strong style="color:#00D4AA;">{cy:.2f}%</strong> &nbsp;｜&nbsp;'
-                        f'5年平均：<strong style="color:#00B4D8;">{ay:.2f}%</strong> &nbsp;｜&nbsp;'
-                        f'訊號：近 {lkb} 日中 <strong style="color:#00D4AA;">{days_hit} 日</strong> 出現綠色柱'
-                        '</div>'
-                        '<div style="margin-top:6px;font-size:0.82rem;color:#6b7b8d;">'
-                        f'WVF = {wvf_val:.2f} &nbsp;｜&nbsp;Upper Band = {ub_val:.2f} &nbsp;｜&nbsp;Range High = {rh_val:.2f}'
+                        '<div class="sig-row">'
+                        f'<span class="k">WVF</span> <span class="v">{wvf_val:.2f}</span>'
+                        '<span class="bar-sep">│</span>'
+                        f'<span class="k">布林上軌</span> <span class="v">{ub_val:.2f}</span>'
+                        '<span class="bar-sep">│</span>'
+                        f'<span class="k">百分位高點</span> <span class="v">{rh_val:.2f}</span>'
                         '</div>'
                         + ma_row + _inst_row + _verdict_row +
                         '</div>'
@@ -960,7 +1818,7 @@ def main():
                     st.markdown(_card, unsafe_allow_html=True)
 
                     if r.get("wvf_data") is not None:
-                        with st.expander(f"📊 {code} {name} — WVF 走勢圖 ＋ 三大法人"):
+                        with st.expander(f"▸ {code} · {name} — WVF 走勢圖 + 三大法人"):
                             fig = make_wvf_chart(r, name, flow=_flow)
                             st.plotly_chart(fig, use_container_width=True)
 
@@ -968,7 +1826,7 @@ def main():
                 st.info(f"近 {lkb} 個交易日內，觀察清單中無股票出現 WVF 綠色訊號。")
 
             # Summary table
-            with st.expander(f"📋 全部掃描結果（{len(no_signal)} 股無訊號 / {len(errors)} 股無資料）"):
+            with st.expander(f"▸ 完整掃描結果 · {len(no_signal)} 無訊號 / {len(errors)} 無資料"):
                 rows = []
                 for r in wvf_results:
                     ma_lbl = r.get("ma_label", "")
@@ -987,14 +1845,17 @@ def main():
                 st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
 
     # ========== 歷史股價驗證工具 ==========
-    st.markdown('<div class="section-header">🔎 歷史收盤價驗證</div>', unsafe_allow_html=True)
-    with st.expander("展開 — 查詢任意股票在指定日期的收盤價（雙來源交叉驗證）"):
+    st.markdown(
+        '<div class="section-header">驗證 · 歷史收盤價 · 雙來源交叉比對</div>',
+        unsafe_allow_html=True,
+    )
+    with st.expander("▸ 展開 · 查詢任一股票於指定日期之收盤價（雙來源驗證）"):
         vp_c1, vp_c2, vp_c3 = st.columns([2, 2, 1])
-        vp_code = vp_c1.text_input("股票代號", placeholder="e.g. 6278", key="vp_code")
-        vp_date = vp_c2.date_input("查詢日期", value=date.today() - timedelta(days=1), key="vp_date")
-        vp_mkt  = vp_c3.selectbox("市場", ["TWSE", "TPEX"], key="vp_mkt")
+        vp_code = vp_c1.text_input("股票代號 ·", placeholder="例如 6278", key="vp_code")
+        vp_date = vp_c2.date_input("查詢日期 ·", value=date.today() - timedelta(days=1), key="vp_date")
+        vp_mkt  = vp_c3.selectbox("市場 ·", ["TWSE", "TPEX"], key="vp_mkt")
 
-        if st.button("🔍 查詢並交叉驗證", key="vp_btn"):
+        if st.button("▶ 執行查詢 · 交叉比對", key="vp_btn"):
             if not vp_code.strip():
                 st.warning("請輸入股票代號。")
             else:
@@ -1065,7 +1926,13 @@ def main():
 
                 # Display results
                 _date_label_vp = vp_date.strftime("%d.%b.%Y")
-                st.markdown(f"#### {_code} — {_date_label_vp} 收盤價比對")
+                st.markdown(
+                    f'<div style="font-family:JetBrains Mono,monospace;font-size:0.82rem;'
+                    f'font-weight:700;letter-spacing:0.14em;text-transform:uppercase;'
+                    f'color:#E5E7EB;margin:14px 0 10px 0;">'
+                    f'›&nbsp; {_code} · 收盤價雙來源對帳 · {_date_label_vp}</div>',
+                    unsafe_allow_html=True,
+                )
                 _cols = st.columns(len(_results))
                 _prices_found = [v for v in _results.values() if v is not None]
                 _match = len(set(round(p, 1) for p in _prices_found)) <= 1 if len(_prices_found) > 1 else None
@@ -1089,10 +1956,11 @@ def main():
                     st.info(f"僅 {_src_name} 有資料。")
 
     # ========== FOOTER ==========
-    st.markdown("---")
     st.markdown("""
-    <div style="text-align:center; color:#6b7b8d; font-size:0.8rem; padding:20px;">
-        數據來源：TWSE/TPEX OpenAPI, Goodinfo.tw | 系統僅供參考，不構成任何投資建議。
+    <div class="term-footer">
+        資料來源<span class="sep">·</span>TWSE / TPEX OpenAPI<span class="sep">·</span>Goodinfo.tw<span class="sep">·</span>FinMind<span class="sep">·</span>yfinance
+        <br>
+        本系統非投資建議<span class="sep">·</span>僅供資訊參考<span class="sep">·</span>台股高殖利率篩選 // v2 · 終端介面
     </div>
     """, unsafe_allow_html=True)
 

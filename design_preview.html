@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<title>TW-DIV · 終端機 · 設計預覽</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@200;400;500;700;800&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg:           #0A0D12;
+    --bg-elev:      #12161D;
+    --bg-hover:     #1A2028;
+    --bg-panel:     #0E1219;
+    --border:       #1F2936;
+    --border-strong:#2B3542;
+    --text:         #E5E7EB;
+    --text-muted:   #9CA3AF;
+    --text-dim:     #6B7280;
+    --amber:        #FFB800;
+    --cyan:         #22D3EE;
+    --green:        #10B981;
+    --red:          #EF4444;
+    --purple:       #A78BFA;
+    --mono:         'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --cjk:          'Noto Sans TC', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--mono), var(--cjk);
+    background:
+        radial-gradient(ellipse 90% 60% at 50% -10%, rgba(255,184,0,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 70% 50% at 85% 100%, rgba(34,211,238,0.04) 0%, transparent 60%),
+        var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+}
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(
+        0deg, rgba(255,255,255,0.012) 0 1px, transparent 1px 3px
+    );
+    z-index: 9999;
+    mix-blend-mode: overlay;
+}
+.container { max-width: 1280px; margin: 0 auto; padding: 28px 28px 64px; }
+
+/* Terminal header */
+.term-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 18px; margin-bottom: 18px;
+    background: linear-gradient(180deg, #0E1219 0%, #0A0D12 100%);
+    border: 1px solid var(--border); border-top: 2px solid var(--amber);
+    position: relative; overflow: hidden;
+}
+.term-header::after {
+    content: ""; position: absolute; top:0; left:0; right:0;
+    height:1px;
+    background: linear-gradient(90deg, transparent, var(--amber), transparent);
+    opacity: .6; animation: scan 8s linear infinite;
+}
+@keyframes scan { 0%{transform:translateX(-100%)} 100%{transform:translateX(100%)} }
+.term-brand { display:flex; align-items:baseline; gap:14px; }
+.brand { font-size:1.35rem; font-weight:800; color:var(--amber); letter-spacing:.08em; }
+.cursor {
+    display:inline-block; width:.55em; height:1em; background:var(--amber);
+    vertical-align:-2px; margin-left:4px; animation:blink 1.05s step-end infinite;
+}
+@keyframes blink { 50%{opacity:0} }
+.slash{color:var(--text-dim);font-weight:400;}
+.tagline{color:var(--text-muted);font-size:.78rem;letter-spacing:.12em;}
+.term-header-right{display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;}
+.status-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border:1px solid var(--border-strong);color:var(--text-muted);background:rgba(255,255,255,.02);}
+.status-chip .dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px currentColor;animation:blink 1.4s ease-in-out infinite;}
+.status-chip.live{color:var(--green);border-color:rgba(16,185,129,.4);}
+.status-chip .kv-key{color:var(--text-dim);}
+.status-chip .kv-val{color:var(--text);font-weight:500;}
+
+/* Procedure banner */
+.procedure{
+    border:1px solid var(--border);
+    background:linear-gradient(180deg, rgba(255,184,0,.025) 0%, var(--bg-panel) 100%);
+    padding:14px 16px;margin-bottom:18px;
+}
+.procedure-head{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+.procedure-head .pt{color:var(--amber);font-weight:800;}
+.procedure-head .title{font-size:.78rem;font-weight:700;color:var(--text);letter-spacing:.18em;}
+.procedure-head .hint{color:var(--text-dim);font-size:.7rem;letter-spacing:.08em;margin-left:auto;}
+.procedure-steps{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;
+}
+.step{
+    padding:12px 14px;border:1px solid var(--border);
+    background:var(--bg-panel);position:relative;
+}
+.step-num{font-size:.65rem;letter-spacing:.2em;color:var(--text-dim);margin-bottom:6px;}
+.step-title{font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:4px;letter-spacing:.03em;}
+.step-sub{font-size:.72rem;color:var(--text-muted);line-height:1.5;}
+.step.active{
+    border-color:var(--amber);
+    background:linear-gradient(180deg, rgba(255,184,0,.08) 0%, rgba(255,184,0,.02) 100%);
+    box-shadow:inset 3px 0 0 var(--amber), 0 0 20px rgba(255,184,0,.08);
+}
+.step.active .step-num{color:var(--amber);}
+.step.done{border-color:rgba(16,185,129,.35);}
+.step.done .step-num{color:var(--green);}
+.step.done .step-num::after{content:" ✓";}
+.step.pending{opacity:.55;}
+
+/* Ticker strip */
+.ticker-strip {
+    border:1px solid var(--border);
+    background:var(--bg-panel);
+    padding:10px 16px; margin-bottom:18px;
+    display:flex; flex-wrap:wrap; gap:22px; align-items:center;
+    font-size:.78rem; color:var(--text-muted);
+}
+.ticker-strip .pt{color:var(--amber);margin-right:6px;}
+.ticker-strip .k{color:var(--text-dim);letter-spacing:.08em;margin-right:6px;}
+.ticker-strip .v{color:var(--text);font-weight:500;}
+.ticker-strip .warn{color:var(--amber);}
+.ticker-strip .div{color:var(--border-strong);margin:0 2px;}
+
+/* KPI strip */
+.kpi-strip{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    border:1px solid var(--border);
+    background: linear-gradient(180deg,rgba(255,184,0,.02) 0%,transparent 100%),var(--bg-panel);
+    margin:8px 0 26px 0;
+}
+.kpi-cell{padding:18px 20px;border-right:1px solid var(--border);position:relative;}
+.kpi-cell:last-child{border-right:none;}
+.kpi-cell::before{content:"";position:absolute;top:10px;left:0;width:3px;height:18px;background:var(--amber);opacity:0;transition:opacity .2s;}
+.kpi-cell:hover::before{opacity:1;}
+.kpi-label{font-size:.68rem;font-weight:500;letter-spacing:.14em;color:var(--text-dim);margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+.kpi-label::before{content:"■";color:var(--amber);font-size:.6rem;}
+.kpi-value{font-size:1.9rem;font-weight:700;color:var(--text);letter-spacing:-.01em;line-height:1;font-variant-numeric:tabular-nums;}
+.kpi-value.amber{color:var(--amber);} .kpi-value.cyan{color:var(--cyan);}
+.kpi-value .unit{font-size:.75rem;color:var(--text-dim);font-weight:400;margin-left:4px;letter-spacing:.05em;}
+.kpi-sub{margin-top:4px;font-size:.72rem;color:var(--text-dim);}
+
+/* Section header */
+.section-header{
+    font-size:.82rem;font-weight:700;color:var(--text);letter-spacing:.12em;
+    margin:30px 0 14px;display:flex;align-items:center;gap:10px;
+}
+.section-header::before{content:">_";color:var(--amber);font-weight:800;}
+.section-header::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--border) 0%,transparent 100%);margin-left:6px;}
+.section-header .count{color:var(--text-dim);font-weight:400;font-size:.72rem;letter-spacing:.08em;}
+
+/* Rule panel */
+.rule-box{
+    background:var(--bg-panel);border:1px solid var(--border);border-left:2px solid var(--cyan);
+    padding:14px 18px;margin-bottom:14px;font-size:.82rem;color:var(--text-muted);line-height:1.7;
+}
+.rule-box .lbl{color:var(--cyan);font-weight:700;letter-spacing:.1em;font-size:.74rem;display:block;margin-bottom:6px;}
+.rule-box strong{color:var(--text);background:rgba(255,184,0,.08);padding:1px 5px;border-radius:2px;}
+.rule-line{display:flex;gap:8px;align-items:flex-start;}
+.rule-line .ix{color:var(--amber);min-width:1.8em;}
+
+/* Signal card */
+.sig-card{
+    background:linear-gradient(90deg,rgba(16,185,129,.08) 0%,var(--bg-panel) 30%);
+    border:1px solid var(--border);border-left:3px solid var(--green);
+    padding:14px 18px;margin-bottom:10px;position:relative;
+}
+.sig-card::after{
+    content:"● 訊號";position:absolute;top:10px;right:14px;
+    font-size:.68rem;letter-spacing:.2em;color:var(--green);
+    animation:blink 1.8s ease-in-out infinite;
+}
+.sig-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;padding-right:80px;}
+.sig-code{font-size:1.05rem;font-weight:700;color:var(--text);letter-spacing:.05em;}
+.sig-code .code-num{color:var(--amber);margin-right:10px;}
+.sig-sector{font-size:.74rem;color:var(--text-dim);letter-spacing:.08em;}
+.sig-row{font-size:.82rem;color:var(--text-muted);margin-top:4px;}
+.sig-row .k{color:var(--text-dim);} .sig-row .v{color:var(--text);font-weight:500;}
+.sig-row .up{color:var(--green);} .sig-row .dn{color:var(--red);}
+.sig-row .bar-sep{color:var(--border-strong);margin:0 8px;}
+.sig-flow{margin-top:10px;padding:8px 12px;background:rgba(255,255,255,.02);border:1px dashed var(--border);font-size:.78rem;color:var(--text-muted);}
+.sig-verdict{margin-top:8px;font-size:.8rem;color:var(--text-muted);padding-left:12px;border-left:2px solid var(--amber);}
+
+.wl-banner{
+    display:flex;align-items:center;gap:14px;padding:12px 16px;margin:12px 0;
+    background:linear-gradient(90deg,rgba(16,185,129,.08) 0%,transparent 100%);
+    border:1px solid var(--border);border-left:2px solid var(--green);font-size:.84rem;color:var(--text);
+}
+.wl-banner .tag{color:var(--green);font-weight:700;letter-spacing:.15em;font-size:.74rem;}
+.wl-banner .path{color:var(--amber);font-weight:500;}
+
+.term-footer{margin-top:32px;padding:14px 0;border-top:1px solid var(--border);font-size:.72rem;color:var(--text-dim);text-align:center;letter-spacing:.08em;}
+.term-footer .sep{color:var(--border-strong);margin:0 8px;}
+
+/* Preview-only table */
+table.preview-tbl{
+    width:100%;border-collapse:collapse;font-size:.82rem;
+    border:1px solid var(--border);background:var(--bg-panel);
+}
+.preview-tbl th,.preview-tbl td{
+    padding:8px 12px;border-bottom:1px solid var(--border);
+    font-variant-numeric:tabular-nums;text-align:left;
+}
+.preview-tbl th{
+    font-size:.7rem;letter-spacing:.1em;color:var(--text-dim);font-weight:500;
+    background:rgba(255,255,255,.01);
+}
+.preview-tbl tr:hover td{background:rgba(255,184,0,.03);}
+.preview-tbl td.num{text-align:right;color:var(--text);font-weight:500;}
+.preview-tbl td.num.hi{color:var(--amber);}
+.preview-tbl td.num.cy{color:var(--cyan);}
+
+.note{font-size:.74rem;color:var(--text-dim);text-align:center;margin-top:32px;letter-spacing:.05em;}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- Terminal header -->
+<div class="term-header">
+    <div class="term-brand">
+        <span class="brand">TW-DIV<span class="cursor"></span></span>
+        <span class="slash">//</span>
+        <span class="tagline">台股股利智能選股 · 終端機</span>
+    </div>
+    <div class="term-header-right">
+        <span class="status-chip live"><span class="dot"></span>即時</span>
+        <span class="status-chip"><span class="kv-key">同步</span><span class="kv-val">2026-04-21 08:17</span></span>
+        <span class="status-chip"><span class="kv-key">母體</span><span class="kv-val">300</span></span>
+    </div>
+</div>
+
+<!-- Procedure · 4-step workflow -->
+<div class="procedure">
+    <div class="procedure-head">
+        <span class="pt">▸</span>
+        <span class="title">使用流程 · PROCEDURE</span>
+        <span class="hint">依序執行 · 當前進度：步驟 03 / 04</span>
+    </div>
+    <div class="procedure-steps">
+        <div class="step done">
+            <div class="step-num">步驟 01</div>
+            <div class="step-title">選擇日期</div>
+            <div class="step-sub">左側欄 · 設定觀察日期與殖利率門檻</div>
+        </div>
+        <div class="step done">
+            <div class="step-num">步驟 02</div>
+            <div class="step-title">建立 CSV 清單</div>
+            <div class="step-sub">點擊 [ 執行選股 ] · 自動儲存觀察清單</div>
+        </div>
+        <div class="step active">
+            <div class="step-num">步驟 03</div>
+            <div class="step-title">選擇 CSV</div>
+            <div class="step-sub">WVF 區 · 選擇來源（session／檔案／上傳）</div>
+        </div>
+        <div class="step pending">
+            <div class="step-num">步驟 04</div>
+            <div class="step-title">執行 WVF 掃描</div>
+            <div class="step-sub">點擊 [ 執行掃描 ] · 查看綠色底部訊號</div>
+        </div>
+    </div>
+</div>
+
+<!-- Ticker strip -->
+<div class="ticker-strip">
+    <span><span class="pt">▸</span><span class="k">篩選規則</span>
+        <span class="v">連續 10 年配息</span><span class="div">│</span>
+        <span class="v">目前殖利率 ≥ X</span><span class="div">│</span>
+        <span class="v">5 年平均殖利率 ≥ Y</span>
+    </span>
+    <span><span class="k">觀察期間</span><span class="v">2016 — 2025</span></span>
+    <span><span class="k">公式</span><span class="v">（現金 + 股票股利）÷ 現價</span></span>
+    <span class="warn">⚠ 非標準定義：含股票股利</span>
+</div>
+
+<!-- KPI strip -->
+<div class="kpi-strip">
+    <div class="kpi-cell">
+        <div class="kpi-label">符合檔數</div>
+        <div class="kpi-value amber">042</div>
+        <div class="kpi-sub">佔母體 14.0%</div>
+    </div>
+    <div class="kpi-cell">
+        <div class="kpi-label">平均目前殖利率</div>
+        <div class="kpi-value">5.37<span class="unit">%</span></div>
+        <div class="kpi-sub">算術平均 · 已篩選</div>
+    </div>
+    <div class="kpi-cell">
+        <div class="kpi-label">平均 5 年殖利率</div>
+        <div class="kpi-value cyan">5.12<span class="unit">%</span></div>
+        <div class="kpi-sub">5 年算術平均</div>
+    </div>
+    <div class="kpi-cell">
+        <div class="kpi-label">最高目前殖利率</div>
+        <div class="kpi-value amber">12.84<span class="unit">%</span></div>
+        <div class="kpi-sub">已篩選集合最高值</div>
+    </div>
+</div>
+
+<!-- Section: Screen results -->
+<div class="section-header">篩選結果 · SCREEN<span class="count">042 筆</span></div>
+
+<table class="preview-tbl">
+    <thead>
+        <tr>
+            <th>代號</th><th>名稱</th><th>產業別</th><th>市場</th>
+            <th class="num">股價</th><th class="num">目前殖利率</th><th class="num">5 年平均</th><th class="num">近 1 年配息</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td>2412</td><td>中華電</td><td>通信網路</td><td>TWSE</td><td class="num">128.50</td><td class="num hi">4.82%</td><td class="num cy">4.35%</td><td class="num">6.19</td></tr>
+        <tr><td>2886</td><td>兆豐金</td><td>金融保險</td><td>TWSE</td><td class="num">45.25</td><td class="num hi">5.23%</td><td class="num cy">5.01%</td><td class="num">2.37</td></tr>
+        <tr><td>2884</td><td>玉山金</td><td>金融保險</td><td>TWSE</td><td class="num">28.40</td><td class="num hi">6.87%</td><td class="num cy">6.12%</td><td class="num">1.95</td></tr>
+        <tr><td>3034</td><td>聯詠</td><td>其他電子業</td><td>TWSE</td><td class="num">415.00</td><td class="num hi">5.54%</td><td class="num cy">7.91%</td><td class="num">23.00</td></tr>
+        <tr><td>1216</td><td>統一</td><td>食品工業</td><td>TWSE</td><td class="num">82.70</td><td class="num hi">4.11%</td><td class="num cy">4.28%</td><td class="num">3.40</td></tr>
+    </tbody>
+</table>
+
+<div class="wl-banner">
+    <span class="tag">✔ 寫入成功</span>
+    <span>觀察清單已建立 → <span class="path">TW_Div_4_21.Apr.2026.csv</span> · 共 <span style="color:var(--amber);">042</span> 檔</span>
+</div>
+
+<!-- Section: signals -->
+<div class="section-header">技術訊號 · WILLIAMS VIX FIX</div>
+
+<div class="rule-box">
+    <span class="lbl">▸ WVF · Williams VIX Fix 恐慌底部指標</span>
+    <div class="rule-line"><span class="ix">01</span><span>以價格歷史合成類 VIX 的市場恐慌指標。</span></div>
+    <div class="rule-line"><span class="ix">02</span><span>當 <strong>WVF ≥ 布林上軌</strong> <em>或</em> <strong>WVF ≥ 百分位高點</strong> 時，出現<strong>綠色訊號</strong>──代表恐慌底部訊號。</span></div>
+    <div class="rule-line"><span class="ix">03</span><span>本掃描器標示出近 <strong>3 個交易日內</strong>至少出現 1 根綠色訊號的個股──作為買方觀察候選。</span></div>
+</div>
+
+<div class="sig-card">
+    <div class="sig-head">
+        <span class="sig-code"><span class="code-num">2317</span>鴻海</span>
+        <span class="sig-sector">其他電子業</span>
+    </div>
+    <div class="sig-row">
+        <span class="k">殖利率</span> <span class="v" style="color:var(--amber);">5.68%</span>
+        <span class="bar-sep">│</span>
+        <span class="k">5 年平均</span> <span class="v" style="color:var(--cyan);">5.12%</span>
+        <span class="bar-sep">│</span>
+        <span class="k">訊號</span> <span class="v" style="color:var(--green);">2/3 日</span>
+    </div>
+    <div class="sig-row">
+        <span class="k">WVF</span> <span class="v">8.24</span>
+        <span class="bar-sep">│</span>
+        <span class="k">布林上軌</span> <span class="v">7.18</span>
+        <span class="bar-sep">│</span>
+        <span class="k">百分位高點</span> <span class="v">7.88</span>
+    </div>
+    <div class="sig-row"><span class="up">▲ 收盤 195.5 &gt; MA20 188.2</span></div>
+    <div class="sig-flow">
+        <span style="color:var(--text-dim);letter-spacing:.1em;font-size:.72rem;">三大法人 · 近 60 日（張）</span><br>
+        <span class="k">外資</span> <span class="up">▲ +28,450</span>
+        <span class="bar-sep">│</span>
+        <span class="k">投信</span> <span class="up">▲ +4,120</span>
+        <span class="bar-sep">│</span>
+        <span class="k">自營商</span> <span class="dn">▼ -3,220</span>
+        <span class="bar-sep">│</span>
+        <span class="k">合計</span> <strong><span class="up">▲ +29,350</span></strong>
+    </div>
+    <div class="sig-verdict">
+        ▶ <strong style="color:var(--green);">三大法人淨買超與 WVF 恐慌底部訊號同向</strong>──建議升級為優先觀察，評估進場時機。
+    </div>
+</div>
+
+<div class="term-footer">
+    資料來源<span class="sep">·</span>TWSE / TPEX OpenAPI<span class="sep">·</span>Goodinfo.tw<span class="sep">·</span>FinMind<span class="sep">·</span>yfinance<br>
+    本系統非投資建議<span class="sep">·</span>僅供資訊參考<span class="sep">·</span>台股高殖利率篩選 // v2 · 終端介面
+</div>
+
+<div class="note">此為重新設計後 Streamlit 儀表板之靜態預覽 · 實際應用程式位於 <code>app.py</code></div>
+
+</div>
+</body>
+</html>
