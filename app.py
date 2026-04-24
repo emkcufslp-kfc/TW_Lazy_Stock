@@ -1644,16 +1644,43 @@ def main():
             wvf_ph  = pc5.number_input("高百分位 ph", 0.50, 1.00, 0.85, 0.01, help="rangeHigh = highest(wvf,lb) × ph")
             wvf_lkb = pc6.number_input("訊號掃描天數", 1, 7, 3, help="檢查最近幾個交易日是否出現綠色柱")
 
-            st.markdown("---")
-            use_ma = st.checkbox("📈 加入均線過濾（收盤價需在均線之上）", value=False)
-            if use_ma:
-                ma1, ma2 = st.columns(2)
-                ma_type   = ma1.selectbox("均線類型", ["SMA", "EMA"], index=0)
-                ma_period = ma2.selectbox("均線週期", [5, 10, 20, 50, 100, 200], index=2)
-            else:
-                ma_type, ma_period = "SMA", 20
 
-        scan_btn = st.button("▶ 執行 WVF 掃描", use_container_width=True, type="primary")
+        # ── 📡 Action Criteria ───────────────────────────────────────────
+        st.markdown(
+            '<div style="font-family:JetBrains Mono,monospace;font-size:0.72rem;'
+            'color:#9CA3AF;letter-spacing:0.12em;text-transform:uppercase;'
+            'border-left:2px solid #FFB800;padding:4px 0 4px 10px;'
+            'margin:14px 0 8px 0;">📡 Action Criteria · 觸發條件（全部選填）</div>',
+            unsafe_allow_html=True,
+        )
+        _crit_left, _crit_right = st.columns([1, 3])
+        with _crit_left:
+            use_wvf_crit = st.checkbox(
+                "WVF 底部訊號",
+                value=True,
+                help="近 N 個交易日出現 WVF 綠色訊號（恐慌底部）",
+                key="act_wvf",
+            )
+        with _crit_right:
+            st.markdown(
+                '<div style="font-family:JetBrains Mono,monospace;font-size:0.7rem;'
+                'color:#6B7280;padding-bottom:4px;">SMA 均線 · 收盤需在均線之上</div>',
+                unsafe_allow_html=True,
+            )
+            _sma_cols = st.columns(4)
+            sma_use_10  = _sma_cols[0].checkbox("SMA 10",  value=False, key="act_sma10")
+            sma_use_20  = _sma_cols[1].checkbox("SMA 20",  value=False, key="act_sma20")
+            sma_use_60  = _sma_cols[2].checkbox("SMA 60",  value=False, key="act_sma60")
+            sma_use_200 = _sma_cols[3].checkbox("SMA 200", value=False, key="act_sma200")
+
+        sma_periods_selected = [
+            p for p, on in [
+                (10, sma_use_10), (20, sma_use_20),
+                (60, sma_use_60), (200, sma_use_200),
+            ] if on
+        ]
+
+        scan_btn = st.button("▶ 執行技術掃描", use_container_width=True, type="primary")
 
         if scan_btn:
             from technical import check_signal, make_wvf_chart
@@ -1670,40 +1697,53 @@ def main():
                     lookback_days=int(wvf_lkb),
                     pd_=int(wvf_pd), bbl=int(wvf_bbl), mult=float(wvf_mult),
                     lb=int(wvf_lb), ph=float(wvf_ph),
-                    use_ma_filter=use_ma,
-                    ma_type=ma_type,
-                    ma_period=int(ma_period),
+                    sma_periods=sma_periods_selected,
                 )
                 results.append({**s, **sig})
                 bar.progress((i + 1) / len(stocks), text=f"掃描中… {s['code']} {s.get('name','')}")
             bar.empty()
-            st.session_state["wvf_results"] = results
-            st.session_state["wvf_lkb"] = int(wvf_lkb)
-            st.session_state["wvf_use_ma"] = use_ma
+            st.session_state["wvf_results"]      = results
+            st.session_state["wvf_lkb"]          = int(wvf_lkb)
+            st.session_state["wvf_sma_periods"]  = sma_periods_selected
+            st.session_state["wvf_use_wvf_crit"] = use_wvf_crit
 
         # ---------- 顯示結果 ----------
         wvf_results = st.session_state.get("wvf_results")
         if wvf_results:
             from technical import make_wvf_chart
 
-            use_ma_display = st.session_state.get("wvf_use_ma", False)
-            lkb = st.session_state.get("wvf_lkb", 3)
+            lkb              = st.session_state.get("wvf_lkb", 3)
+            use_wvf_crit     = st.session_state.get("wvf_use_wvf_crit", True)
+            sma_periods_disp = st.session_state.get("wvf_sma_periods", [])
 
-            # Apply filters: WVF green + (optionally) above MA
+            # Apply filters based on Action Criteria
             def _passes(r: dict) -> bool:
-                if "error" in r or not r.get("green"):
+                if "error" in r:
                     return False
-                if use_ma_display and r.get("above_ma") is False:
+                # WVF criterion
+                if use_wvf_crit and not r.get("green"):
                     return False
+                # Multi-SMA: ALL selected periods must be above
+                if sma_periods_disp:
+                    sma_checks = r.get("sma_checks", {})
+                    for p in sma_periods_disp:
+                        chk = sma_checks.get(p, {})
+                        if chk.get("above") is False:
+                            return False
                 return True
 
             green_hits = [r for r in wvf_results if _passes(r)]
             no_signal  = [r for r in wvf_results if not _passes(r) and "error" not in r]
             errors     = [r for r in wvf_results if "error" in r]
 
-            if use_ma_display:
-                ma_label = (wvf_results[0].get("ma_label") or "MA") if wvf_results else "MA"
-                st.info(f"均線過濾已啟用（{ma_label}）：僅顯示 WVF 綠色訊號 **且** 收盤價在均線之上的股票。")
+            # Active criteria info banner
+            _active_criteria = []
+            if use_wvf_crit:
+                _active_criteria.append(f"WVF 底部訊號（近 {lkb} 日）")
+            for p in sma_periods_disp:
+                _active_criteria.append(f"收盤 > SMA{p}")
+            if _active_criteria:
+                st.info("✅ 已啟用篩選條件：" + " ＋ ".join(_active_criteria))
 
             if green_hits:
                 st.markdown(
@@ -1725,12 +1765,33 @@ def main():
                     ub_val  = r.get("upper_band", 0)
                     rh_val  = r.get("range_high", 0)
 
-                    ma_label  = r.get("ma_label", "")
-                    last_close= r.get("last_close")
-                    last_ma   = r.get("last_ma")
-                    above_ma  = r.get("above_ma")
+                    sma_checks = r.get("sma_checks", {})
+                    last_close = r.get("last_close")
                     ma_row = ""
-                    if above_ma is not None and last_close is not None:
+                    if sma_checks and last_close is not None:
+                        badges = []
+                        for p in sorted(sma_checks.keys()):
+                            chk = sma_checks[p]
+                            sma_v = chk.get("sma")
+                            ab    = chk.get("above")
+                            if sma_v is None or ab is None:
+                                badges.append(f'<span style="color:#6B7280;">SMA{p} 資料不足</span>')
+                            elif ab:
+                                badges.append(f'<span class="up">▲ &gt; SMA{p} {sma_v}</span>')
+                            else:
+                                badges.append(f'<span class="dn">▼ &lt; SMA{p} {sma_v}</span>')
+                        if badges:
+                            ma_row = (
+                                f'<div class="sig-row">'
+                                f'<span class="k">收盤 {last_close}</span> '
+                                + ' <span class="bar-sep">│</span> '.join(badges)
+                                + '</div>'
+                            )
+                    elif r.get("above_ma") is not None and last_close is not None:
+                        # legacy single-MA fallback
+                        ma_label = r.get("ma_label", "MA")
+                        last_ma  = r.get("last_ma")
+                        above_ma = r.get("above_ma")
                         ma_badge = (
                             f'<span class="up">▲ 收盤 {last_close} &gt; {ma_label} {last_ma}</span>'
                             if above_ma else
@@ -1823,25 +1884,40 @@ def main():
                             st.plotly_chart(fig, use_container_width=True)
 
             else:
-                st.info(f"近 {lkb} 個交易日內，觀察清單中無股票出現 WVF 綠色訊號。")
+                st.info(f"目前篩選條件下，觀察清單中無股票符合所有 Action Criteria。")
 
             # Summary table
             with st.expander(f"▸ 完整掃描結果 · {len(no_signal)} 無訊號 / {len(errors)} 無資料"):
+                # Collect all SMA periods seen across results
+                _all_sma_ps = sorted({
+                    p
+                    for r in wvf_results
+                    for p in r.get("sma_checks", {}).keys()
+                })
                 rows = []
                 for r in wvf_results:
-                    ma_lbl = r.get("ma_label", "")
-                    above  = r.get("above_ma")
-                    ma_str = ("✅ 是" if above else "❌ 否") if above is not None else "—"
-                    rows.append({
-                        "代號": r.get("code",""), "名稱": r.get("name",""),
-                        "產業別": r.get("sector",""),
+                    row = {
+                        "代號": r.get("code", ""),
+                        "名稱": r.get("name", ""),
+                        "產業別": r.get("sector", ""),
                         "WVF訊號": "🟢 是" if r.get("green") else ("⚠️ 無資料" if "error" in r else "—"),
                         "觸發天數": r.get("days", 0) if "error" not in r else "-",
-                        f"收盤>{ma_lbl}": ma_str,
                         "收盤價": r.get("last_close", "-") if r.get("last_close") else "-",
-                        ma_lbl or "MA": r.get("last_ma", "-") if r.get("last_ma") else "-",
                         "WVF": r.get("wvf", "-") if "error" not in r else "-",
-                    })
+                    }
+                    # Per-SMA columns
+                    sma_checks = r.get("sma_checks", {})
+                    for p in _all_sma_ps:
+                        chk = sma_checks.get(p, {})
+                        ab  = chk.get("above")
+                        sv  = chk.get("sma")
+                        if ab is None:
+                            row[f">SMA{p}"] = "—"
+                        elif ab:
+                            row[f">SMA{p}"] = f"✅ {sv}"
+                        else:
+                            row[f">SMA{p}"] = f"❌ {sv}"
+                    rows.append(row)
                 st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
 
     # ========== 歷史股價驗證工具 ==========
@@ -1926,44 +2002,4 @@ def main():
 
                 # Display results
                 _date_label_vp = vp_date.strftime("%d.%b.%Y")
-                st.markdown(
-                    f'<div style="font-family:JetBrains Mono,monospace;font-size:0.82rem;'
-                    f'font-weight:700;letter-spacing:0.14em;text-transform:uppercase;'
-                    f'color:#E5E7EB;margin:14px 0 10px 0;">'
-                    f'›&nbsp; {_code} · 收盤價雙來源對帳 · {_date_label_vp}</div>',
-                    unsafe_allow_html=True,
-                )
-                _cols = st.columns(len(_results))
-                _prices_found = [v for v in _results.values() if v is not None]
-                _match = len(set(round(p, 1) for p in _prices_found)) <= 1 if len(_prices_found) > 1 else None
-
-                for _ci, (_src, _p) in enumerate(sorted(_results.items())):
-                    with _cols[_ci]:
-                        if _p is not None:
-                            st.metric(_src, f"${_p:.2f}")
-                        else:
-                            st.metric(_src, "無資料")
-
-                if _match is True:
-                    st.success("✅ 兩來源價格一致，數據可信。")
-                elif _match is False:
-                    _diff = abs(_prices_found[0] - _prices_found[1])
-                    _pct  = _diff / _prices_found[0] * 100
-                    st.warning(f"⚠️ 兩來源差異 ${_diff:.2f}（{_pct:.2f}%）。可能原因：yfinance 使用還原股價（除權息調整），TWSE/TPEX 為原始收盤價。")
-                    st.info("💡 本系統使用 yfinance `auto_adjust=True`（已還原股價），若股票近期有除權息，兩者數字會不同——這是正常現象，不影響殖利率計算正確性。")
-                elif len(_prices_found) == 1:
-                    _src_name = [k for k, v in _results.items() if v is not None][0]
-                    st.info(f"僅 {_src_name} 有資料。")
-
-    # ========== FOOTER ==========
-    st.markdown("""
-    <div class="term-footer">
-        資料來源<span class="sep">·</span>TWSE / TPEX OpenAPI<span class="sep">·</span>Goodinfo.tw<span class="sep">·</span>FinMind<span class="sep">·</span>yfinance
-        <br>
-        本系統非投資建議<span class="sep">·</span>僅供資訊參考<span class="sep">·</span>台股高殖利率篩選 // v2 · 終端介面
-    </div>
-    """, unsafe_allow_html=True)
-
-
-if __name__ == "__main__":
-    main()
+            

@@ -8,3 +8,4 @@ plotly
 tqdm
 openpyxl
 yfinance
+finmind

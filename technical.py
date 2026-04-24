@@ -91,6 +91,46 @@ def compute_ma(close: pd.Series, ma_type: str = "SMA", period: int = 20) -> pd.S
     return close.rolling(period).mean()   # SMA default
 
 
+def compute_sma_checks(
+    df: pd.DataFrame,
+    periods: list[int],
+) -> dict[int, dict]:
+    """
+    For each period, check whether the latest close is above that SMA.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        OHLCV DataFrame with a 'Close' column.
+    periods : list[int]
+        SMA periods to evaluate, e.g. [10, 20, 60, 200].
+
+    Returns
+    -------
+    dict[int, {"above": bool | None, "close": float, "sma": float | None}]
+        None means insufficient history to compute that SMA.
+    """
+    if df.empty or "Close" not in df.columns or not periods:
+        return {}
+
+    last_close = float(df["Close"].iloc[-1])
+    result: dict[int, dict] = {}
+
+    for p in sorted(periods):
+        sma_series = df["Close"].rolling(p, min_periods=p).mean().dropna()
+        if sma_series.empty:
+            result[p] = {"above": None, "close": round(last_close, 2), "sma": None}
+        else:
+            sma_val = round(float(sma_series.iloc[-1]), 2)
+            result[p] = {
+                "above": last_close > sma_val,
+                "close": round(last_close, 2),
+                "sma":   sma_val,
+            }
+
+    return result
+
+
 def check_signal(
     code: str,
     market: str,
@@ -104,20 +144,35 @@ def check_signal(
     use_ma_filter: bool = False,
     ma_type: str = "SMA",
     ma_period: int = 20,
+    sma_periods: list[int] | None = None,
 ) -> dict:
     """
-    Check if WVF green bar fired in the last `lookback_days` sessions.
-    Optionally checks whether latest close is above the chosen MA.
+    Check WVF green bar and optional SMA crossovers for a Taiwan stock.
+
+    Parameters
+    ----------
+    sma_periods : list[int], optional
+        SMA periods to evaluate independently, e.g. [10, 20, 60, 200].
+        When provided, takes precedence over use_ma_filter/ma_type/ma_period
+        for chart display (uses the largest period as the primary chart MA).
 
     Returns dict with keys:
-      green (bool), days (int signal count), wvf, upper_band, range_high,
+      green (bool), days (int), wvf, upper_band, range_high,
+      sma_checks (dict[int, {above, close, sma}]),  ← new
       above_ma (bool|None), last_close, last_ma, ma_label,
-      wvf_data (full DataFrame for charting), error (str if failed)
+      wvf_data (DataFrame for charting), error (str if failed)
     """
-    min_rows = max(lb + bbl + 5, ma_period + 5)
-    df = fetch_ohlcv(code, market, days=max(160, min_rows + 20))
+    _sma_periods = sorted(sma_periods) if sma_periods else []
+
+    # Ensure enough history for the largest SMA requested
+    largest_sma = _sma_periods[-1] if _sma_periods else ma_period
+    min_rows = max(lb + bbl + 5, largest_sma + 5)
+    fetch_days = max(220, min_rows + 20)   # 220 guarantees SMA200 with buffer
+
+    df = fetch_ohlcv(code, market, days=fetch_days)
     if df is None or len(df) < min_rows:
-        return {"code": code, "green": False, "days": 0, "error": "insufficient data"}
+        return {"code": code, "green": False, "days": 0,
+                "sma_checks": {}, "error": "insufficient data"}
 
     try:
         result = compute_wvf(df, pd_=pd_, bbl=bbl, mult=mult, lb=lb, ph=ph, pl=pl)
@@ -127,36 +182,59 @@ def check_signal(
         last = valid.iloc[-1]
 
         out = {
-            "code": code,
-            "green": green_count > 0,
-            "days": green_count,
-            "wvf": round(float(last["wvf"]), 2),
-            "upper_band": round(float(last["upper_band"]), 2),
-            "range_high": round(float(last["range_high"]), 2),
-            "above_ma": None,
-            "last_close": None,
-            "last_ma": None,
-            "ma_label": f"{ma_type}{ma_period}",
-            "wvf_data": valid,
+            "code":        code,
+            "green":       green_count > 0,
+            "days":        green_count,
+            "wvf":         round(float(last["wvf"]), 2),
+            "upper_band":  round(float(last["upper_band"]), 2),
+            "range_high":  round(float(last["range_high"]), 2),
+            "sma_checks":  {},          # populated below
+            "above_ma":    None,
+            "last_close":  None,
+            "last_ma":     None,
+            "ma_label":    "",
+            "wvf_data":    valid,
         }
 
-        if use_ma_filter:
-            ma_series = compute_ma(df["Close"], ma_type, ma_period)
+        if _sma_periods:
+            # ── Multi-SMA path (new) ──────────────────────────────────
+            sma_checks = compute_sma_checks(df, _sma_periods)
+            out["sma_checks"] = sma_checks
+
+            # Primary chart MA = largest selected period
+            primary_p  = _sma_periods[-1]
+            primary    = sma_checks.get(primary_p, {})
+            out["above_ma"]   = primary.get("above")
+            out["last_close"] = primary.get("close")
+            out["last_ma"]    = primary.get("sma")
+            out["ma_label"]   = f"SMA{primary_p}"
+
+            # Attach primary MA series to wvf_data for chart
+            ma_series = compute_ma(df["Close"], "SMA", primary_p)
+            valid_copy = valid.copy()
+            valid_copy["ma"] = ma_series.reindex(valid_copy.index)
+            out["wvf_data"] = valid_copy
+
+        elif use_ma_filter:
+            # ── Legacy single-MA path ─────────────────────────────────
+            ma_series  = compute_ma(df["Close"], ma_type, ma_period)
             last_close = float(df["Close"].iloc[-1])
             last_ma_val = float(ma_series.dropna().iloc[-1])
-            out["above_ma"] = last_close > last_ma_val
+            out["above_ma"]   = last_close > last_ma_val
             out["last_close"] = round(last_close, 2)
-            out["last_ma"] = round(last_ma_val, 2)
+            out["last_ma"]    = round(last_ma_val, 2)
+            out["ma_label"]   = f"{ma_type}{ma_period}"
 
-            # Attach MA to wvf_data for charting
-            valid = valid.copy()
-            valid["ma"] = ma_series.reindex(valid.index)
-            out["wvf_data"] = valid
+            valid_copy = valid.copy()
+            valid_copy["ma"] = ma_series.reindex(valid_copy.index)
+            out["wvf_data"] = valid_copy
 
         return out
+
     except Exception as e:
         logger.warning(f"[{code}] WVF compute error: {e}")
-        return {"code": code, "green": False, "days": 0, "error": str(e)}
+        return {"code": code, "green": False, "days": 0,
+                "sma_checks": {}, "error": str(e)}
 
 
 def get_historical_prices_batch(
