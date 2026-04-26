@@ -2002,4 +2002,46 @@ def main():
 
                 # Display results
                 _date_label_vp = vp_date.strftime("%d.%b.%Y")
-            
+                st.markdown(
+                    f'<div style="font-family:JetBrains Mono,monospace;font-size:0.82rem;'
+                    f'font-weight:700;letter-spacing:0.14em;text-transform:uppercase;'
+                    f'color:#E5E7EB;margin:14px 0 10px 0;">'
+                    f'›&nbsp; {_code} · 收盤價雙來源對帳 · {_date_label_vp}</div>',
+                    unsafe_allow_html=True,
+                )
+                _cols = st.columns(len(_results))
+                _prices_found = [v for v in _results.values() if v is not None]
+                _match = len(set(round(p, 1) for p in _prices_found)) <= 1 if len(_prices_found) > 1 else None
+
+                for _ci, (_src, _p) in enumerate(sorted(_results.items())):
+                    with _cols[_ci]:
+                        if _p is not None:
+                            st.metric(_src, f"${_p:.2f}")
+                        else:
+                            st.metric(_src, "無資料")
+
+                if _match is True:
+                    st.success("✅ 兩來源價格一致，數據可信。")
+                elif _match is False:
+                    _diff = abs(_prices_found[0] - _prices_found[1])
+                    _pct  = _diff / _prices_found[0] * 100
+                    st.warning(f"⚠️ 兩來源差異 ${_diff:.2f}（{_pct:.2f}%）。可能原因：yfinance 使用還原股價（除權息調整），TWSE/TPEX 為原始收盤價。")
+                    st.info("💡 本系統使用 yfinance `auto_adjust=True`（已還原股價），若股票近期有除權息，兩者數字會不同——這是正常現象，不影響殖利率計算正確性。")
+                elif len(_prices_found) == 1:
+                    _src_name = [k for k, v in _results.items() if v is not None][0]
+                    st.info(f"僅 {_src_name} 有資料。")
+
+    # ========== FOOTER ==========
+    st.markdown("""
+    <div class="term-footer">
+        資料來源<span class="sep">·</span>TWSE / TPEX OpenAPI<span class="sep">·</span>Goodinfo.tw<span class="sep">·</span>FinMind<span class="sep">·</span>yfinance
+        <br>
+        本系統非投資建議<span class="sep">·</span>僅供資訊參考<span class="sep">·</span>台股高殖利率篩選 // v2 · 終端介面
+    </div>
+    """, unsafe_allow_html=True)
+
+
+# Streamlit executes this file top-to-bottom on every rerun;
+# invoke main() so the dashboard UI actually renders.
+if __name__ == "__main__":
+    main()
