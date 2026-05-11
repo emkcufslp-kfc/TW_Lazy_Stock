@@ -830,6 +830,14 @@ def get_data_freshness() -> str:
     return "未知"
 
 
+def get_sync_date() -> "date":
+    """返回 screened_dataset.csv 的最後修改日期（date 物件）；若不存在則回今天。"""
+    if SCREENED_FILE.exists():
+        ts = os.path.getmtime(SCREENED_FILE)
+        return datetime.fromtimestamp(ts).date()
+    return date.today()
+
+
 def render_kpi_cell(label: str, value: str, unit: str = "", accent: str = "",
                     sub: str = "") -> str:
     """Generate terminal-style KPI cell HTML.
@@ -1137,6 +1145,7 @@ def main():
 
         # Watchlist date + Screen button
         today = date.today()
+        sync_date = get_sync_date()
         watchlist_date = st.date_input(
             "觀察日期 · AS-OF",
             value=st.session_state.get("watchlist_date", today),
@@ -1181,6 +1190,101 @@ def main():
         </div>
         """, unsafe_allow_html=True)
 
+        st.divider()
+        st.markdown("""
+        <div style="color:#FFB800;font-weight:700;letter-spacing:0.14em;
+                    font-family:JetBrains Mono,monospace;font-size:0.75rem;
+                    margin-bottom:10px;">▌ 個股查詢 · CUSTOM TICKER</div>
+        """, unsafe_allow_html=True)
+
+        _ct_code_input = st.text_input(
+            "股票代號",
+            placeholder="例如 2330、0050",
+            key="ct_code_input",
+            max_chars=6,
+        )
+        _ct_mkt_input = st.selectbox(
+            "市場別",
+            ["TWSE 上市", "TPEX 上櫃"],
+            key="ct_mkt_input",
+        )
+        _ct_date_input = st.date_input(
+            "觀察日期 · AS-AT",
+            value=st.session_state.get("ct_date_input", date.today()),
+            min_value=date.today().replace(year=date.today().year - 10),
+            max_value=date.today(),
+            help="選擇股價基準日。預設為今天，可回溯至任一歷史日期。",
+            key="ct_date_input",
+        )
+        _ct_btn = st.button("▶ 分析個股", use_container_width=True, type="primary", key="ct_btn")
+
+        if _ct_btn:
+            _ct_code_raw = _ct_code_input.strip()
+            if not _ct_code_raw:
+                st.warning("請輸入股票代號。")
+            elif not _ct_code_raw.isdigit():
+                st.warning("代號格式錯誤（請輸入數字）。")
+            else:
+                _ct_market = "TWSE" if "TWSE" in _ct_mkt_input else "TPEX"
+                with st.spinner(f"正在取得 {_ct_code_raw} 的資料…"):
+                    # 1. Current price via yfinance
+                    from technical import fetch_ohlcv as _ct_fetch_ohlcv
+                    _ct_as_at = st.session_state.get("ct_date_input", date.today())
+                    _ct_ohlcv = _ct_fetch_ohlcv(_ct_code_raw, _ct_market, days=10, as_of_date=_ct_as_at)
+                    _ct_price = None
+                    if _ct_ohlcv is not None and not _ct_ohlcv.empty:
+                        _ct_price = round(float(_ct_ohlcv["Close"].iloc[-1]), 2)
+
+                    # 2. Dividend history
+                    # Priority for custom ticker: Goodinfo first (full history),
+                    # then div_hist CSV (may be incomplete for some stocks),
+                    # then FinMind as last resort.
+                    _ct_name   = _ct_code_raw
+                    _ct_sector = ""
+                    _ct_div_df = None
+
+                    # Try Goodinfo first — most complete historical data
+                    from data_sources import fetch_dividend_from_goodinfo as _ct_fetch_gi
+                    _ct_div_df = _ct_fetch_gi(_ct_code_raw)
+
+                    # Fall back to div_hist CSV if Goodinfo failed
+                    if _ct_div_df is None or _ct_div_df.empty:
+                        _in_dh = div_hist[div_hist["code"].astype(str) == _ct_code_raw]
+                        if not _in_dh.empty:
+                            _ct_div_df = (
+                                _in_dh[["year", "cash_div", "stock_div", "total_div"]]
+                                .groupby("year", as_index=False)[["cash_div", "stock_div", "total_div"]]
+                                .sum()
+                                .sort_values("year")
+                                .reset_index(drop=True)
+                            )
+
+                    # Last resort: FinMind API
+                    if _ct_div_df is None or _ct_div_df.empty:
+                        from data_sources_finmind import fetch_dividend_from_finmind as _ct_fetch_fm
+                        _ct_div_df = _ct_fetch_fm(_ct_code_raw, start_date="2010-01-01")
+
+                    # Pull name from div_hist if available
+                    _in_dh = div_hist[div_hist["code"].astype(str) == _ct_code_raw]
+                    if not _in_dh.empty and "name" in _in_dh.columns:
+                        _ct_name = str(_in_dh.iloc[0]["name"])
+
+                    # 3. Name + sector from screened dataset
+                    _in_sc = screened[screened["code"].astype(str) == _ct_code_raw]
+                    if not _in_sc.empty:
+                        _ct_name   = str(_in_sc.iloc[0]["name"])
+                        _ct_sector = str(_in_sc.iloc[0].get("sector", ""))
+
+                st.session_state["ct_result"] = {
+                    "code":   _ct_code_raw,
+                    "name":   _ct_name,
+                    "sector": _ct_sector,
+                    "market": _ct_market,
+                    "price":  _ct_price,
+                    "div_df": _ct_div_df,
+                    "as_at":  _ct_as_at,
+                }
+
     # ========== 篩選邏輯 ==========
     filtered = screened.copy()
     filtered = filtered[
@@ -1202,6 +1306,12 @@ def main():
     filtered = filtered.sort_values(sort_cols, ascending=sort_asc).reset_index(drop=True)
 
     # ---- 歷史殖利率重算輔助函式 ----
+    def _check_10y_pit(yearly: "pd.Series", end_year: int) -> bool:
+        """True if stock has dividends in ALL 10 consecutive years ending at end_year."""
+        required = set(range(end_year - 9, end_year + 1))
+        paid     = set(int(y) for y in yearly[yearly > 0].index)
+        return required.issubset(paid)
+
     def _hist_metrics(sub_div: pd.DataFrame, price: float) -> dict | None:
         """Recompute yield metrics from historical dividend data at a given price."""
         yearly = sub_div.groupby("year")["total_div"].sum()
@@ -1222,11 +1332,15 @@ def main():
     # 儲存觀察清單到 session state（按下 Screen 時）
     if apply_btn:
         target_date = st.session_state["watchlist_date_input"]
-        today_date  = date.today()
+        _sync_date  = get_sync_date()
 
-        if target_date < today_date:
-            # ── 歷史模式：用 yfinance 取得該日股價，重算殖利率再篩選 ──
-            with st.spinner(f"正在取得 {target_date.strftime('%Y-%m-%d')} 歷史股價（共 {len(screened)} 檔）…"):
+        if target_date != _sync_date:
+            # ── 非同步日期模式：抓取對應日期（或最新）股價，重算殖利率 ──
+            # target_date < _sync_date → 歷史模式（特定歷史日期股價）
+            # target_date > _sync_date → 最新模式（即時股價；CSV 資料已過期）
+            _fetch_label = (target_date.strftime('%Y-%m-%d')
+                            if target_date < _sync_date else "最新")
+            with st.spinner(f"正在取得 {_fetch_label} 股價（共 {len(screened)} 檔）…"):
                 from technical import get_historical_prices_batch
                 stock_list = [
                     {"code": str(r["code"]), "market": r["market"]}
@@ -1234,25 +1348,58 @@ def main():
                 ]
                 hist_prices = get_historical_prices_batch(stock_list, target_date)
 
-            target_year = target_date.year
+            # True PIT: for historical dates, only include dividends
+            # that would have been paid/known by the AS-OF date.
+            # Taiwan stocks pay prior-year dividends mid-year, so on any date
+            # in year Y we only use dividends from completed years (≤ Y-1).
+            # For live/today mode (target_date >= sync_date), use full data.
+            _is_hist_pit = target_date < _sync_date
+            # PIT dividend cutoff: only completed fiscal years visible at AS-OF date
+            # e.g. AS-OF 2024-01-01 → year ≤ 2023; AS-OF 2026-05-10 → all years
+            _div_year_limit = target_date.year - 1 if _is_hist_pit else 9999
+
+            # For historical PIT, use ALL stocks in div_hist (not just today's
+            # pre-screened list) — a stock may have passed 10y rule historically
+            # but not today, or vice versa. Build a lookup for name/market/sector.
+            _sc_lookup = {
+                str(r["code"]): r
+                for _, r in screened.iterrows()
+            }
+            _dh_codes = div_hist["code"].astype(str).unique() if _is_hist_pit else                         screened["code"].astype(str).unique()
+
             rows = []
-            for _, row in screened.iterrows():
-                code  = str(row["code"])
+            for code in _dh_codes:
                 price = hist_prices.get(code)
                 if not price or price <= 0:
                     continue
-                sub_d = div_hist[div_hist["code"].astype(str) == code]
-                sub_d = sub_d[sub_d["year"] <= target_year]
+                sub_d = div_hist[div_hist["code"].astype(str) == code].copy()
+                if _is_hist_pit:
+                    sub_d = sub_d[sub_d["year"] <= _div_year_limit]
                 if sub_d.empty:
                     continue
+
+                yearly = sub_d.groupby("year")["total_div"].sum()
+
+                # Dynamic 10-year window: must have dividends in all 10 consecutive
+                # years ending at _div_year_limit (for live mode, uses latest year)
+                _window_end = _div_year_limit if _is_hist_pit else int(yearly.index.max())
+                if not _check_10y_pit(yearly, _window_end):
+                    continue  # fails dynamic 10-year consecutive rule
+
                 m = _hist_metrics(sub_d, price)
                 if m is None:
                     continue
-                rows.append({"code": code, "name": row["name"], "market": row["market"],
-                             "price": price,
-                             "sector": str(row.get("sector", "")),
-                             "business_nature": str(row.get("business_nature", "")),
-                             **m})
+
+                # Metadata: prefer screened lookup, fall back to div_hist columns
+                _sc_row = _sc_lookup.get(code, {})
+                _name   = str(_sc_row.get("name", sub_d.iloc[0].get("name", code)))
+                _mkt    = str(_sc_row.get("market", sub_d.iloc[0].get("market", "")))
+                _sector = str(_sc_row.get("sector", ""))
+                _biz    = str(_sc_row.get("business_nature", ""))
+
+                rows.append({"code": code, "name": _name, "market": _mkt,
+                             "price": price, "sector": _sector,
+                             "business_nature": _biz, **m})
 
             if not hist_prices:
                 st.error("❌ 無法從 yfinance 取得歷史股價，請確認網路連線或稍後重試。")
@@ -1276,7 +1423,7 @@ def main():
                 st.session_state["watchlist_df"] = hist_filtered
                 st.success(f"✅ 歷史篩選完成：{len(hist_prices)} 檔取得股價 → 符合條件 {len(hist_filtered)} 檔")
         else:
-            # ── 今日模式：直接使用預建資料 ──
+            # ── 同步日期模式：AS-OF == sync_date → 直接使用預建 CSV 資料 ──
             st.session_state["watchlist_df"] = filtered.copy()
 
         st.session_state["watchlist_meta"] = {
@@ -1291,12 +1438,22 @@ def main():
     # 若已用歷史日期 Screen 過，主畫面改用當時的歷史結果；否則沿用即時篩選
     _wl = st.session_state.get("watchlist_df")
     _meta = st.session_state.get("watchlist_meta")
+    _sync_dt = get_sync_date()
+
+    # Three states:
+    #   _is_historical : AS-OF < sync_date  → historical prices, show 歷史模式 banner
+    #   _is_live_fresh : AS-OF > sync_date  → live prices fetched, no banner, use watchlist_df
+    #   else           : AS-OF == sync_date → CSV data as-is, use filtered directly
     _is_historical = (
-        _wl is not None
-        and _meta is not None
-        and _meta["date"] < date.today()
+        _wl is not None and _meta is not None
+        and _meta["date"] < _sync_dt
     )
-    if _is_historical:
+    _is_live_fresh = (
+        _wl is not None and _meta is not None
+        and _meta["date"] > _sync_dt
+    )
+
+    if _is_historical or _is_live_fresh:
         _wl_view = _wl[
             (_wl["current_yield_pct"] >= min_current) &
             (_wl["avg_5y_yield_pct"]  >= min_avg5)
@@ -2030,6 +2187,144 @@ def main():
                 elif len(_prices_found) == 1:
                     _src_name = [k for k, v in _results.items() if v is not None][0]
                     st.info(f"僅 {_src_name} 有資料。")
+
+
+    # ========== 自訂個股查詢 · CUSTOM TICKER ANALYSIS ==========
+    # ── Display result (controls are in the sidebar) ───────────────────────
+    _ct_res = st.session_state.get("ct_result")
+    if _ct_res is not None:
+        from screening import (
+            compute_metrics as _ct_compute_metrics,
+            latest_10_calendar_years_dividend_ok as _ct_check_10y,
+        )
+
+        _r_code   = _ct_res["code"]
+        _r_name   = _ct_res["name"]
+        _r_sector = _ct_res["sector"]
+        _r_price  = _ct_res["price"]
+        _r_div    = _ct_res["div_df"]
+        _r_as_at  = _ct_res.get("as_at", date.today())
+        _r_as_at_str = _r_as_at.strftime("%Y-%m-%d") if _r_as_at else "—"
+
+        # Section header with AS-AT badge
+        st.markdown(
+            f'<div style="font-family:JetBrains Mono,monospace;font-size:0.78rem;'
+            f'color:#9CA3AF;letter-spacing:0.12em;margin-bottom:6px;">'
+            f'▌ 個股查詢 · <span style="color:#FFB800;">{_r_code}</span>'
+            f' {_r_name}'
+            f'&nbsp;&nbsp;<span style="color:#6B7280;font-size:0.7rem;">'
+            f'AS-AT {_r_as_at_str}</span></div>',
+            unsafe_allow_html=True,
+        )
+
+        if _r_price is None:
+            st.error(
+                f"❌ 無法取得 {_r_code} 於 {_r_as_at_str} 的股價。"
+                " 請確認股票代號與市場別是否正確，或選擇其他日期。"
+            )
+        elif _r_div is None or _r_div.empty:
+            st.error(
+                f"❌ 無法取得 {_r_code} 的股利資料（FinMind API）。"
+                "請確認股票代號是否正確。"
+            )
+        else:
+            # Evaluate rules using YOUR unchanged logic
+            _ct_pass_10y = _ct_check_10y(_r_div)
+            _ct_metrics  = _ct_compute_metrics(_r_div, _r_price)
+
+            # Sector pill
+            import html as _html_ct
+            if _r_sector:
+                _sec_esc = _html_ct.escape(str(_r_sector))
+                st.markdown(
+                    f'<div style="margin:4px 0 10px 0;">' +
+                    f'<span class="inline-pill amber">▸ {_sec_esc}</span>' +
+                    f'</div>',
+                    unsafe_allow_html=True,
+                )
+
+            # Rule chips — informational only, no filter applied
+            def _ct_chip(label: str, ok: bool) -> str:
+                bc = "rgba(16,185,129,0.5)" if ok else "rgba(239,68,68,0.5)"
+                fc = "var(--green)"          if ok else "var(--red)"
+                bg = "rgba(16,185,129,0.05)" if ok else "rgba(239,68,68,0.05)"
+                return (
+                    f'<span style="font-family:JetBrains Mono,monospace;' +
+                    f'font-size:0.72rem;padding:3px 10px;border:1px solid {bc};' +
+                    f'color:{fc};background:{bg};margin-right:6px;' +
+                    f'letter-spacing:0.06em;">{label}</span>'
+                )
+
+            if _ct_metrics:
+                _cy = _ct_metrics["current_yield_pct"]
+                _ay = _ct_metrics["avg_5y_yield_pct"]
+                _chips_html = (
+                    _ct_chip(
+                        ("✓" if _ct_pass_10y else "✗") + " 連續 10 年配息 2016–2025",
+                        _ct_pass_10y,
+                    )
+                    + _ct_chip(f"目前殖利率 {_cy:.2f}%", _cy > 0)
+                    + _ct_chip(f"5 年平均 {_ay:.2f}%",  _ay > 0)
+                )
+            else:
+                _chips_html = (
+                    _ct_chip(
+                        ("✓" if _ct_pass_10y else "✗") + " 連續 10 年配息 2016–2025",
+                        _ct_pass_10y,
+                    )
+                    + _ct_chip("殖利率資料不足（需完整近 5 年記錄）", False)
+                )
+            st.markdown(
+                f'<div style="margin-bottom:14px;">{_chips_html}</div>',
+                unsafe_allow_html=True,
+            )
+
+            # KPI metrics
+            if _ct_metrics:
+                _cd1, _cd2, _cd3, _cd4 = st.columns(4)
+                _cd1.metric("現價 · TWD",   f"{_r_price:.2f}")
+                _cd2.metric("目前殖利率 %",  f"{_ct_metrics['current_yield_pct']:.2f}")
+                _cd3.metric("5 年平均 %",   f"{_ct_metrics['avg_5y_yield_pct']:.2f}")
+                _cd4.metric("最新配息年度",  str(int(_ct_metrics["latest_paid_year"])))
+            else:
+                st.warning("⚠ 股利資料不足，無法完整計算殖利率（需要最近連續 5 年記錄）。")
+                st.metric("現價 · TWD", f"{_r_price:.2f}")
+
+            # Dividend table + trend chart (reuse existing chart function)
+            _ct_left, _ct_right = st.columns([1, 1])
+
+            with _ct_left:
+                st.markdown(
+                    '<div style="font-family:JetBrains Mono,monospace;font-size:0.78rem;' +
+                    'font-weight:700;letter-spacing:0.16em;' +
+                    'color:#9CA3AF;margin:10px 0 8px 0;">›&nbsp; 歷年股利明細</div>',
+                    unsafe_allow_html=True,
+                )
+                _ct_tbl = _r_div[["year", "cash_div", "stock_div", "total_div"]].copy()
+                _ct_tbl.columns = ["年度", "現金股利", "股票股利", "合計"]
+                st.dataframe(
+                    _ct_tbl,
+                    use_container_width=True,
+                    hide_index=True,
+                    column_config={
+                        "年度":     st.column_config.NumberColumn(format="%d"),
+                        "現金股利": st.column_config.NumberColumn(format="%.2f"),
+                        "股票股利": st.column_config.NumberColumn(format="%.2f"),
+                        "合計":     st.column_config.NumberColumn(format="%.2f"),
+                    },
+                )
+
+            with _ct_right:
+                _fig_ct = create_dividend_trend_chart(_r_div, _r_code, _r_name)
+                st.plotly_chart(_fig_ct, use_container_width=True, key="ct_trend_chart")
+
+            # Yield comparison chart (reuse existing chart function)
+            if _ct_metrics:
+                _fig_ct_yield = create_yield_comparison_chart(
+                    float(_ct_metrics["current_yield_pct"]),
+                    float(_ct_metrics["avg_5y_yield_pct"]),
+                )
+                st.plotly_chart(_fig_ct_yield, use_container_width=True, key="ct_yield_chart")
 
     # ========== FOOTER ==========
     st.markdown("""
