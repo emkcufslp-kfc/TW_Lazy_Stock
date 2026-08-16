@@ -155,13 +155,18 @@ def fetch_company_info_finmind(
     Returns
     -------
     pd.DataFrame
-        欄位: code (str), sector (str), market_fm (str)
+        欄位: code (str), name (str), sector (str), market_fm (str)
         market_fm = "TWSE" 或 "TPEX"（可用於補充/覆蓋 TWSE/TPEX API 的 market 欄）
+
+    Notes
+    -----
+    涵蓋全市場（非僅 top-N 選股清單），適合用於「自訂個股查詢」等
+    可能查到 top-N 之外股票的情境，作為 name/sector 的補充來源。
     """
     raw = _finmind_get("TaiwanStockInfo", token=token)
     if raw is None:
         logger.warning("TaiwanStockInfo 取得失敗，公司資訊將為空")
-        return pd.DataFrame(columns=["code", "sector", "market_fm"])
+        return pd.DataFrame(columns=["code", "name", "sector", "market_fm"])
 
     rows: list[dict] = []
     for item in raw:
@@ -172,15 +177,17 @@ def fetch_company_info_finmind(
         raw_type   = str(item.get("type", "")).lower().strip()
         market_fm  = _TYPE_TO_MARKET.get(raw_type, "")
         sector     = str(item.get("industry_category", "")).strip()
+        name       = str(item.get("stock_name", "")).strip()
 
         rows.append({
             "code":       code,
+            "name":       name,
             "sector":     sector,
             "market_fm":  market_fm,
         })
 
     if not rows:
-        return pd.DataFrame(columns=["code", "sector", "market_fm"])
+        return pd.DataFrame(columns=["code", "name", "sector", "market_fm"])
 
     df = pd.DataFrame(rows).drop_duplicates("code", keep="first")
 

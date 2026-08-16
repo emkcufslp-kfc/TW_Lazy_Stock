@@ -51,7 +51,7 @@ logger = logging.getLogger(__name__)
 
 
 def build(
-    top_n: int = 300,
+    top_n: int = 500,
     source: str = "goodinfo",
     token: str | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -215,8 +215,8 @@ def build(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="台股股利選股資料建置")
-    parser.add_argument("--top", type=int, default=300,
-                        help="取前 N 名市值股票 (預設: 300)")
+    parser.add_argument("--top", type=int, default=500,
+                        help="取前 N 名市值股票 (預設: 500)")
     parser.add_argument("--source", choices=["goodinfo", "finmind"], default="goodinfo",
                         help="股利資料來源：goodinfo（預設）或 finmind")
     parser.add_argument("--token", type=str, default=None,

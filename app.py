@@ -1275,6 +1275,22 @@ def main():
                         _ct_name   = str(_in_sc.iloc[0]["name"])
                         _ct_sector = str(_in_sc.iloc[0].get("sector", ""))
 
+                    # 4. Full-market fallback (covers tickers outside the
+                    #    pre-built top-N universe, e.g. custom queries for
+                    #    stocks not in div_hist/screened): FinMind TaiwanStockInfo
+                    if _ct_name == _ct_code_raw or not _ct_sector:
+                        try:
+                            from data_sources_finmind import fetch_company_info_finmind as _ct_fetch_info
+                            _ct_info_df = _ct_fetch_info(codes=[_ct_code_raw])
+                            if not _ct_info_df.empty:
+                                _ct_info_row = _ct_info_df.iloc[0]
+                                if _ct_name == _ct_code_raw and _ct_info_row.get("name"):
+                                    _ct_name = str(_ct_info_row["name"])
+                                if not _ct_sector and _ct_info_row.get("sector"):
+                                    _ct_sector = str(_ct_info_row["sector"])
+                        except Exception:
+                            pass  # name/sector stays as whatever was already resolved
+
                 st.session_state["ct_result"] = {
                     "code":   _ct_code_raw,
                     "name":   _ct_name,

@@ -23,14 +23,14 @@ jobs:
       - name: Install deps
         run: pip install -r requirements.txt
 
-      - name: Build dataset (FinMind source)
+      - name: Build dataset (FinMind source, top 500)
         env:
           FINMIND_TOKEN: ${{ secrets.FINMIND_TOKEN }}
         run: |
           if [ -n "$FINMIND_TOKEN" ]; then
-            python build_dataset.py --source finmind --token "$FINMIND_TOKEN"
+            python build_dataset.py --source finmind --top 500 --token "$FINMIND_TOKEN"
           else
-            python build_dataset.py --source finmind
+            python build_dataset.py --source finmind --top 500
           fi
 
       - name: Check for changes
