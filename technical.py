@@ -10,6 +10,7 @@ Pine Script reference (CM_Williams_Vix_Fix):
 from __future__ import annotations
 
 import logging
+from datetime import date, timedelta
 from typing import Optional
 
 import pandas as pd
@@ -28,16 +29,44 @@ def _yahoo_ticker(code: str, market: str) -> str:
     return f"{code}.TW" if market == "TWSE" else f"{code}.TWO"
 
 
-def fetch_ohlcv(code: str, market: str, days: int = 160) -> Optional[pd.DataFrame]:
-    """Fetch OHLCV data from Yahoo Finance for a Taiwan stock."""
+def fetch_ohlcv(
+    code: str,
+    market: str,
+    days: int = 160,
+    as_of_date: Optional[date] = None,
+) -> Optional[pd.DataFrame]:
+    """Fetch OHLCV data from Yahoo Finance for a Taiwan stock.
+
+    Parameters
+    ----------
+    days : trading-day window size to return (most recent `days` rows).
+    as_of_date : optional historical cutoff. If given and in the past,
+        data is bounded to end on/near this date instead of "today".
+        If None or today/future, behaves as before (live trailing window).
+    """
     if not _HAS_YF:
         return None
     try:
         tk = yf.Ticker(_yahoo_ticker(code, market))
-        df = tk.history(period=f"{days}d", auto_adjust=True)
-        if df is None or df.empty:
-            return None
-        df.index = pd.to_datetime(df.index).tz_localize(None)
+        if as_of_date is not None and as_of_date < date.today():
+            # Historical as-of window: pull a generous calendar-day range
+            # ending the day after as_of_date, then trim to the last
+            # `days` trading rows on or before as_of_date.
+            start = as_of_date - timedelta(days=days * 2 + 15)
+            end = as_of_date + timedelta(days=1)
+            df = tk.history(start=str(start), end=str(end), auto_adjust=True)
+            if df is None or df.empty:
+                return None
+            df.index = pd.to_datetime(df.index).tz_localize(None)
+            df = df[df.index <= pd.Timestamp(as_of_date)]
+            if df.empty:
+                return None
+            df = df.tail(days)
+        else:
+            df = tk.history(period=f"{days}d", auto_adjust=True)
+            if df is None or df.empty:
+                return None
+            df.index = pd.to_datetime(df.index).tz_localize(None)
         return df[["Open", "High", "Low", "Close", "Volume"]].copy()
     except Exception as e:
         logger.warning(f"[{code}] yfinance error: {e}")
